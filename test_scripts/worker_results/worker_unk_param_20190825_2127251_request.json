@@ -1,0 +1,1 @@
+"{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"WorkerUpdate\",\n    \"id\": 2,\n    \"params\": {\n        \"workerId\":\"123\",\n        \"details\":{\n            \"name\": \"TEST\"\n        }\n    }\n}"

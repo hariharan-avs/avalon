@@ -1,0 +1,1 @@
+"{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"WorkerUpdate\",\n    \"id\": 2,\n    \"params\": {\n        \"workersId\":\"4582\",\n        \"details\":{\n            \"hashingAlgorithm\": \"KECCAK-256\"\n        }\n    }\n}"
