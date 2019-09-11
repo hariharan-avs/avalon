@@ -1,0 +1,1 @@
+"{\"jsonrpc\": \"2.0\", \"method\": \"WorkerSetStatus\", \"id\": 12003, \"params\": {\"workerId\": \"307841\", \"status\": 2}}"

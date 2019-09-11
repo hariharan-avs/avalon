@@ -1,0 +1,1 @@
+{"jsonrpc": "2.0", "id": 14001, "error": {"code": 2, "message": "Worker Id already exists in the database.                  Hence invalid parameter"}}

@@ -1,0 +1,11 @@
+{
+    "jsonrpc": "2.0",
+    "method": "WorkerUpdate",
+    "id": 16003,
+    "params": {
+	"workerId": "",
+	"details":{
+	    "encryptionKey": "acsSign" 
+	}
+    }
+}

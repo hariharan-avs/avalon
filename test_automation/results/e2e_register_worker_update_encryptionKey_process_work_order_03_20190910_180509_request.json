@@ -1,0 +1,1 @@
+"{\"jsonrpc\": \"2.0\", \"method\": \"WorkerUpdate\", \"id\": 16003, \"params\": {\"workerId\": \"307841\", \"details\": {\"encryptionKey\": \"acsSign\"}}}"

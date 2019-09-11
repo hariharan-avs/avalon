@@ -1,0 +1,1 @@
+"{\"jsonrpc\": \"2.0\", \"method\": \"WorkerUpdate\", \"id\": 15003, \"params\": {\"workerId\": \"307841\", \"details\": {\"dataEncryptionAlgorithm\": \"AES-GCM-128\"}}}"
