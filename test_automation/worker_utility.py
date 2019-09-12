@@ -19,24 +19,37 @@ from workflow import validate_response_code
 
 logger = logging.getLogger(__name__)
 
-def process_worker_actions(input_json_file, id_gen, output_json_file_name, worker_obj, uri_client, check_worker_result):
+def process_worker_actions(input_json_file, id_gen, output_json_file_name,
+                          worker_obj, uri_client, check_worker_result):
+    ''' Function to process worker actions.
+        Reads input json file of the test case.
+        Triggers create worker request, process request and validate response.
+        Input Parameters : input_json_file, id_gen, output_json_file_name,
+        worker_obj, uri_client, check_worker_result
+        Returns : err_cd, worker_obj, input_json_str1, response. '''
 
     # read json input file for the test case
-    logger.info("------------------Input file name: %s ---------------\n", input_json_file)
+    logger.info("----- Input file name: %s -----\n",
+               input_json_file)
     input_json_str1 = futils.read_json_file(input_json_file)
 
-    logger.info("------------------Testing Worker Actions------------------")
+    logger.info("----- Testing Worker Actions -----")
 
     # create work order request
-    input_json_str1, worker_obj = create_worker_request(input_json_str1, worker_obj, id_gen)
+    input_json_str1, worker_obj = create_worker_request(input_json_str1,
+                                                       worker_obj, id_gen)
     # submit work order request and retrieve response
-    response = process_request(uri_client, input_json_str1, output_json_file_name)
+    response = process_request(uri_client, input_json_str1,
+                              output_json_file_name)
     # validate work order response and get error code
     err_cd = validate_response_code(response, check_worker_result)
 
     return err_cd, worker_obj, input_json_str1, response
 
 def create_worker_request(input_json_str1, worker_obj, id_gen):
+    ''' Function to populate parameters in input string.
+        Input Parameters : input_json_str1, worker_obj, id_gen
+        Returns : input_json_str1, worker_obj. '''
 
     input_json_temp = json.loads(input_json_str1)
     if "workerId" in input_json_temp["params"].keys():
@@ -47,23 +60,6 @@ def create_worker_request(input_json_str1, worker_obj, id_gen):
                 worker_obj.worker_id = worker_id_gen
             else:
                 input_json_temp["params"]["workerId"] = worker_obj.worker_id
-
-    if "worker_register" in input_json_str1:
-        # set default hashingAlgorithm
-        if input_json_temp["params"]["details"]["hashingAlgorithm"] == "":
-            input_json_temp["params"]["details"]["hashingAlgorithm"] = worker_obj.hashingAlgorithm
-        # set default signingAlgorithm
-        if input_json_temp["params"]["details"]["signingAlgorithm"] == "":
-            input_json_temp["params"]["details"]["signingAlgorithm"] = worker_obj.signingAlgorithm
-        # set default keyEncryptionAlgorithm
-        if input_json_temp["params"]["details"]["keyEncryptionAlgorithm"] == "":
-            input_json_temp["params"]["details"]["keyEncryptionAlgorithm"] = worker_obj.keyEncryptionAlgorithm
-        # set default dataEncryptionAlgorithm
-        if input_json_temp["params"]["details"]["dataEncryptionAlgorithm"] == "":
-            input_json_temp["params"]["details"]["dataEncryptionAlgorithm"] = worker_obj.dataEncryptionAlgorithm
-
-        input_json_temp["params"]["details"]["workerTypeData"]["verificationKey"] = input_json_temp["params"]["workerId"].decode("hex")
-
     else:
         logger.info("No parameters modified from input json.")
 

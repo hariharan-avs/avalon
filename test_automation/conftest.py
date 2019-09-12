@@ -32,7 +32,10 @@ def setup_config(args=None):
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", help="configuration file", nargs = "+")
-    parser.add_argument("--config-dir", help="configuration folder", nargs = "+")
+    parser.add_argument("--config-dir", help="configuration folder",
+                         nargs = "+")
+    parser.add_argument("--connect_uri", action="store",
+                         default="http://localhost:1947", help="server uri")
     (options, remainder) = parser.parse_known_args(args)
 
     if options.config :
@@ -40,6 +43,9 @@ def setup_config(args=None):
 
     if options.config_dir :
         confpaths = options.config_dir
+
+    if options.connect_uri :
+        server_uri = options.connect_uri
 
     try :
         config = pconfig.parse_configuration_files(conffiles, confpaths)
@@ -49,21 +55,25 @@ def setup_config(args=None):
         sys.exit(-1)
 
     plogger.setup_loggers(config.get("Logging", {}))
-    sys.stdout = plogger.stream_to_logger(logging.getLogger("STDOUT"), logging.DEBUG)
-    sys.stderr = plogger.stream_to_logger(logging.getLogger("STDERR"), logging.WARN)
+    sys.stdout = plogger.stream_to_logger((logging.getLogger("STDOUT"),
+                                           logging.DEBUG))
+    sys.stderr = plogger.stream_to_logger((logging.getLogger("STDERR"),
+                                           logging.WARN))
 
-    sig_obj, worker_obj, private_key, server_uri = initialize_objects(config, remainder)
-    worker_obj, uri_client, err_cd = worker_lookup_retrieve(config, worker_obj, server_uri)
+    logger.info("configuration for the session: %s", config)
+    uri_client = GenericServiceClient(server_uri)
+
+    sig_obj, worker_obj, private_key = initialize_objects(config, remainder)
+    worker_obj, err_cd = worker_lookup_retrieve(config, worker_obj, uri_client)
 
     return worker_obj, sig_obj, uri_client, private_key, err_cd
 
 def initialize_objects(config, args):
     """ Function to initialize common objects for tests. """
 
-    logger.info('***************** INTEL TRUSTED COMPUTE FRAMEWORK (TCF)*****************')
+    logger.info('***** INTEL TRUSTED COMPUTE FRAMEWORK (TCF) *****')
 
-    # static server_uri and private_key of client
-    server_uri = r'http://localhost:1947'
+    # private_key of client
     private_key = enclave_helper.generate_signing_keys()
 
     # Initializing Signature object, Worker Object
@@ -71,67 +81,71 @@ def initialize_objects(config, args):
     worker_obj = worker.WorkerDetails()
 
     # Log computed objects
-    logger.info("server_uri: %s", server_uri)
-    logger.info("config: %s", config)
     logger.info("sig_obj: %s", sig_obj)
     logger.info("worker_obj: %s", worker_obj)
 
-    return sig_obj, worker_obj, private_key, server_uri
+    return sig_obj, worker_obj, private_key
 
-def worker_lookup_retrieve(config, worker_obj, server_uri):
+def worker_lookup_retrieve(config, worker_obj, uri_client):
     """ Function for computing worker lookup and retrieve once per session. """
 
-    if not server_uri:
+    if not uri_client:
         logger.error("Server URI is not provided")
         exit(1)
 
     # logger.info("Execute work order")
-    uri_client = GenericServiceClient(server_uri)
     response = None
-    wo_id = None
-    request = 1
 
     err_cd = 0
-    #----------------------------------------------------------------------------------
+    #----------------------------------------------------------------------
     # create worker lookup request
     output_json_file_name = 'worker_lookup'
-    input_worker_look_up = '{"jsonrpc": "2.0", "method": "WorkerLookUp", "id": 1, "params": {"workerType": 1}}'
+    input_worker_look_up = '''{"jsonrpc": "2.0", "method": "WorkerLookUp",
+                            "id": 1, "params": {"workerType": 1}}'''
     input_json_str1 = json.dumps(json.loads(input_worker_look_up))
 
     logger.info("------------------Testing WorkerLookUp------------------")
 
     # submit worker lookup request and retrieve response
     logger.info("**********Received Request*********\n%s\n", input_json_str1)
-    response = process_request(uri_client, input_json_str1, output_json_file_name)
+    response = process_request(uri_client, input_json_str1,
+                              output_json_file_name)
     logger.info("**********Received Response*********\n%s\n", response)
 
     # check worker lookup response
     if "result" in response and "totalCount" in response["result"].keys():
         if response["result"]["totalCount"] == 0:
             err_cd = 1
-            logger.info("ERROR: Failed at WorkerLookUp - No Workers exist to process workorder.")
+            logger.info('''ERROR: Failed at WorkerLookUp -
+                    No Workers exist to process workorder.''')
 
     if err_cd == 0:
         # create worker retrieve request
-        input_worker_retrieve = '{"jsonrpc": "2.0", "method": "WorkerRetrieve", "id": 2, "params": {"workerId": ""}}'
+        input_worker_retrieve = '''{"jsonrpc": "2.0", "method": "WorkerRetrieve"
+                                , "id": 2, "params": {"workerId": ""}}'''
         input_json_str1 = json.dumps(json.loads(input_worker_retrieve))
-        logger.info("------------------Testing WorkerRetrieve------------------")
-        # Retrieving the worker id from the "WorkerLookUp" response and update the worker id information for the further json requests
+        logger.info("-----Testing WorkerRetrieve-----")
+        # Retrieving the worker id from the "WorkerLookUp" response and
+        # update the worker id information for the further json requests
         if "result" in response and "ids" in response["result"].keys():
                 input_json_final = json.loads(input_json_str1)
-                input_json_final["params"]["workerId"] = enclave_helper.strip_begin_end_key(response["result"]["ids"][0])
+                input_json_final["params"]["workerId"] = (enclave_helper.
+                strip_begin_end_key(response["result"]["ids"][0]))
                 input_json_str1 = json.dumps(input_json_final)
 
-                logger.info("**********Worker details Updated with Worker ID*********\n%s\n", input_json_str1)
+                logger.info('''*****Worker details Updated with Worker ID*****
+                           \n%s\n''', input_json_str1)
         else:
-            logger.info("ERROR: Failed at WorkerLookUp - No Worker ids in WorkerLookUp response.")
+            logger.info('''ERROR: Failed at WorkerLookUp -
+                       No Worker ids in WorkerLookUp response.''')
             err_cd = 1
 
         if err_cd == 0:
             # submit worker retrieve request and load to worker object
-            logger.info("**********Received Request*********\n%s\n", input_json_str1)
-            response = process_request(uri_client, input_json_str1, output_json_file_name)
-            logger.info("**********Received Response*********\n%s\n", response)
+            logger.info('''*****Received Request*****\n%s\n''', input_json_str1)
+            response = process_request(uri_client, input_json_str1,
+                                      output_json_file_name)
+            logger.info('''*****Received Response*****\n%s\n''', response)
             worker_obj.load_worker(response)
 
-    return worker_obj, uri_client, err_cd
+    return worker_obj, err_cd
