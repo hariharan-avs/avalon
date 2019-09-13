@@ -27,6 +27,10 @@ def test_work_order_with_not_supported_dataencryption_algorithm(setup_config):
     check_get_result = {"error": {"code": 2}}
 
     # process worker actions
-    err_cd, input_json_str1, response, processing_time, worker_obj, sig_obj, encrypted_session_key = work_order_utility.process_work_order(input_json, input_type, tamper, output_json_file_name, worker_obj, sig_obj, uri_client, private_key, err_cd, check_submit, check_get_result)
+    (err_cd, input_json_str1, response, processing_time,
+    worker_obj, sig_obj, session_iv,
+    enc_session_key) = work_order_utility.process_work_order(input_json_file,
+    input_type, tamper, output_json_file_name, worker_obj, sig_obj,
+    uri_client, private_key, err_cd, check_submit, check_get_result)
 
     assert err_cd == 0
