@@ -16,7 +16,7 @@ def test_work_order_success(setup_config):
     err_cd = setup_config[4]
 
     # input and output names
-    input_json_file = r'./work_order/input/work_order_success.json'
+    input_json_file = './work_order/input/work_order_success.json'
     input_type = 'file'
     output_json_file_name = 'work_order_success'
     tamper = {"params": {}}
