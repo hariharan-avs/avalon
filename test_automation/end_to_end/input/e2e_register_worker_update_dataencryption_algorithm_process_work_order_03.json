@@ -1,0 +1,11 @@
+{
+    "jsonrpc": "2.0",
+    "method": "WorkerUpdate",
+    "id": 15003,
+    "params": {
+	"workerId": "",
+	"details":{
+	    "dataEncryptionAlgorithm": "AES-GCM-128" 
+	}
+    }
+}

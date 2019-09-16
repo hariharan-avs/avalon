@@ -3,7 +3,7 @@
     "method": "WorkOrderSubmit",
     "id": 11,
     "params": {
-        "responseTimeoutMSecs": 6000,
+        "responseTimeoutMSecs": 36000,
         "payloadFormat": "pformat",
         "resultUri": "resulturi",
         "notifyUri": "notifyuri",
@@ -19,7 +19,7 @@
         "encryptedRequestHash": "requesthash",
         "requesterSignature": "",
         "inData": [
-		   {"index": 2,
+                   {"index": 2,
                     "dataHash": "",
                     "data": "Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1",
                     "encryptedDataEncryptionKey": "",

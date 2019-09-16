@@ -13,13 +13,13 @@
         "requesterId": "0x3456",
         "workerEncryptionKey": "",
         "dataEncryptionAlgorithm": "AES-GCM-256",
-        "encryptedSessionKey": "sessionkey",
+        "encryptedSessionKey": "",
         "sessionKeyIv": "Iv",
-        "requesterNonce": "",
-        "encryptedRequestHash": "requesthash",
+        "requesterNonce": "hs",
+        "encryptedRequestHash": "",
         "requesterSignature": "",
         "inData": [
-		   {"index": 2,
+                   {"index": 2,
                     "dataHash": "",
                     "data": "Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1",
                     "encryptedDataEncryptionKey": "",
@@ -34,4 +34,3 @@
         ]
     }
 }
-
