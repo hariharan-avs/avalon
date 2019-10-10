@@ -249,9 +249,14 @@ def tamper_request(input_json_str1, tamper):
 
 def verify_work_order_signature(response, sig_obj, worker_obj):
 
+    verify_key = worker_obj.verification_key
+
     try:
-        sig_bool = sig_obj.verify_signature(json.dumps(response), worker_obj)
-        if sig_bool > 0:
+        sig_bool = sig_obj.verify_signature(response, verify_key)
+
+        logger.info("Signature return verify: %s \n", sig_bool)
+        if sig_bool is SignatureStatus.PASSED :
+        #if sig_bool > 0:
             err_cd = 0
             logger.info('''Success: Work Order Signature Verified''')
         else:
@@ -266,7 +271,7 @@ def verify_work_order_signature(response, sig_obj, worker_obj):
 def decrypt_work_order_response(response, session_key, session_iv):
     decrypted_data = ""
     try:
-        decrypted_data = enclave_helper.decrypted_response(json.dumps(response),
+        decrypted_data = enclave_helper.decrypted_response(response,
                          session_key, session_iv)
         err_cd = 0
         logger.info('''Success: Work Order Response Decrypted''')
