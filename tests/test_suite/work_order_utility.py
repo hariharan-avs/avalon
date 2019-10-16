@@ -17,6 +17,7 @@ from shared_kv.shared_kv_interface import KvStorage
 import utility.utility as enclave_helper
 import utility.file_utils as futils
 import workflow
+from api_classes import WorkOrderSubmit
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +31,22 @@ def create_work_order_request(input_json_str1, worker_obj, tamper):
     
     before_sign_keys = ""
     work_order_id = ""
+    
+    wo_obj = WorkOrderSubmit()
+    wo_obj.add_json_values(input_json_str1)
+
+    json_rpc_request = {
+            "jsonrpc": "2.0",
+            "method": "WorkOrderSubmit",
+            "id": id
+    }
+
+    json_rpc_request["params"] = wo_obj.get_params()
+    json_rpc_request["params"]["inData"] = wo_obj.get_indata()
+    json_rpc_request["params"]["outData"] = wo_obj.get_outdata()
 #    work_order_obj = work_order.WorkOrderParams()
 #    default_json = work_order_obj.to_string()
-
+#
 #    input_json_temp = json.loads(input_json_str1)
     
 #    input_param_keys = input_json_temp["params"].keys()
@@ -179,17 +193,20 @@ def process_work_order(input_json, input_type, tamper, output_json_file_name,
     response = ""
 
     if err_cd == 0:
-        if input_type == "file":
+        if input_type == "file" :
             # read json input file for the test case
             logger.info("------ Input file name: %s ------\n", input_json)
             input_json_str1 = futils.read_json_file(input_json)
-        elif input_type == "string":
+        elif input_type == "string" :
             input_json_str1 = input_json
+        elif input_type == "object" :
+            input_json_str1 = input_json.to_string()
         #--------------------------------------------------------------------
         logger.info("------ Testing WorkOrderSubmit ------")
 
         # create work order request
-        input_json_str1 = create_work_order_request(input_json_str1,
+        if input_type != "object" :
+            input_json_str1 = create_work_order_request(input_json_str1,
                                                    worker_obj, tamper)
         input_json_temp = json.loads(input_json_str1)
         work_order_id = input_json_temp["params"]["workOrderId"]
@@ -280,3 +297,74 @@ def decrypt_work_order_response(response, session_key, session_iv):
         logger.info('''ERROR: Work Order Response Decryption Failed''')
 
     return err_cd, decrypted_data
+
+def validate_request(request_tup):
+
+    input_json_temp = request_tup[0]
+    input_type = request_tup[1]
+    tamper = request_tup[2]
+    output_json_file_name = request_tup[3]
+    worker_obj = request_tup[4]
+    sign_obj = request_tup[5]
+    uri_client = request_tup[6]
+    private_key = request_tup[7]
+    err_cd = request_tup[8]
+    check_result_1 = request_tup[9]
+    check_result_2 = request_tup[10]
+
+    input_json_str = ""
+
+    try :
+        if input_type == "file" :
+            # read json input file for the test case
+            logger.info("------ Input file name: %s ------\n", input_json_temp)
+        
+            with open(input_json_temp, "r") as inp_file:
+                input_json=json.load(inp_file)
+
+        elif input_type == "string" :
+            input_json = input_json_temp
+    
+        input_json_str = json.loads(input_json)
+    except :
+        logger.info('''Invalid Json Input. 
+                Submitting to enclave without modifications to test response''')
+
+        response = process_request(uri_client, input_json_temp, 
+                   output_json_file_name)
+        err_cd = validate_response_code(response, check_result_1)
+
+    if input_json_str != "" :
+        input_method = input_json_str["method"] 
+
+        if input_method is "WorkOrderSubmit" :
+            (err_cd, input_json_str, response, processing_time, 
+            worker_obj, sig_obj, session_key, session_iv, 
+            encrypted_session_key) = process_work_order(input_json, 
+                    input_type, tamper, output_json_file_name,
+                    worker_obj, sig_obj, uri_client, private_key, 
+                    err_cd, check_result_1, check_result_2)
+        elif input_method is "WorkOrderGetResult" :
+            pass
+
+        elif input_method is "WorkerLookUp" :
+            pass
+
+        elif input_method is "WorkerRetrieve" :
+            pass
+
+        elif input_method is "WorkerRegister" :
+            pass
+
+        elif input_method is "WorkerUpdate" :
+            pass
+
+        elif input_method is "WorkerSetStatus" :
+            pass
+
+        else :
+            response = process_request(uri_client, input_json_temp,
+                       output_json_file_name)
+            err_cd = validate_response_code(response, check_result_1)
+        
+    return input_json_str
