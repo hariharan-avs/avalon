@@ -178,7 +178,7 @@ def process_work_order_get_result(work_order_id, request_id,
 
     return response
 
-def process_work_order(input_json, input_type, tamper, output_json_file_name,
+def process_work_order(input_json_str, tamper, output_json_file_name,
         worker_obj, sig_obj, uri_client, private_key, err_cd, check_submit,
         check_get_result):
     """ Function to process work order
@@ -193,45 +193,38 @@ def process_work_order(input_json, input_type, tamper, output_json_file_name,
     response = ""
 
     if err_cd == 0:
-        if input_type == "file" :
-            # read json input file for the test case
-            logger.info("------ Input file name: %s ------\n", input_json)
-            input_json_str1 = futils.read_json_file(input_json)
-        elif input_type == "string" :
-            input_json_str1 = input_json
-        elif input_type == "object" :
-            input_json_str1 = input_json.to_string()
         #--------------------------------------------------------------------
         logger.info("------ Testing WorkOrderSubmit ------")
 
         # create work order request
-        if input_type != "object" :
-            input_json_str1 = create_work_order_request(input_json_str1,
-                                                   worker_obj, tamper)
-        input_json_temp = json.loads(input_json_str1)
-        work_order_id = input_json_temp["params"]["workOrderId"]
-        request_id = input_json_temp["id"]
-        response_timeout = input_json_temp["params"]["responseTimeoutMSecs"]
-        input_json_str1 = json.dumps(input_json_temp)
-        # sign work order request
-        (err_cd, input_json_str1, session_key, session_iv,
-        encrypted_session_key) = sign_work_order_request(input_json_str1,
-                                      worker_obj, sig_obj, private_key)
+        wo_obj = WorkOrderSubmit()
+        wo_obj.add_json_values(input_json_str, tamper)
+
+        json_rpc_request = {
+                "jsonrpc": "2.0",
+                "method": "WorkOrderSubmit",
+                "id": id
+        }
+
+        json_rpc_request["params"] = wo_obj.get_params()
+
+        in_data = wo_obj.get_indata()
+        out_data = wo_obj.get_outdata()
+
+        if in_data is not None:
+                        json_rpc_request["params"]["inData"] = in_data
+
+        if out_data is not None:
+                        json_rpc_request["params"]["outData"] = out_data
+
+        response = process_request(uri_client, json_rpc_request,
+                   output_json_file_name)
+        err_cd = validate_response_code(response, check_result_1)
+
     else:
         logger.info('''ERROR: No Worker Retrieved from system.
                    Unable to proceed to process work order.''')
 
-    if err_cd == 0:
-        # submit work order request and retrieve response
-        start_wait_time = time.time()
-        input_json_str1 = tamper_request(input_json_str1, tamper)
-        response = workflow.process_request(uri_client, input_json_str1,
-                                           output_json_file_name)
-        # validate work order submit response error or result code
-        err_cd = workflow.validate_response_code(response, check_submit)
-    else:
-        logger.info('''ERROR: WorkOrderSubmit signing process failed.
-                   Hence WorkOrderSubmit not submitted to enclave.''')
 
     if err_cd == 0:
         logger.info("------ Testing WorkOrderGetResult ------")
@@ -340,8 +333,8 @@ def validate_request(request_tup):
         if input_method is "WorkOrderSubmit" :
             (err_cd, input_json_str, response, processing_time, 
             worker_obj, sig_obj, session_key, session_iv, 
-            encrypted_session_key) = process_work_order(input_json, 
-                    input_type, tamper, output_json_file_name,
+            encrypted_session_key) = process_work_order(input_json_str, 
+                    tamper, output_json_file_name,
                     worker_obj, sig_obj, uri_client, private_key, 
                     err_cd, check_result_1, check_result_2)
         elif input_method is "WorkOrderGetResult" :
