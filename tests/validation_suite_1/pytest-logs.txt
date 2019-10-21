@@ -1,0 +1,146 @@
+2019-10-21 07:37:43 INFO configuration for the session: {'KvStorage': {'StoragePath': 'config/Kv_Shared_tmp', 'StorageSize': '1 TB'}, 'Logging': {'LogLevel': 'INFO', 'LogFile': '__screen__'}, 'EnclaveManager': {'sleep_interval': '10'}, 'Listener': {'listener_port': 1947, 'max_work_order_count': 10}, 'EnclaveModule': {'spid': 'DEADBEEF00000000DEADBEEF00000000', 'num_of_enclaves': '1', 'ias_url': 'https://api.trustedservices.intel.com/sgx/dev', 'ias_api_key': '112233445566778899aabbccddeeff00', 'enclave_library': 'libtcf-enclave.signed.so', 'enclave_library_path': 'tc/sgx/trusted_worker_manager/enclave/build/lib/'}, 'WorkerConfig': {'ProofDataType': 'TEE-SGX-IAS', 'WorkOrderSyncUri': 'http://localhost:8080', 'WorkOrderAsyncUri': 'http://localhost:8080', 'WorkOrderPullUri': 'http://localhost:8080', 'WorkOrderNotifyUri': 'http://localhost:8080', 'ApplicationTypeId': '11aa22bb33cc44dd', 'OrganizationId': 'aabbcc1234ddeeff', 'ReceiptInvocationUri': 'http://localhost:8080', 'WorkOrderInvocationAddress': '', 'ReceiptInvocationAddress': '', 'FromAddress': '', 'HashingAlgorithm': 'SHA-256', 'SigningAlgorithm': 'SECP256K1', 'KeyEncryptionAlgorithm': 'RSA-OAEP-3072', 'DataEncryptionAlgorithm': 'AES-GCM-256', 'workOrderPayloadFormats': 'JSON-RPC'}}
+2019-10-21 07:37:43 INFO ***** INTEL TRUSTED COMPUTE FRAMEWORK (TCF) *****
+2019-10-21 07:37:43 INFO sig_obj: <utility.signature.ClientSignature object at 0x7fc36df63cc0>
+2019-10-21 07:37:43 INFO worker_obj: <worker.worker_details.SGXWorkerDetails object at 0x7fc36df63f98>
+2019-10-21 07:37:43 INFO ------------------Testing WorkerLookUp------------------
+2019-10-21 07:37:43 INFO ********Received Request*******
+{'jsonrpc': '2.0', 'method': 'WorkerLookUp', 'id': 1, 'params': {'workerType': 1}}
+
+2019-10-21 07:37:43 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkerLookUp", "id": 1, "params": {"workerType": 1}}
+
+2019-10-21 07:37:43 INFO **********Received Response*********
+{'result': {'totalCount': 1, 'lookupTag': '4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d', 'ids': ['4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d']}, 'id': 1, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:43 INFO **********Received Response*********
+{'result': {'totalCount': 1, 'lookupTag': '4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d', 'ids': ['4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d']}, 'id': 1, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:43 INFO -----Testing WorkerRetrieve-----
+2019-10-21 07:37:43 INFO *****Worker details Updated with Worker ID*****
+                           
+{'jsonrpc': '2.0', 'method': 'WorkerRetrieve', 'id': 2, 'params': {'workerId': '4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d'}}
+
+2019-10-21 07:37:43 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkerRetrieve", "id": 2, "params": {"workerId": "4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d"}}
+
+2019-10-21 07:37:43 INFO **********Received Response*********
+{'result': {'workerType': 1, 'organizationId': 'aabbcc1234ddeeff', 'applicationTypeId': '11aa22bb33cc44dd', 'details': {'workOrderSyncUri': 'http://localhost:8080', 'workOrderAsyncUri': 'http://localhost:8080', 'workOrderPullUri': 'http://localhost:8080', 'workOrderNotifyUri': 'http://localhost:8080', 'receiptInvocationUri': 'http://localhost:8080', 'workOrderInvocationAddress': '', 'receiptInvocationAddress': '', 'fromAddress': '', 'hashingAlgorithm': 'SHA-256', 'signingAlgorithm': 'SECP256K1', 'keyEncryptionAlgorithm': 'RSA-OAEP-3072', 'dataEncryptionAlgorithm': 'AES-GCM-256', 'workOrderPayloadFormats': 'JSON-RPC', 'workerTypeData': {'verificationKey': '-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEFBexPFbQUabMRcktyguflJDIqyracZRm\njv8z28tYjVecZHW5rL8UycdKTgmqOJb7j605A69dLOlMjYfcRuRx5Q==\n-----END PUBLIC KEY-----\n', 'extendedMeasurements': ['DEADBEEF00000000DEADBEEF0000000000000000000000000000000000000000', '42FAAAD95A1F7FCF4A09F71D2C6E0C19BF0D1CAA54F85207BC34AD7E8B7A35B8'], 'proofDataType': 'TEE-SGX-IAS', 'proofData': '', 'encryptionKey': '-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAvVdXnoUm3GepJ7fY9hmwz9CC3QkcKCsI1bvZ+5wIB87yzsBhYZ5P\nGQLdFkpFPF5NgD5wW4aVdfddMA7WBAj6T9dmmyUNGl65q2ACyKS9Rcx9nhnOG0iW\nCu3hPf18cBpX1pua6bfY9uA3ah//sSr9tHZRF1XyFt+gbFf2ycNzizz2hddNE2xN\nT1i+X+4uX1G2rQf9s6cRNRuRbLD+R39xiwGn+FM6F1/VHYB23N24ugc+/HhDhV8I\nuzT80eQZANaVV5l8v6nJ5ITgklW7LY94AsvsaXW0DEh+5MhAHWwZuxuSaDZlLj3Y\nq3kHpuEYFLi4HSmhBk0U+SbJjts2ZF5yWQIDAQAB\n-----END RSA PUBLIC KEY-----\n', 'encryptionKeySignature': ''}}, 'status': 1}, 'id': 2, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:43 INFO *********Updating Worker Details*********
+2019-10-21 07:37:43 INFO Hashing Algorithm : SHA-256
+2019-10-21 07:37:43 INFO Signing Algorithm : SECP256K1
+2019-10-21 07:37:43 INFO ------ Input file name: ./work_order/input/work_order_success.json ------
+
+2019-10-21 07:37:43 INFO ------ Loaded file name: ./work_order/input/work_order_success.json ------
+
+2019-10-21 07:37:43 INFO Json loaded : {
+    "jsonrpc": "2.0",
+    "method": "WorkOrderSubmit",
+    "id": 11,
+    "params": {
+        "responseTimeoutMSecs": 6000,
+        "payloadFormat": "JSON-RPC",
+        "resultUri": "resulturi",
+        "notifyUri": "notifyuri",
+        "workOrderId": "",
+        "workerId": "",
+        "workloadId": "heart-disease-eval",
+        "requesterId": "0x3456",
+        "workerEncryptionKey": "",
+        "dataEncryptionAlgorithm": "AES-GCM-256",
+        "encryptedSessionKey": "",
+        "sessionKeyIv": "",
+        "requesterNonce": "",
+        "encryptedRequestHash": "",
+        "requesterSignature": "",
+        "inData": [
+		   {"index": 2,
+                    "dataHash": "",
+                    "data": "Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1",
+                    "encryptedDataEncryptionKey": "",
+                    "iv": ""
+                   },
+                   {"index": 1,
+                    "dataHash": "",
+                    "data": "Heart disease evaluation data: 32 1 1 156  132 125 1 95  1 0 1 1 3 1",
+                    "encryptedDataEncryptionKey": "",
+                    "iv": ""
+                   }
+        ]
+    }
+} 
+
+2019-10-21 07:37:43 INFO Json Str 1 loaded : {'jsonrpc': '2.0', 'method': 'WorkOrderSubmit', 'id': 11, 'params': {'responseTimeoutMSecs': 6000, 'payloadFormat': 'JSON-RPC', 'resultUri': 'resulturi', 'notifyUri': 'notifyuri', 'workOrderId': '', 'workerId': '', 'workloadId': 'heart-disease-eval', 'requesterId': '0x3456', 'workerEncryptionKey': '', 'dataEncryptionAlgorithm': 'AES-GCM-256', 'encryptedSessionKey': '', 'sessionKeyIv': '', 'requesterNonce': '', 'encryptedRequestHash': '', 'requesterSignature': '', 'inData': [{'index': 2, 'dataHash': '', 'data': 'Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1', 'encryptedDataEncryptionKey': '', 'iv': ''}, {'index': 1, 'dataHash': '', 'data': 'Heart disease evaluation data: 32 1 1 156  132 125 1 95  1 0 1 1 3 1', 'encryptedDataEncryptionKey': '', 'iv': ''}]}} 
+
+2019-10-21 07:37:43 INFO Json input_method : WorkOrderSubmit 
+
+2019-10-21 07:37:43 INFO Json Str 2 loaded : {'jsonrpc': '2.0', 'method': 'WorkOrderSubmit', 'id': 11, 'params': {'responseTimeoutMSecs': 6000, 'payloadFormat': 'JSON-RPC', 'resultUri': 'resulturi', 'notifyUri': 'notifyuri', 'workOrderId': '', 'workerId': '', 'workloadId': 'heart-disease-eval', 'requesterId': '0x3456', 'workerEncryptionKey': '', 'dataEncryptionAlgorithm': 'AES-GCM-256', 'encryptedSessionKey': '', 'sessionKeyIv': '', 'requesterNonce': '', 'encryptedRequestHash': '', 'requesterSignature': '', 'inData': [{'index': 2, 'dataHash': '', 'data': 'Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1', 'encryptedDataEncryptionKey': '', 'iv': ''}, {'index': 1, 'dataHash': '', 'data': 'Heart disease evaluation data: 32 1 1 156  132 125 1 95  1 0 1 1 3 1', 'encryptedDataEncryptionKey': '', 'iv': ''}]}} 
+
+2019-10-21 07:37:43 INFO ------ Testing WorkOrderSubmit ------
+2019-10-21 07:37:43 INFO Type of indataitem : <class 'dict'> 
+
+2019-10-21 07:37:43 INFO Type of indataitem in loop : <class 'dict'> 
+
+2019-10-21 07:37:43 INFO Type of indataitem keys: dict_keys(['index', 'dataHash', 'data', 'encryptedDataEncryptionKey', 'iv']) 
+
+2019-10-21 07:37:43 INFO index : 2, dataHash : , data : Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1,
+                            encrypted_data_encryption_key : , iv :  
+
+2019-10-21 07:37:43 INFO Second Position - index : 2, dataHash : , data : Heart disease evaluation data: 25 10 1 67  102 125 1 95 5 10 1 11 36 1,
+                    encrypted_data_encryption_key : , iv :  
+
+2019-10-21 07:37:43 INFO Type of indataitem : <class 'dict'> 
+
+2019-10-21 07:37:43 INFO Type of indataitem in loop : <class 'dict'> 
+
+2019-10-21 07:37:43 INFO Type of indataitem keys: dict_keys(['index', 'dataHash', 'data', 'encryptedDataEncryptionKey', 'iv']) 
+
+2019-10-21 07:37:43 INFO index : 1, dataHash : , data : Heart disease evaluation data: 32 1 1 156  132 125 1 95  1 0 1 1 3 1,
+                            encrypted_data_encryption_key : , iv :  
+
+2019-10-21 07:37:43 INFO Second Position - index : 1, dataHash : , data : Heart disease evaluation data: 32 1 1 156  132 125 1 95  1 0 1 1 3 1,
+                    encrypted_data_encryption_key : , iv :  
+
+2019-10-21 07:37:43 INFO In indata hash loop 
+
+2019-10-21 07:37:43 INFO Json RPC : {'jsonrpc': '2.0', 'method': 'WorkOrderSubmit', 'id': 3, 'params': {'responseTimeoutMSecs': 6000, 'payloadFormat': 'JSON-RPC', 'resultUri': 'resulturi', 'notifyUri': 'notifyuri', 'workOrderId': '0x1e5ed1fed55424e4', 'workerId': '4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d', 'workloadId': '68656172742d646973656173652d6576616c', 'requesterId': '0x3456', 'workerEncryptionKey': '', 'dataEncryptionAlgorithm': 'AES-GCM-256', 'sessionKeyIv': '80255f165b00020e04fd6ec3', 'encryptedSessionKey': '64d9a4dba28c56f9fff57079094ec8efbe4f74b94c8bdd7b8df0650fa6e54b9229895458cbbe77c143b474698d2464bffd9408977c6d3f1a64b07c6bf18aeca226fc58f3977e2566dc44bc3cd3f4ea9b10e12669583804f4146295be213c8821f075665ab8604654637f94a852043f77888872960a14da618a587a7a60e0afba223bbf7cf453c794c2a32522986c075ae2ed3eaa79dacc4081bdb9f68ec588b1cc06c0b38692596f12badd3948abc0c22dc2e188504a46884d17c8d12990758e03791491466a8dc0c65946f170a9ac48b9b3302ad806c759be607181f239284514dcf1bf0fec741c53655d5c34abafeaae28ea9060e1a2b40ad446f494541fd8', 'requesterNonce': 'TDPtWfCseLUnF5F6cxjF0EsE3AGzpBA9H6hdNlYUjWo=', 'encryptedRequestHash': 'D0888B87495C704178EA28D72B8BAEC139D94BC541471B7EDA02E35DED117A0FA2592868D942B82F3FD67528692BDA81', 'requesterSignature': 'MEUCIQDYdMISYvcuV/bxiD0Xp4Tl22COHWt+3T7fdkHbvhQeNgIgTqmSpskaDWL8Bns1lNVA1u8w4Gtn4I1h9CtUiKjPuFE=', 'verifyingKey': '-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEF044Has9uOel0/QjKL7XClraiGjAW39O\nUhfsR+iqVBrMOwH+fyE3nj3vEP3QCPQrNcSf/CDr+/GwheZbCxcOJA==\n-----END PUBLIC KEY-----\n', 'inData': [{'index': 2, 'dataHash': '', 'data': 'qNWSgBivqYJpKluXPYf+zfrkdvgmUVmgFdH/6MnrlIkpcm+KuaT1+VOWZeXsEWP1EGh8RccLSAbFBvA/iT99krbEITDOWZyROusQ7D2WTDCoPtWrmVE=', 'encrypDataEncryptionKey': '', 'iv': ''}, {'index': 1, 'dataHash': '', 'data': 'qNWSgBivqYJpKluXPYf+zfrkdvgmUVmgFdH/6MnrlIgucm+aqLXk+lKWZeXvEWP1EGh8RccLSAbQF+E/iT99kqfXMjcFfVmZY2wPwCGpRgFPWBB5', 'encrypDataEncryptionKey': '', 'iv': ''}]}} 
+
+2019-10-21 07:37:43 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkOrderSubmit", "id": 3, "params": {"responseTimeoutMSecs": 6000, "payloadFormat": "JSON-RPC", "resultUri": "resulturi", "notifyUri": "notifyuri", "workOrderId": "0x1e5ed1fed55424e4", "workerId": "4d465977454159484b6f5a497a6a3043415159464b34454541416f445167414546426578504662515561624d52636b74796775666c4a444971797261635a526d6a76387a323874596a5665635a485735724c38557963644b54676d714f4a62376a363035413639644c4f6c4d6a5966635275527835513d3d", "workloadId": "68656172742d646973656173652d6576616c", "requesterId": "0x3456", "workerEncryptionKey": "", "dataEncryptionAlgorithm": "AES-GCM-256", "sessionKeyIv": "80255f165b00020e04fd6ec3", "encryptedSessionKey": "64d9a4dba28c56f9fff57079094ec8efbe4f74b94c8bdd7b8df0650fa6e54b9229895458cbbe77c143b474698d2464bffd9408977c6d3f1a64b07c6bf18aeca226fc58f3977e2566dc44bc3cd3f4ea9b10e12669583804f4146295be213c8821f075665ab8604654637f94a852043f77888872960a14da618a587a7a60e0afba223bbf7cf453c794c2a32522986c075ae2ed3eaa79dacc4081bdb9f68ec588b1cc06c0b38692596f12badd3948abc0c22dc2e188504a46884d17c8d12990758e03791491466a8dc0c65946f170a9ac48b9b3302ad806c759be607181f239284514dcf1bf0fec741c53655d5c34abafeaae28ea9060e1a2b40ad446f494541fd8", "requesterNonce": "TDPtWfCseLUnF5F6cxjF0EsE3AGzpBA9H6hdNlYUjWo=", "encryptedRequestHash": "D0888B87495C704178EA28D72B8BAEC139D94BC541471B7EDA02E35DED117A0FA2592868D942B82F3FD67528692BDA81", "requesterSignature": "MEUCIQDYdMISYvcuV/bxiD0Xp4Tl22COHWt+3T7fdkHbvhQeNgIgTqmSpskaDWL8Bns1lNVA1u8w4Gtn4I1h9CtUiKjPuFE=", "verifyingKey": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEF044Has9uOel0/QjKL7XClraiGjAW39O\nUhfsR+iqVBrMOwH+fyE3nj3vEP3QCPQrNcSf/CDr+/GwheZbCxcOJA==\n-----END PUBLIC KEY-----\n", "inData": [{"index": 2, "dataHash": "", "data": "qNWSgBivqYJpKluXPYf+zfrkdvgmUVmgFdH/6MnrlIkpcm+KuaT1+VOWZeXsEWP1EGh8RccLSAbFBvA/iT99krbEITDOWZyROusQ7D2WTDCoPtWrmVE=", "encrypDataEncryptionKey": "", "iv": ""}, {"index": 1, "dataHash": "", "data": "qNWSgBivqYJpKluXPYf+zfrkdvgmUVmgFdH/6MnrlIgucm+aqLXk+lKWZeXvEWP1EGh8RccLSAbQF+E/iT99kqfXMjcFfVmZY2wPwCGpRgFPWBB5", "encrypDataEncryptionKey": "", "iv": ""}]}}
+
+2019-10-21 07:37:43 INFO **********Received Response*********
+{'error': {'code': 5, 'message': 'Work order is computing. Please query for WorkOrderGetResult                  to view the result'}, 'id': 3, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:43 INFO check_result_key in expected result: error 
+ 
+2019-10-21 07:37:43 INFO SUCCESS: Response contains expected error code
+                               5. 
+
+2019-10-21 07:37:43 INFO ------ Testing WorkOrderGetResult ------
+2019-10-21 07:37:43 INFO ----- Constructing WorkOrderGetResult -----
+2019-10-21 07:37:43 INFO ----- Validating WorkOrderGetResult Response ------
+2019-10-21 07:37:43 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkOrderGetResult", "id": 4, "params": {"workOrderId": "0x1e5ed1fed55424e4"}}
+
+2019-10-21 07:37:43 INFO **********Received Response*********
+{'error': {'code': 5, 'message': 'Work order result is yet to be updated'}, 'id': 4, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:46 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkOrderGetResult", "id": 4, "params": {"workOrderId": "0x1e5ed1fed55424e4"}}
+
+2019-10-21 07:37:46 INFO **********Received Response*********
+{'error': {'code': 5, 'message': 'Work order result is yet to be updated'}, 'id': 4, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:49 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkOrderGetResult", "id": 4, "params": {"workOrderId": "0x1e5ed1fed55424e4"}}
+
+2019-10-21 07:37:49 INFO **********Received Response*********
+{'error': {'code': 2, 'message': 'Decryption of client request hash failed. Request is tampered.'}, 'id': 4, 'jsonrpc': '2.0'}
+
+2019-10-21 07:37:52 INFO WorkOrderGetResult -
+                           Response received with error code. 
+2019-10-21 07:37:52 INFO check_result_key in expected result: result 
+ 
+2019-10-21 07:37:52 INFO ERROR: Response did not contain result in expected response.
+                   
+ 
