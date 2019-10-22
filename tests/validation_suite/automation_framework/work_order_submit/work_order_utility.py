@@ -13,7 +13,7 @@ import automation_framework.utilities.utility as enclave_helper
 import automation_framework.utilities.file_utils as futils
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
-from automation_framework.work_order_submit.work_order_submit import WorkOrderSubmit
+from automation_framework.work_order_submit.work_order_submit_params import WorkOrderSubmit
 import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
 
 logger = logging.getLogger(__name__)
@@ -84,7 +84,6 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
     else:
         logger.info('''ERROR: No Worker Retrieved from system.
                    Unable to proceed to process work order.''')
-
 
     if err_cd == 0:
         input_json_str = {}

@@ -13,33 +13,34 @@ import automation_framework.utilities.utility as enclave_helper
 import automation_framework.utilities.file_utils as futils
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
+from automation_framework.work_order_get_result.work_order_get_result_params import WorkOrderGetResult
 
 logger = logging.getLogger(__name__)
 
-def create_work_order_get_result(work_order_id, request_id):
-    """ Function to create work order get result request. """
-
-    logger.info("----- Constructing WorkOrderGetResult -----")
-    # create work order get result request
-    input_workorder_getresult = '''{"jsonrpc": "2.0",
-                                "method": "WorkOrderGetResult","id": 11,
-                                "params": {"workOrderId": ""}}'''
-
-    input_workorder_getresult = {
-            "jsonrpc": "2.0",
-            "method": "WorkOrderGetResult",
-            "id": 4
-    }
-
-    input_workorder_getresult["params"] = {
-            "workOrderId": work_order_id
-    }
-    # input_json_temp = json.loads(input_workorder_getresult)
-    # input_json_temp["params"]["workOrderId"] = work_order_id
-    # input_json_temp["id"] = request_id
-    # input_json_str1 = json.dumps(input_json_temp)
-
-    return input_workorder_getresult
+# def create_work_order_get_result(work_order_id, request_id):
+#     """ Function to create work order get result request. """
+#
+#     logger.info("----- Constructing WorkOrderGetResult -----")
+#     # create work order get result request
+#     input_workorder_getresult = '''{"jsonrpc": "2.0",
+#                                 "method": "WorkOrderGetResult","id": 11,
+#                                 "params": {"workOrderId": ""}}'''
+#
+#     input_workorder_getresult = {
+#             "jsonrpc": "2.0",
+#             "method": "WorkOrderGetResult",
+#             "id": 4
+#     }
+#
+#     input_workorder_getresult["params"] = {
+#             "workOrderId": work_order_id
+#     }
+#     # input_json_temp = json.loads(input_workorder_getresult)
+#     # input_json_temp["params"]["workOrderId"] = work_order_id
+#     # input_json_temp["id"] = request_id
+#     # input_json_str1 = json.dumps(input_json_temp)
+#
+#     return input_workorder_getresult
 
 def process_work_order_get_result(uri_client, input_json_str, tamper_get_result,
                                  work_order_id, request_id, check_get_result):
@@ -47,7 +48,14 @@ def process_work_order_get_result(uri_client, input_json_str, tamper_get_result,
 
     logger.info("------ Testing WorkOrderGetResult ------")
     # process work order get result and retrieve response
-    input_json_str = create_work_order_get_result(work_order_id, request_id)
+    logger.info("----- Constructing WorkOrderGetResult -----")
+
+    get_result_obj = WorkOrderGetResult()
+    get_result_obj.set_work_order_id(work_order_id)
+    get_result_obj.set_request_id(request_id)
+
+    input_get_result = json.loads(get_result_obj.to_string())
+    # input_json_str = create_work_order_get_result(work_order_id, request_id)
     logger.info("----- Validating WorkOrderGetResult Response ------")
     response = {}
     output_json_file_name = 'work_order_get_result'
@@ -70,7 +78,7 @@ def process_work_order_get_result(uri_client, input_json_str, tamper_get_result,
             break
 
         # submit work order get result request and retrieve response
-        response = process_request(uri_client, input_json_str,
+        response = process_request(uri_client, input_get_result,
                    output_json_file_name)
         time.sleep (3)
 

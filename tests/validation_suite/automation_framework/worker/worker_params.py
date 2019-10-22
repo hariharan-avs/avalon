@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Worker.py -- functions to perform worker related functions based on Spec 1.0 compatibility  
+Worker.py -- functions to perform worker related functions based on Spec 1.0 compatibility
 
 """
 
@@ -45,9 +45,6 @@ class WorkerDetails():
         self.key_encryption_algorithm = tcs_worker['KeyEncryptionAlgorithm']
         self.data_encryption_algorithm = tcs_worker['DataEncryptionAlgorithm']
         self.work_order_payload_formats = []
-
-
-
 
 class SGXWorkerDetails(WorkerDetails):
     """

@@ -14,6 +14,8 @@ import utility.logger as plogger
 import crypto.crypto as crypto
 import automation_framework.utilities.signature as signature
 import automation_framework.worker.worker_params as worker
+from automation_framework.worker_lookup.worker_lookup_params import WorkerLookUp
+from automation_framework.worker_retrieve.worker_retrieve_params import WorkerRetrieve
 import automation_framework.utilities.utility as enclave_helper
 import automation_framework.utilities.file_utils as futils
 from automation_framework.utilities.workflow import process_request
@@ -102,22 +104,26 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
     output_json_file_name = 'worker_lookup'
     # input_worker_look_up = '''{"jsonrpc": "2.0", "method": "WorkerLookUp",
     #                         "id": 1, "params": {"workerType": 1}}'''
-    input_worker_look_up = {
-            "jsonrpc": "2.0",
-            "method": "WorkerLookUp",
-            "id": 1
-    }
+    # input_worker_look_up = {
+    #         "jsonrpc": "2.0",
+    #         "method": "WorkerLookUp",
+    #         "id": 1
+    # }
+    #
+    # input_worker_look_up["params"] = {
+    #         "workerType": 1
+    # }
 
-    input_worker_look_up["params"] = {
-            "workerType": 1
-    }
+    lookup_obj = WorkerLookUp()
+    lookup_obj.set_worker_type(1)
+    input_worker_look_up = json.loads(lookup_obj.to_string())
 
-    input_json_str = input_worker_look_up
+    # input_json_str = input_worker_look_up
     logger.info("------------------Testing WorkerLookUp------------------")
 
     # submit worker lookup request and retrieve response
-    logger.info("********Received Request*******\n%s\n", input_json_str)
-    response = process_request(uri_client, input_json_str,
+    logger.info("********Received Request*******\n%s\n", input_worker_look_up)
+    response = process_request(uri_client, input_worker_look_up,
                                output_json_file_name)
     logger.info("**********Received Response*********\n%s\n", response)
 
@@ -134,15 +140,17 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
         #                         , "id": 2, "params": {"workerId": ""}}'''
         # input_json_str1 = json.loads(input_worker_retrieve)
 
-        input_worker_retrieve = {
-                "jsonrpc": "2.0",
-                "method": "WorkerRetrieve",
-                "id": 2
-        }
+        # input_worker_retrieve = {
+        #         "jsonrpc": "2.0",
+        #         "method": "WorkerRetrieve",
+        #         "id": 2
+        # }
+        #
+        # input_worker_retrieve["params"] = {
+        #         "workerId": ""
+        # }
 
-        input_worker_retrieve["params"] = {
-                "workerId": ""
-        }
+        retrieve_obj = WorkerRetrieve()
 
         logger.info("-----Testing WorkerRetrieve-----")
         # Retrieving the worker id from the "WorkerLookUp" response and
@@ -151,8 +159,11 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
                 #input_json_final = input_json_str1
                 #input_json_final["params"]["workerId"] = (enclave_helper.
                 #strip_begin_end_key(response["result"]["ids"][0]))
-                input_worker_retrieve["params"]["workerId"] = (enclave_helper.
+                retrieve_obj.set_worker_id(enclave_helper.
                 strip_begin_end_key(response["result"]["ids"][0]))
+                input_worker_retrieve = json.loads(retrieve_obj.to_string())
+                # input_worker_retrieve["params"]["workerId"] = (enclave_helper.
+                # strip_begin_end_key(response["result"]["ids"][0]))
                 #input_json_str1 = json.dumps(input_json_final)
 
                 logger.info('''*****Worker details Updated with Worker ID*****
