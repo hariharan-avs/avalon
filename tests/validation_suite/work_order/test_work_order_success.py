@@ -2,6 +2,7 @@ import pytest
 import logging
 import json
 from automation_framework.utilities.validate_request import validate_request
+import automation_framework.work_order_submit.work_order_utility as wo_utility
 
 logger = logging.getLogger(__name__)
 
@@ -42,19 +43,19 @@ def test_work_order_success(setup_config):
     session_iv = response_tup[5]
     encrypted_session_key = response_tup[6]
 
-    # if err_cd == 0:
-    #     err_cd = work_order_utility.verify_work_order_signature(response,
-    #              sig_obj, worker_obj)
-    #
-    # if err_cd == 0:
-    #     (err_cd, decrypted_data) = (work_order_utility.
-    #     decrypt_work_order_response(response, session_key, session_iv))
-    #
-    # if err_cd == 0:
-    #     logger.info('''Test Case Success : Work Order Processed successfully
-    #                with Signature Verification and Decrypted Response \n''')
-    # else:
-    #     logger.info('''Test Case Failed : Work Order Not Processed successfully
-    #                with Signature Verification and Decrypted Response''')
+    if err_cd == 0:
+        err_cd = wo_utility.verify_work_order_signature(response,
+                 sig_obj, worker_obj)
+
+    if err_cd == 0:
+        (err_cd, decrypted_data) = (wo_utility.
+        decrypt_work_order_response(response, session_key, session_iv))
+
+    if err_cd == 0:
+        logger.info('''Test Case Success : Work Order Processed successfully
+                   with Signature Verification and Decrypted Response \n''')
+    else:
+        logger.info('''Test Case Failed : Work Order Not Processed successfully
+                   with Signature Verification and Decrypted Response''')
 
     assert err_cd == 0
