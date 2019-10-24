@@ -27,6 +27,7 @@ import warnings
 import re
 import toml
 from string import Template
+from automation_framework.utilities.file_utils import find_file_in_path
 from utility.file_utils import find_file_in_path
 
 __all__ = [ "ConfigurationException", "parse_configuration_files", "parse_configuration_file" ]

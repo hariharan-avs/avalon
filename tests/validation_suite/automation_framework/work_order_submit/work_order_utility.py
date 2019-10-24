@@ -40,8 +40,9 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
         wo_obj = WorkOrderSubmit()
         wo_obj.add_json_values(input_json_str, tamper, worker_obj)
 
-        sign_output = wo_obj.generate_signature(private_key)
-
+        sign_output = wo_obj.generate_signature(private_key, tamper)
+        
+        logger.info('''sign_output : %s \n''', sign_output)
         if sign_output is None :
             err_cd = 1
         else:
@@ -49,28 +50,14 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
                 output_string = sign_output[0]
             else:
                 err_cd = 2
-        # json_rpc_request = {
-        #         "jsonrpc": "2.0",
-        #         "method": "WorkOrderSubmit",
-        #         "id": 3
-        # }
-        #
-        # if wo_obj.get_encrypted_request_hash() is not "" or None :
-        #     wo_obj.add_encrypted_request_hash()
-        #
-        # if wo_obj.get_requester_signature() is not "" or None :
-        #     wo_obj.add_requester_signature(private_key, tamper)
-        #
-        # json_rpc_request["params"] = wo_obj.get_params()
-        #
-        # in_data = wo_obj.get_in_data()
-        # out_data = wo_obj.get_out_data()
-        #
-        # if in_data is not None:
-        #     json_rpc_request["params"]["inData"] = in_data
-        #
-        # if out_data is not None:
-        #     json_rpc_request["params"]["outData"] = out_data
+                
+        #if wo_obj.get_encrypted_request_hash() is not "" or None :
+        #    final_hash = wo_obj.add_encrypted_request_hash()
+        
+        #if wo_obj.get_requester_signature() is not "" or None :
+        #    wo_obj.add_requester_signature(private_key, final_hash, tamper)
+        
+        #output_string = wo_obj.to_string()
 
         logger.info('''Json RPC signed : %s \n''', output_string)
         input_json_str1 = json.loads(output_string)

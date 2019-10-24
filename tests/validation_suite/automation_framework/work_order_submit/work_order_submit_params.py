@@ -69,10 +69,10 @@ class WorkOrderSubmit():
         if "workloadId" in input_params_list :
             if input_json_temp["params"]["workloadId"] != "" :
                 self.set_workload_id(
-                input_json_temp["params"]["workloadId"].encode("UTF-8").hex())
+                input_json_temp["params"]["workloadId"].encode('UTF-8').hex())
             else :
                 workload_id = "echo-client"
-                self.set_workload_id(workload_id.encode("UTF-8").hex())
+                self.set_workload_id(workload_id.encode('UTF-8').hex())
 
         if "requesterId" in input_params_list :
             if input_json_temp["params"]["requesterId"] != "" :
@@ -110,9 +110,9 @@ class WorkOrderSubmit():
                 self.encrypted_session_key = (
                      enclave_helper.generate_encrypted_key (self.session_key,
                                     worker_obj.encryption_key))
-                self.set_encrypted_session_key(self.encrypted_session_key)
-                # self.set_encrypted_session_key(byte_array_to_hex_str(
-                #                                self.encrypted_session_key))
+                #self.set_encrypted_session_key(self.encrypted_session_key)
+                self.set_encrypted_session_key(byte_array_to_hex_str(
+                                               self.encrypted_session_key))
         if "inData" in input_params_list :
             if input_json_temp["params"]["inData"] != "" :
                 input_json_inData = input_json_temp["params"]["inData"]
@@ -198,12 +198,12 @@ class WorkOrderSubmit():
         and set encryptedRequestHash parameter in the request.
         """
         sig_obj = signature.ClientSignature()
-        concat_string = self.get_requester_nonce() + \
-                self.get_work_order_id() + \
-                self.get_worker_id() + \
-                self.get_workload_id() + \
-                self.get_requester_id()
-        concat_bytes = bytes(concat_string, "UTF-8")
+        concat_string = self.get_requester_nonce().encode('UTF-8') + \
+                self.get_work_order_id().encode('UTF-8') + \
+                self.get_worker_id().encode('UTF-8') + \
+                self.get_workload_id().encode('UTF-8') + \
+                self.get_requester_id().encode('UTF-8')
+        concat_bytes = bytes(concat_string)
         #SHA-256 hashing is used
         hash_1 = crypto.byte_array_to_base64(
                 crypto.compute_message_hash(concat_bytes)
@@ -221,29 +221,35 @@ class WorkOrderSubmit():
         concat_hash = hash_1 + hash_2 + hash_3
         concat_hash = bytes(concat_hash, "UTF-8")
         self.final_hash = crypto.compute_message_hash(concat_hash)
-        encrypted_request_hash = enclave_helper.encrypt_data(
+        self.encrypted_request_hash = enclave_helper.encrypt_data(
                 self.final_hash, self.session_key, self.session_iv)
-        self.params_obj["encryptedRequestHash"] = crypto.byte_array_to_hex(
-                encrypted_request_hash)
+        self.params_obj["encryptedRequestHash"] = byte_array_to_hex_str(
+                self.encrypted_request_hash)
 
-    def add_requester_signature(self, private_key, tamper):
+        logger.info('''Final Hash 1: %s \n''', self.final_hash)
+        return self.final_hash
+
+    def add_requester_signature(self, private_key, final_hash, tamper):
         """
         Calculate the signature of the request as defined in TCF EEA spec 6.1.8.3
         and set the requesterSignature parameter in the request
         """
+        logger.info('''Final Hash 2: %s \n''', final_hash)
         sig_obj = signature.ClientSignature()
+
         status, sign = sig_obj.generate_signature(
-                self.final_hash,
+                final_hash,
                 private_key
         )
         if status == True:
                 self.params_obj["requesterSignature"] = sign
+                logger.info("Signing Populated")
                 # public signing key is shared to enclave manager to verify the signature.
                 # It is temporary approach to share the key with the worker.
                 self.set_verifying_key(private_key.GetPublicKey().Serialize())
                 return True
         else:
-                logger.error("Signing request failed")
+                logger.info("Signing request failed")
                 return False
 
     def set_verifying_key(self, verifying_key):
@@ -256,35 +262,38 @@ class WorkOrderSubmit():
         for inData_item in input_json_inData :
             logger.info('''Type of indataitem : %s \n''', type(inData_item))
             if type(inData_item) is dict :
-                logger.info('''Type of indataitem in loop : %s \n''', type(inData_item))
-                inData_item_keys = inData_item.keys()
-                logger.info('''Type of indataitem keys: %s \n''', inData_item_keys)
-                if "index" in inData_item_keys :
-                    index = inData_item["index"]
-                if "dataHash" in inData_item_keys :
-                    dataHash = inData_item["dataHash"]
-                if "data" in inData_item_keys :
-                    data = inData_item["data"]
-                if "encryptedDataEncryptionKey" in inData_item_keys :
-                    encryptedDataEncryptionKey = inData_item["encryptedDataEncryptionKey"]
-                if "iv" in inData_item_keys:
-                    data_iv = inData_item["iv"]
-
-                logger.info('''index : %s, dataHash : %s, data : %s,
-                            encrypted_data_encryption_key : %s, iv : %s \n''',
-                            index, dataHash, data, encryptedDataEncryptionKey, data_iv)
-                    # if (input_json_inData["index"] != "" and
-                    # input_json_inData["dataHash"] == "" and
-                    # input_json_inData["data"] != "" and
-                    # input_json_inData["encryptedDataEncryptionKey"] == "" and
-                    # input_json_inData["iv"] == "") :
+                # logger.info('''Type of indataitem in loop : %s \n''', type(inData_item))
+                # inData_item_keys = inData_item.keys()
+                # logger.info('''Type of indataitem keys: %s \n''', inData_item_keys)
+                # if "index" in inData_item_keys :
+                #     index = inData_item["index"]
+                # if "dataHash" in inData_item_keys :
+                #     dataHash = inData_item["dataHash"]
+                # if "data" in inData_item_keys :
+                #     data = inData_item["data"]
+                # if "encryptedDataEncryptionKey" in inData_item_keys :
+                #     encryptedDataEncryptionKey = inData_item["encryptedDataEncryptionKey"]
+                # if "iv" in inData_item_keys:
+                #     data_iv = inData_item["iv"]
+                #
+                # logger.info('''index : %s, dataHash : %s, data : %s,
+                #             encrypted_data_encryption_key : %s, iv : %s \n''',
+                #             index, dataHash, data, encryptedDataEncryptionKey, data_iv)
+                #     # if (input_json_inData["index"] != "" and
+                #     # input_json_inData["dataHash"] == "" and
+                #     # input_json_inData["data"] != "" and
+                #     # input_json_inData["encryptedDataEncryptionKey"] == "" and
+                #     # input_json_inData["iv"] == "") :
+                # in_data_copy = self.params_obj["inData"]
+                # new_data_list = self.__add_data_params(index,
+                #                 in_data_copy,
+                #                 data, dataHash,
+                #                 encryptedDataEncryptionKey,
+                #                 data_iv)
+                # self.params_obj["inData"] = new_data_list
                 in_data_copy = self.params_obj["inData"]
-                new_data_list = self.__add_data_params(index,
-                                in_data_copy,
-                                data, dataHash,
-                                encryptedDataEncryptionKey,
-                                data_iv)
-                self.params_obj["inData"] = new_data_list
+                in_data_copy.append(inData_item)
+                self.params_obj["inData"] = in_data_copy
             else :
                 in_data_copy = self.params_obj["inData"]
                 in_data_copy.append(inData_item)
@@ -319,33 +328,33 @@ class WorkOrderSubmit():
         self.params_obj["outData"] = new_data_list
 
     def __add_data_params(self, index, data_items, data, data_hash,
-                encrypted_data_encryption_key, data_iv):
+                            encrypted_data_encryption_key, data_iv):
         logger.info('''Second Position - index : %s, dataHash : %s, data : %s,
                     encrypted_data_encryption_key : %s, iv : %s \n''',
                     index, data_hash, data, encrypted_data_encryption_key, data_iv)
-        data_items.append({"index": index, "dataHash": data_hash,
-                           "data": data, "encryptedDataEncryptionKey":
-                           encrypted_data_encryption_key,
-                           "iv": data_iv})
-        # data_items.append({"index": index, "dataHash": data_hash,
-        #                    "data": self.__encrypt_data(data,
-        #                    encrypted_data_encryption_key,
-        #                    data_iv), "encrypDataEncryptionKey":
-        #                    encrypted_data_encryption_key,
-        #                    "iv": data_iv})
-        #data_items[index]["index"] = index
-        #data_items[index]["data"] = self.__encrypt_data(
-        #        data,
-        #        encrypted_data_encryption_key,
-        #        data_iv
-        #)
-        #if data_hash:
-        #        data_items[index]["dataHash"] = data_hash
-        #if encrypted_data_encryption_key:
-        #        data_items[index]["encryptedDataEncryptionKey"] = \
-        #                encrypted_data_encryption_key
-        #if data_iv:
-        #        data_items[index]["iv"] = data_iv
+        #data_items.append({"index": index, "dataHash": data_hash,
+        #                   "data": data, "encryptedDataEncryptionKey":
+        #                   encrypted_data_encryption_key,
+        #                   "iv": data_iv})
+        #data_items.append({"index": index, "dataHash": data_hash,
+        #                   "data": self.__encrypt_data(data,
+        #                   encrypted_data_encryption_key,
+        #                   data_iv), "encrypDataEncryptionKey":
+        #                   encrypted_data_encryption_key,
+        #                   "iv": data_iv})
+        data_items[index]["index"] = index
+        data_items[index]["data"] = self.__encrypt_data(
+                data,
+                encrypted_data_encryption_key,
+                data_iv
+        )
+        if data_hash:
+                data_items[index]["dataHash"] = data_hash
+        if encrypted_data_encryption_key:
+                data_items[index]["encryptedDataEncryptionKey"] = \
+                        encrypted_data_encryption_key
+        if data_iv:
+                data_items[index]["iv"] = data_iv
         return data_items
 
     # Use these if you want to pass json to WorkOrderJRPCImpl
@@ -402,23 +411,21 @@ class WorkOrderSubmit():
         else :
             return None
 
-    def __encrypt_data(self, data, encrypted_data_encryption_key=None,
-            data_iv=None):
+    def __encrypt_data(self, data, encrypted_data_encryption_key,
+            data_iv):
         data = data.encode("UTF-8")
-        if encrypted_data_encryption_key is None or \
-                encrypted_data_encryption_key == "" or \
-                encrypted_data_encryption_key == "null":
-                enc_data = enclave_helper.encrypt_data(
-                        data, self.session_key, self.session_iv
-                )
-                return crypto.byte_array_to_base64(enc_data)
-        elif encrypted_data_encryption_key == "-".encode('UTF-8'):
-                # Skip encryption and just encode workorder data to base64 format
-                enc_data = crypto.byte_array_to_base64(data)
-                return enc_data
+        e_key =  encrypted_data_encryption_key.encode('UTF-8')
+
+        if (not e_key ) or (e_key == "null".encode('UTF-8')):
+            enc_data = enclave_helper.encrypt_data(data, self.session_key, self.session_iv)
+            return crypto.byte_array_to_base64(enc_data)
+        elif e_key == "-".encode('UTF-8'):
+            # Skip encryption and just encode workorder data to base64 format
+            enc_data = crypto.byte_array_to_base64(data)
+            return enc_data
         else:
-                enc_data = enclave_helper.encrypt_data(data, encrypted_data_encryption_key, data_iv)
-                return crypto.byte_array_to_base64(enc_data)
+            enc_data = enclave_helper.encrypt_data(data, encrypted_data_encryption_key, data_iv)
+            return crypto.byte_array_to_base64(enc_data)
 
     def to_string(self):
         json_rpc_request = self.id_obj
@@ -435,12 +442,14 @@ class WorkOrderSubmit():
 
         return json.dumps(json_rpc_request, indent=4)
 
-    def generate_signature(self, private_key):
+    def generate_signature(self, private_key, tamper):
 
         sig_obj = signature.ClientSignature()
+        data_key = None
+        data_iv = None
         sign_result = sig_obj.generate_client_signature(self.to_string(),
                 self.worker_obj, private_key, self.session_key, self.session_iv,
-                self.get_encrypted_session_key(),
-                data_key=None, data_iv=None)
+                self.encrypted_session_key,
+                data_key, data_iv, tamper)
 
         return sign_result

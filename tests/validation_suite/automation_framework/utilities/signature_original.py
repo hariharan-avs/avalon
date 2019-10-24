@@ -28,10 +28,10 @@ import random
 import json
 import logging
 import crypto.crypto as crypto
-
-import automation_framework.utilities.utility as enclave_helper
-from automation_framework.utilities.hex_utils import is_hex, byte_array_to_hex_str
-import automation_framework.worker.worker_params as worker
+import utility.file_utils as putils
+import utility.utility as utility
+from utility.hex_utils import is_hex, byte_array_to_hex_str
+import worker.worker_details as worker
 from error_code.error_status import SignatureStatus
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class ClientSignature(object) :
         self.private_key = None
         self.public_key = None
         self.param_pool = ["requesterNonce", "workOrderId", "workerId", "requesterId","inData"]
-        self.tcs_worker = enclave_helper.read_toml_file("tcs_config.toml","WorkerConfig")
+        self.tcs_worker = utility.read_toml_file("tcs_config.toml","WorkerConfig")
 
 #---------------------------------------------------------------------------------------------
     def __payload_json_check(self, json_data):
@@ -81,7 +81,7 @@ class ClientSignature(object) :
 
 #---------------------------------------------------------------------------------------------
     def __encrypt_workorder_indata(self, input_json_params,
-            session_key, session_iv, worker_encryption_key, data_key, data_iv):
+            session_key, session_iv, worker_encryption_key, data_key=None, data_iv=None):
         """
         Function to encrypt inData of workorder
         Parameters:
@@ -109,27 +109,19 @@ class ClientSignature(object) :
             e_key = item['encryptedDataEncryptionKey'].encode('UTF-8')
 
             if (not e_key ) or (e_key == "null".encode('UTF-8')):
-                enc_data = enclave_helper.encrypt_data(data, session_key,
-                           session_iv)
-                input_json_params['inData'][i]['data'] = (
-                crypto.byte_array_to_base64(enc_data))
-                logger.debug("encrypted indata - %s",
-                       crypto.byte_array_to_base64(enc_data))
+                enc_data = utility.encrypt_data(data, session_key, session_iv)
+                input_json_params['inData'][i]['data'] = crypto.byte_array_to_base64(enc_data)
+                logger.debug("encrypted indata - %s", crypto.byte_array_to_base64(enc_data))
             elif e_key == "-".encode('UTF-8'):
-                # Skip encryption and just encode workorder data
-                # to base64 format
-                input_json_params['inData'][i]['data'] = (
-                crypto.byte_array_to_base64(data))
+                # Skip encryption and just encode workorder data to base64 format
+                input_json_params['inData'][i]['data'] = crypto.byte_array_to_base64(data)
             else:
-                enc_data = enclave_helper.encrypt_data(data, data_key, data_iv)
-                input_json_params['inData'][i]['data'] = (
-                crypto.byte_array_to_base64(enc_data))
-                logger.debug("encrypted indata - %s",
-                       crypto.byte_array_to_base64(enc_data))
+                enc_data = utility.encrypt_data(data, data_key, data_iv)
+                input_json_params['inData'][i]['data'] = crypto.byte_array_to_base64(enc_data)
+                logger.debug("encrypted indata - %s", crypto.byte_array_to_base64(enc_data))
             i = i + 1
 
-        logger.debug("Workorder InData after encryption: %s",
-                     indata_objects)
+        logger.debug("Workorder InData after encryption: %s", indata_objects)
 
 #---------------------------------------------------------------------------------------------
     def __calculate_hash_on_concatenated_string(self, input_json_params, nonce_hash):
@@ -205,7 +197,7 @@ class ClientSignature(object) :
 #---------------------------------------------------------------------------------------------
     def generate_client_signature(self, input_json_str,
             worker, private_key, session_key, session_iv, encrypted_session_key,
-            data_key, data_iv, tamper):
+            data_key=None, data_iv=None):
         """
         Function to generate client signature
         Parameters:
@@ -226,7 +218,6 @@ class ClientSignature(object) :
         Returns a tuple containing signature and status
         """
 
-        tamper_keys = tamper["params"].keys()
         if (self.__payload_json_check(input_json_str) is False):
             logger.error("ERROR: Signing the request failed")
             return None
@@ -241,57 +232,29 @@ class ClientSignature(object) :
 
         input_json = json.loads(input_json_str)
         input_json_params = input_json['params']
-
-        if "sessionKeyIv" in input_json_params.keys() :
-            input_json_params["sessionKeyIv"] = (byte_array_to_hex_str(
-                                                 session_iv))
-        else :
-            logger.error("failure 1")
-            return SignatureStatus.FAILED
+        input_json_params["sessionKeyIv"] = byte_array_to_hex_str(session_iv)
 
         logger.info("Encrypt data input params ; %s \n", input_json_params)
-
-        if encrypted_session_key is not None :
-            encrypted_session_key_str = byte_array_to_hex_str(
-                                        encrypted_session_key)
-        else :
-            logger.error("failure 2")
-            return SignatureStatus.FAILED
-
-        data_key = None
-        data_iv = None
+        encrypted_session_key_str = byte_array_to_hex_str(encrypted_session_key)
         self.__encrypt_workorder_indata(input_json_params, session_key,
-                 session_iv, worker.encryption_key, data_key, data_iv)
+                session_iv, worker.encryption_key, data_key, data_iv)
 
-        if "requesterNonce" in input_json_params.keys() :
-            if input_json_params["requesterNonce"] and \
-                is_hex(input_json_params["requesterNonce"]):
-                nonce = crypto.string_to_byte_array(input_json_params["requesterNonce"])
-            else:
-                # [NO_OF_BYTES] 16 BYTES for nonce, is the recommendation by NIST to
-                # avoid collisions by the "Birthday Paradox".
-                nonce =  crypto.random_bit_string(NO_OF_BYTES)
+        if input_json_params["requesterNonce"] and \
+            is_hex(input_json_params["requesterNonce"]):
+            nonce = crypto.string_to_byte_array(input_json_params["requesterNonce"])
+        else:
+            # [NO_OF_BYTES] 16 BYTES for nonce, is the recommendation by NIST to
+            # avoid collisions by the "Birthday Paradox".
+            nonce =  crypto.random_bit_string(NO_OF_BYTES)
 
-            request_nonce_hash = crypto.compute_message_hash(nonce)
-            nonce_hash = (crypto.byte_array_to_base64(request_nonce_hash)).encode('UTF-8')
-
-            input_json_params['requesterNonce'] = crypto.byte_array_to_base64(
-                                                  request_nonce_hash)
-        else :
-            logger.info("requesterNonce not set. Parameter not in input")
-            nonce_hash = "".encode('UTF-8')
-
-
-        hash_string_1 = self.__calculate_hash_on_concatenated_string(
-                        input_json_params, nonce_hash)
-
-        hash_string_2 = ""
-        if "inData" in input_json_params.keys() :
-            data_objects = input_json_params['inData']
-            hash_string_2 = self.calculate_datahash(data_objects)
+        request_nonce_hash = crypto.compute_message_hash(nonce)
+        nonce_hash = (crypto.byte_array_to_base64(request_nonce_hash)).encode('UTF-8')
+        hash_string_1 = self.__calculate_hash_on_concatenated_string(input_json_params, nonce_hash)
+        data_objects = input_json_params['inData']
+        hash_string_2 = self.calculate_datahash(data_objects)
 
         hash_string_3 = ""
-        if 'outData' in input_json_params.keys() :
+        if 'outData' in input_json_params:
             data_objects = input_json_params['outData']
             data_objects.sort(key = lambda x:x['index'])
             hash_string_3 = self.calculate_datahash(data_objects)
@@ -300,26 +263,20 @@ class ClientSignature(object) :
         concat_hash = bytes(concat_string, 'UTF-8')
         final_hash = crypto.compute_message_hash(concat_hash)
 
-        encrypted_request_hash = enclave_helper.encrypt_data(final_hash,
-                                 session_key, session_iv)
-        encrypted_request_hash_str = byte_array_to_hex_str(
-                                     encrypted_request_hash)
+        encrypted_request_hash = utility.encrypt_data(final_hash, session_key, session_iv)
+        encrypted_request_hash_str = byte_array_to_hex_str(encrypted_request_hash)
         logger.debug("encrypted request hash: \n%s", encrypted_request_hash_str)
 
         #Update the input json params
         input_json_params["encryptedRequestHash"] = encrypted_request_hash_str
-
-        status_gen_sign, signature = self.generate_signature(final_hash,
-                                     private_key)
-        if status_gen_sign == False :
-            logger.error("failure 4")
+        status, signature = self.generate_signature(final_hash, private_key)
+        if status == False:
             return SignatureStatus.FAILED
-
-        input_json_params["requesterSignature"] = signature
+        input_json_params['requesterSignature'] = signature
         input_json_params["encryptedSessionKey"] = encrypted_session_key_str
         # Temporary mechanism to share client's public key. Not a part of Spec
-        input_json_params["verifyingKey"] =  self.public_key
-
+        input_json_params['verifyingKey'] =  self.public_key
+        input_json_params['requesterNonce'] = crypto.byte_array_to_base64(request_nonce_hash)
         input_json['params'] = input_json_params
         input_json_str = json.dumps(input_json)
         logger.info("Request Json successfully Signed")
