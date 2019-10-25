@@ -141,15 +141,21 @@ class WorkOrderSubmit():
             if input_json_temp["params"]["encryptedRequestHash"] != "" :
                 self.params_obj["encryptedRequestHash"] = \
                 input_json_temp["params"]["encryptedRequestHash"]
+            else :
+                self.params_obj["encryptedRequestHash"] = ""
 
         if "requesterSignature" in input_params_list :
             if input_json_temp["params"]["requesterSignature"] != "" :
                 self.params_obj["requesterSignature"] = \
                 input_json_temp["params"]["requesterSignature"]
+            else :
+                self.params_obj["requesterSignature"] = ""
 
         if "verifyingKey" in input_params_list :
             if input_json_temp["params"]["verifyingKey"] != "" :
                 self.params_obj["verifyingKey"] = input_json_temp["params"]["verifyingKey"]
+            else :
+                self.params_obj["verifyingKey"] = ""
 
     def set_response_timeout_msecs(self, response_timeout_msecs):
             self.params_obj["responseTimeoutMSecs"] = \
