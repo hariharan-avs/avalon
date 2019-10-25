@@ -43,23 +43,23 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
         sign_output = wo_obj.generate_signature(private_key, tamper)
         
         logger.info('''sign_output : %s \n''', sign_output)
+        sign_cd = 0
         if sign_output is None :
-            err_cd = 1
+            sign_cd = 1
+            logger.info('''Request signing failed with 'None' response''')
         else:
             if sign_output is not SignatureStatus.FAILED :
                 output_string = sign_output[0]
             else:
-                err_cd = 2
-                
-        #if wo_obj.get_encrypted_request_hash() is not "" or None :
-        #    final_hash = wo_obj.add_encrypted_request_hash()
-        
-        #if wo_obj.get_requester_signature() is not "" or None :
-        #    wo_obj.add_requester_signature(private_key, final_hash, tamper)
-        
-        #output_string = wo_obj.to_string()
+                sign_cd = 2
+                logger.info('''Request signing failed with
+                            'SignatureStatus.FAILED' response''')
 
-        logger.info('''Json RPC signed : %s \n''', output_string)
+        if sign_cd != 0:
+            output_string = wo_obj.to_string()
+            logger.info('''Request signing failed. Submitting usigned request''')
+            
+        logger.info('''Request to be submitted : %s \n''', output_string)
         input_json_str1 = json.loads(output_string)
         response = process_request(uri_client, input_json_str1,
                                    output_json_file_name)

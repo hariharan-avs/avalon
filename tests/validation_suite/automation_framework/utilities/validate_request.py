@@ -14,15 +14,6 @@ def validate_request(request_tup) :
 
     input_json_temp = request_tup[0]
     input_type = request_tup[1]
-    tamper = request_tup[2]
-    output_json_file_name = request_tup[3]
-    worker_obj = request_tup[4]
-    sig_obj = request_tup[5]
-    uri_client = request_tup[6]
-    private_key = request_tup[7]
-    err_cd = request_tup[8]
-    check_result_1 = request_tup[9]
-    check_result_2 = request_tup[10]
 
     try :
         if input_type == "file" :
@@ -54,6 +45,16 @@ def validate_request(request_tup) :
         logger.info("Json Str 2 loaded : %s \n", input_json_str)
 
         if input_method == "WorkOrderSubmit" :
+            tamper = request_tup[2]
+            output_json_file_name = request_tup[3]
+            worker_obj = request_tup[4]
+            sig_obj = request_tup[5]
+            uri_client = request_tup[6]
+            private_key = request_tup[7]
+            err_cd = request_tup[8]
+            check_result_1 = request_tup[9]
+            check_result_2 = request_tup[10]
+
             response_tup = wo_utility.process_work_order(input_json_str, tamper,
                            output_json_file_name, worker_obj, sig_obj,
                            uri_client, private_key, err_cd, check_result_1,

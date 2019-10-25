@@ -81,7 +81,7 @@ class ClientSignature(object) :
 
 #---------------------------------------------------------------------------------------------
     def __encrypt_workorder_indata(self, input_json_params,
-            session_key, session_iv, worker_encryption_key, data_key, data_iv):
+            session_key, session_iv, worker_encryption_key):
         """
         Function to encrypt inData of workorder
         Parameters:
@@ -121,6 +121,8 @@ class ClientSignature(object) :
                 input_json_params['inData'][i]['data'] = (
                 crypto.byte_array_to_base64(data))
             else:
+                data_key = None
+                data_iv = None
                 enc_data = enclave_helper.encrypt_data(data, data_key, data_iv)
                 input_json_params['inData'][i]['data'] = (
                 crypto.byte_array_to_base64(enc_data))
@@ -226,7 +228,6 @@ class ClientSignature(object) :
         Returns a tuple containing signature and status
         """
 
-        tamper_keys = tamper["params"].keys()
         if (self.__payload_json_check(input_json_str) is False):
             logger.error("ERROR: Signing the request failed")
             return None
@@ -246,7 +247,7 @@ class ClientSignature(object) :
             input_json_params["sessionKeyIv"] = (byte_array_to_hex_str(
                                                  session_iv))
         else :
-            logger.error("failure 1")
+            logger.info("Signing Failed : No SessionKeyIv in request.")
             return SignatureStatus.FAILED
 
         logger.info("Encrypt data input params ; %s \n", input_json_params)
@@ -255,13 +256,11 @@ class ClientSignature(object) :
             encrypted_session_key_str = byte_array_to_hex_str(
                                         encrypted_session_key)
         else :
-            logger.error("failure 2")
+            logger.info("Signing Failed : encrypted_session_key is None.")
             return SignatureStatus.FAILED
 
-        data_key = None
-        data_iv = None
         self.__encrypt_workorder_indata(input_json_params, session_key,
-                 session_iv, worker.encryption_key, data_key, data_iv)
+                 session_iv, worker.encryption_key)
 
         if "requesterNonce" in input_json_params.keys() :
             if input_json_params["requesterNonce"] and \
@@ -278,9 +277,8 @@ class ClientSignature(object) :
             input_json_params['requesterNonce'] = crypto.byte_array_to_base64(
                                                   request_nonce_hash)
         else :
-            logger.info("requesterNonce not set. Parameter not in input")
-            nonce_hash = "".encode('UTF-8')
-
+            logger.info("Signing Failed : No requesterNonce in request.")
+            return SignatureStatus.FAILED
 
         hash_string_1 = self.__calculate_hash_on_concatenated_string(
                         input_json_params, nonce_hash)
@@ -312,7 +310,8 @@ class ClientSignature(object) :
         status_gen_sign, signature = self.generate_signature(final_hash,
                                      private_key)
         if status_gen_sign == False :
-            logger.error("failure 4")
+            logger.info('''Signing Failed : 
+                        Generate signature with final hash failed''')
             return SignatureStatus.FAILED
 
         input_json_params["requesterSignature"] = signature
