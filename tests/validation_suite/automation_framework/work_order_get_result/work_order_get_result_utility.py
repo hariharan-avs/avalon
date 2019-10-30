@@ -42,50 +42,61 @@ logger = logging.getLogger(__name__)
 #
 #     return input_workorder_getresult
 
-def process_work_order_get_result(uri_client, input_json_str, tamper_get_result,
-                                 work_order_id, request_id, check_get_result):
+def process_work_order_get_result(err_cd, uri_client, input_json_str,
+                                  tamper_get_result, work_order_id, request_id,
+                                  check_get_result) :
     """ Function to process work order get result response. """
 
     logger.info("------ Testing WorkOrderGetResult ------")
-    # process work order get result and retrieve response
-    logger.info("----- Constructing WorkOrderGetResult -----")
 
-    get_result_obj = WorkOrderGetResult()
-    get_result_obj.set_work_order_id(work_order_id)
-    get_result_obj.set_request_id(request_id)
+    processing_time = ""
 
-    input_get_result = json.loads(get_result_obj.to_string())
-    # input_json_str = create_work_order_get_result(work_order_id, request_id)
-    logger.info("----- Validating WorkOrderGetResult Response ------")
-    response = {}
-    output_json_file_name = 'work_order_get_result'
+    if err_cd == 0 :
+        if input_json_str == {} :
+            # process work order get result and retrieve response
+            logger.info("----- Constructing WorkOrderGetResult -----")
+            get_result_obj = WorkOrderGetResult()
+            get_result_obj.set_work_order_id(work_order_id)
+            get_result_obj.set_request_id(request_id)
 
-    response_timeout_start = time.time()
-    response_timeout_multiplier = ((6000/3600) + 6) * 3
-    while("result" not in response):
-        if "error" in response:
-            if response["error"]["code"] != 5:
-                logger.info('''WorkOrderGetResult -
-                           Response received with error code. ''')
-                err_cd = 1
+            input_get_result = json.loads(get_result_obj.to_string())
+        else :
+            input_get_result = input_json_str
+
+        # input_json_str = create_work_order_get_result(work_order_id, request_id)
+        logger.info("----- Validating WorkOrderGetResult Response ------")
+        response = {}
+        output_json_file_name = 'work_order_get_result'
+
+        response_timeout_start = time.time()
+        response_timeout_multiplier = ((6000/3600) + 6) * 3
+        while("result" not in response):
+            if "error" in response:
+                if response["error"]["code"] != 5:
+                    logger.info('''WorkOrderGetResult -
+                               Response received with error code. ''')
+                    err_cd = 1
+                    break
+
+            response_timeout_end = time.time()
+            if ((response_timeout_end - response_timeout_start) >
+                (response_timeout_multiplier)):
+                logger.info('''ERROR: WorkOrderGetResult response is not
+                           received within expected time.''')
                 break
 
-        response_timeout_end = time.time()
-        if ((response_timeout_end - response_timeout_start) >
-            (response_timeout_multiplier)):
-            logger.info('''ERROR: WorkOrderGetResult response is not
-                       received within expected time.''')
-            break
+            # submit work order get result request and retrieve response
+            response = process_request(uri_client, input_get_result,
+                       output_json_file_name)
+            time.sleep (3)
 
-        # submit work order get result request and retrieve response
-        response = process_request(uri_client, input_get_result,
-                   output_json_file_name)
-        time.sleep (3)
+        # validate work order get result code response error or result code
+        err_cd = validate_response_code(response, check_get_result)
 
-    # validate work order get result code response error or result code
-    err_cd = validate_response_code(response, check_get_result)
-    #else:
-    #    logger.info('''ERROR: WorkOrderGetResult not performed -
-    #                Expected response not received for WorkOrderSubmit.''')
+    else:
+        logger.info('''ERROR: WorkOrderGetResult not performed -
+                    Expected response not received for
+                    WorkOrderSubmit.''')
 
-    return response, err_cd
+    response_tup = (err_cd, response, processing_time)
+    return response_tup

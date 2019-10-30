@@ -3,6 +3,7 @@ import logging
 import json
 from automation_framework.utilities.validate_request import validate_request
 import automation_framework.work_order_submit.work_order_utility as wo_utility
+import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,19 @@ def test_work_order_success(setup_config):
     session_key = response_tup[4]
     session_iv = response_tup[5]
     encrypted_session_key = response_tup[6]
+
+    work_order_id = input_json_str1["params"]["workOrderId"]
+    request_id = input_json_str1["id"] + 1
+    input_json_str = {}
+    tamper_get_result = ""
+
+    response_get_result = wo_get_result.process_work_order_get_result(err_cd,
+                          uri_client, input_json_str,
+                          tamper_get_result, work_order_id, request_id,
+                          check_get_result)
+
+    err_cd = response_get_result[0]
+    response = response_get_result[1]
 
     if err_cd == 0:
         err_cd = wo_utility.verify_work_order_signature(response,

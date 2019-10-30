@@ -14,6 +14,7 @@ import automation_framework.utilities.file_utils as futils
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 from automation_framework.work_order_submit.work_order_submit_params import WorkOrderSubmit
+import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
         wo_obj.add_json_values(input_json_str, tamper, worker_obj)
 
         sign_output = wo_obj.generate_signature(private_key, tamper)
-
+        
         logger.info('''sign_output : %s \n''', sign_output)
         sign_cd = 0
         if sign_output is None :
@@ -57,7 +58,7 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
         if sign_cd != 0:
             output_string = wo_obj.to_string()
             logger.info('''Request signing failed. Submitting usigned request''')
-
+            
         logger.info('''Request to be submitted : %s \n''', output_string)
         input_json_str1 = json.loads(output_string)
         response = process_request(uri_client, input_json_str1,
@@ -71,30 +72,24 @@ def process_work_order(input_json_str, tamper, output_json_file_name,
         logger.info('''ERROR: No Worker Retrieved from system.
                    Unable to proceed to process work order.''')
 
+    if err_cd == 0:
+        input_json_str = {}
+        tamper_get_result = {}
+
+        (response,
+         err_cd) = wo_get_result.process_work_order_get_result(uri_client,
+                   json.dumps(input_json_str), tamper_get_result,
+                   work_order_id, request_id, check_get_result)
+    else:
+        logger.info('''ERROR: WorkOrderGetResult not performed -
+                    Expected response not received for
+                    WorkOrderSubmit.''')
+
     response_tup = (err_cd, input_json_str1, response, processing_time,
                     wo_obj.session_key, wo_obj.session_iv,
                     wo_obj.get_encrypted_session_key())
 
     return response_tup
-
-    # if err_cd == 0:
-    #     input_json_str = {}
-    #     tamper_get_result = {}
-    #
-    #     (response,
-    #      err_cd) = wo_get_result.process_work_order_get_result(uri_client,
-    #                json.dumps(input_json_str), tamper_get_result,
-    #                work_order_id, request_id, check_get_result)
-    # else:
-    #     logger.info('''ERROR: WorkOrderGetResult not performed -
-    #                 Expected response not received for
-    #                 WorkOrderSubmit.''')
-    #
-    # response_tup = (err_cd, input_json_str1, response, processing_time,
-    #                 wo_obj.session_key, wo_obj.session_iv,
-    #                 wo_obj.get_encrypted_session_key())
-    #
-    # return response_tup
 
 def verify_work_order_signature(response, sig_obj, worker_obj):
 
