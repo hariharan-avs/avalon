@@ -118,7 +118,8 @@ class ClientSignature(object) :
                 crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in item :
                     input_json_params['inData'][i]['dataHash'] = (
-                       hex(random.randint(1, 2**64 -1)))
+                       byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
             elif e_key == "-".encode('UTF-8'):
@@ -128,8 +129,8 @@ class ClientSignature(object) :
                 crypto.byte_array_to_base64(data))
                 if 'dataHash' in item :
                     input_json_params['inData'][i]['dataHash'] = (
-                       hex(random.randint(1, 2**64 -1)))           
-
+                       byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
             else:
                 data_key = None
                 data_iv = None
@@ -138,8 +139,8 @@ class ClientSignature(object) :
                 crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in item :
                     input_json_params['inData'][i]['dataHash'] = (
-                        hex(random.randint(1, 2**64 -1)))
-
+                       byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
             i = i + 1

@@ -168,6 +168,13 @@ def strip_begin_end_key(key) :
     return key.replace("\n", "")\
             .replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "")
 
+def strip_rsa_begin_end_key(key) :
+    """
+    Strips off newline chars, BEGIN PUBLIC KEY and END PUBLIC KEY.
+    """
+    return key.replace("\n", "")\
+            .replace("-----BEGIN RSA PUBLIC KEY-----", "").replace("-----END RSA PUBLIC KEY-----", "")
+
 #---------------------------------------------------------------------------------------------
 def generate_signing_keys():
     """
