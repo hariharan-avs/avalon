@@ -96,6 +96,14 @@ class WorkOrderSubmit():
                 input_json_temp["params"]["dataEncryptionAlgorithm"])
             else :
                 self.set_data_encryption_algorithm("AES-GCM-256")
+                
+        if "sessionKeyIv" in input_params_list :
+            if input_json_temp["params"]["sessionKeyIv"] != "" :
+                self.set_session_key_iv(
+                     input_json_temp["params"]["sessionKeyIv"])
+            else :
+                self.set_session_key_iv(byte_array_to_hex_str(
+                     self.session_iv))
 
         if "encryptedSessionKey" in input_params_list :
             if input_json_temp["params"]["encryptedSessionKey"] != "" :
@@ -110,14 +118,6 @@ class WorkOrderSubmit():
                 #self.set_encrypted_session_key(self.encrypted_session_key)
                 self.set_encrypted_session_key(byte_array_to_hex_str(
                                                self.encrypted_session_key))
-
-        if "sessionKeyIv" in input_params_list :
-            if input_json_temp["params"]["sessionKeyIv"] != "" :
-                self.set_session_key_iv(
-                     input_json_temp["params"]["sessionKeyIv"])
-            else :
-                self.set_session_key_iv(byte_array_to_hex_str(
-                     self.session_iv))
 
         if "requesterNonce" in input_params_list :
             if input_json_temp["params"]["requesterNonce"] != "" :
