@@ -1,0 +1,57 @@
+2019-11-04 07:12:10 INFO configuration for the session: {'KvStorage': {'StoragePath': 'config/Kv_Shared_tmp', 'StorageSize': '1 TB'}, 'Logging': {'LogLevel': 'INFO', 'LogFile': '__screen__'}, 'EnclaveManager': {'sleep_interval': '10'}, 'Listener': {'listener_port': 1947, 'max_work_order_count': 10}, 'EnclaveModule': {'spid': 'DEADBEEF00000000DEADBEEF00000000', 'num_of_enclaves': '1', 'ias_url': 'https://api.trustedservices.intel.com/sgx/dev', 'ias_api_key': '112233445566778899aabbccddeeff00', 'enclave_library': 'libtcf-enclave.signed.so', 'enclave_library_path': 'tc/sgx/trusted_worker_manager/enclave/build/lib/'}, 'WorkerConfig': {'ProofDataType': 'TEE-SGX-IAS', 'WorkOrderSyncUri': 'http://localhost:8080', 'WorkOrderAsyncUri': 'http://localhost:8080', 'WorkOrderPullUri': 'http://localhost:8080', 'WorkOrderNotifyUri': 'http://localhost:8080', 'ApplicationTypeId': '11aa22bb33cc44dd', 'OrganizationId': 'aabbcc1234ddeeff', 'ReceiptInvocationUri': 'http://localhost:8080', 'WorkOrderInvocationAddress': '', 'ReceiptInvocationAddress': '', 'FromAddress': '', 'HashingAlgorithm': 'SHA-256', 'SigningAlgorithm': 'SECP256K1', 'KeyEncryptionAlgorithm': 'RSA-OAEP-3072', 'DataEncryptionAlgorithm': 'AES-GCM-256', 'workOrderPayloadFormats': 'JSON-RPC'}}
+2019-11-04 07:12:10 INFO ***** INTEL TRUSTED COMPUTE FRAMEWORK (TCF) *****
+2019-11-04 07:12:10 INFO sig_obj: <automation_framework.utilities.signature.ClientSignature object at 0x7fd0f4aa84a8>
+2019-11-04 07:12:10 INFO worker_obj: <automation_framework.worker.worker_params.SGXWorkerDetails object at 0x7fd0f4aa88d0>
+2019-11-04 07:12:10 INFO ------------------Testing WorkerLookUp------------------
+2019-11-04 07:12:10 INFO ********Received Request*******
+{'jsonrpc': '2.0', 'method': 'WorkerLookUp', 'id': 1, 'params': {'workerType': 1}}
+
+2019-11-04 07:12:10 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkerLookUp", "id": 1, "params": {"workerType": 1}}
+
+2019-11-04 07:12:10 INFO **********Received Response*********
+{'result': {'totalCount': 1, 'lookupTag': '4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d', 'ids': ['4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d']}, 'id': 1, 'jsonrpc': '2.0'}
+
+2019-11-04 07:12:10 INFO **********Received Response*********
+{'result': {'totalCount': 1, 'lookupTag': '4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d', 'ids': ['4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d']}, 'id': 1, 'jsonrpc': '2.0'}
+
+2019-11-04 07:12:10 INFO -----Testing WorkerRetrieve-----
+2019-11-04 07:12:10 INFO *****Worker details Updated with Worker ID*****
+                           
+{'jsonrpc': '2.0', 'method': 'WorkerRetrieve', 'id': 2, 'params': {'workerId': '4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d'}}
+
+2019-11-04 07:12:10 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkerRetrieve", "id": 2, "params": {"workerId": "4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d"}}
+
+2019-11-04 07:12:10 INFO **********Received Response*********
+{'result': {'workerType': 1, 'organizationId': 'aabbcc1234ddeeff', 'applicationTypeId': '11aa22bb33cc44dd', 'details': {'workOrderSyncUri': 'http://localhost:8080', 'workOrderAsyncUri': 'http://localhost:8080', 'workOrderPullUri': 'http://localhost:8080', 'workOrderNotifyUri': 'http://localhost:8080', 'receiptInvocationUri': 'http://localhost:8080', 'workOrderInvocationAddress': '', 'receiptInvocationAddress': '', 'fromAddress': '', 'hashingAlgorithm': 'KECCAK-256', 'signingAlgorithm': 'SECP256K1', 'keyEncryptionAlgorithm': 'RSA-OAEP-3072', 'dataEncryptionAlgorithm': 'AES-GCM-256', 'workOrderPayloadFormats': 'JSON-RPC', 'workerTypeData': {'verificationKey': '-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAERF9Y/krN1CEramXLF3HJGbNmmY6BYLbc\n7gibF/FEjv1qpZmgzpKATs6ZK19Ij+pvZsG5eE41hXNrCoNG2drxTA==\n-----END PUBLIC KEY-----\n', 'extendedMeasurements': ['DEADBEEF00000000DEADBEEF0000000000000000000000000000000000000000', '3BC4C35B471A35B260B93C408DA1541A62FCC2AE3A91E10DD784E2E983DF41BC'], 'proofDataType': 'TEE-SGX-IAS', 'proofData': '', 'encryptionKey': '-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAyEoVRU+TIEv3PRHFpQMVqTnCYQge8RBHdvSpIli38MNwNuvUSHs0\nxtJ9MO/Es+373/hAWmxBtP28B7+h6SPZEZ/69jDGyMEzJEu8YdzUn+cvNK0txAv0\nmq5LAgCH+sueGVTuI92IdohcMTg0YNpdfv09e2TxomEhoqSL0lo88+hi+CIzdUq4\nuhMimsu1N3KQLia8ypYxeLvCpu/rRYyM7tkK1Oeksfp5fXL9whQhFFq7dWY0nx7d\nK0FGsK8gMpWROmS0InPl0I8Z1ngjaMJVxqZh+47t4a7xoOyXdDnEBijSZ9C7+YxS\nFlHh16A1y2wwLylrb9nUpE5BGPQBLZ3vfQIDAQAB\n-----END RSA PUBLIC KEY-----\n', 'encryptionKeySignature': ''}}, 'status': 1}, 'id': 2, 'jsonrpc': '2.0'}
+
+2019-11-04 07:12:10 INFO *********Updating Worker Details*********
+2019-11-04 07:12:10 INFO Hashing Algorithm : KECCAK-256
+2019-11-04 07:12:10 INFO Signing Algorithm : SECP256K1
+2019-11-04 07:12:10 INFO ------ Input file name: ./worker_tests/input/worker_update.json ------
+
+2019-11-04 07:12:10 INFO ------ Loaded file data: ./worker_tests/input/worker_update.json ------
+
+2019-11-04 07:12:10 INFO Json loaded : {'jsonrpc': '2.0', 'method': 'WorkerUpdate', 'id': 2, 'params': {'workerId': '', 'details': {'hashingAlgorithm': ''}}} 
+
+2019-11-04 07:12:10 INFO Json input_method : WorkerUpdate 
+
+2019-11-04 07:12:10 INFO Json Str 2 loaded : {'jsonrpc': '2.0', 'method': 'WorkerUpdate', 'id': 2, 'params': {'workerId': '', 'details': {'hashingAlgorithm': ''}}} 
+
+2019-11-04 07:12:10 INFO ----- Testing Worker Update -----
+2019-11-04 07:12:10 INFO ----- Constructing WorkerUpdate from input json -----
+2019-11-04 07:12:10 INFO **********Received Request*********
+{"jsonrpc": "2.0", "method": "WorkerUpdate", "id": 2, "params": {"workerId": "4d465977454159484b6f5a497a6a3043415159464b34454541416f4451674145524639592f6b724e31434572616d584c4633484a47624e6d6d593642594c626337676962462f46456a763171705a6d677a704b415473365a4b3139496a2b70765a7347356545343168584e72436f4e473264727854413d3d", "details": {"hashingAlgorithm": "KECCAK-256"}}}
+
+2019-11-04 07:12:10 INFO **********Received Response*********
+{'error': {'code': 0, 'message': 'Successfully Updated'}, 'id': 2, 'jsonrpc': '2.0'}
+
+2019-11-04 07:12:10 INFO check_result_key in expected result: error 
+ 
+2019-11-04 07:12:10 INFO SUCCESS: Response contains expected error code
+                               0. 
+
+2019-11-04 07:12:10 INFO Test Case Success : Worker Update request
+                    Processed successfully 
+
