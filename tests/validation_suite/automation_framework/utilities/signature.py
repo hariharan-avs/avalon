@@ -222,7 +222,7 @@ class ClientSignature(object) :
 #---------------------------------------------------------------------------------------------
     def generate_client_signature(self, input_json_str,
             worker, private_key, session_key, session_iv, encrypted_session_key,
-            data_key, data_iv, tamper):
+            data_key, data_iv):
         """
         Function to generate client signature
         Parameters:

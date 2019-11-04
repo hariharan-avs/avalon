@@ -17,34 +17,56 @@ from automation_framework.work_order_get_result.work_order_get_result_params imp
 
 logger = logging.getLogger(__name__)
 
-def process_work_order_get_result(input_request, input_type, tamper,
-              output_json_file_name, uri_client, err_cd, work_order_id,
-              request_id, check_get_result) :
-    """ Function to process work order get result request.
-    Uses WorkOrderGetResult class to initialize request object.
-    Triggers process_request and validate_response_code
-    Return err_cd, response."""
+# def create_work_order_get_result(work_order_id, request_id):
+#     """ Function to create work order get result request. """
+#
+#     logger.info("----- Constructing WorkOrderGetResult -----")
+#     # create work order get result request
+#     input_workorder_getresult = '''{"jsonrpc": "2.0",
+#                                 "method": "WorkOrderGetResult","id": 11,
+#                                 "params": {"workOrderId": ""}}'''
+#
+#     input_workorder_getresult = {
+#             "jsonrpc": "2.0",
+#             "method": "WorkOrderGetResult",
+#             "id": 4
+#     }
+#
+#     input_workorder_getresult["params"] = {
+#             "workOrderId": work_order_id
+#     }
+#     # input_json_temp = json.loads(input_workorder_getresult)
+#     # input_json_temp["params"]["workOrderId"] = work_order_id
+#     # input_json_temp["id"] = request_id
+#     # input_json_str1 = json.dumps(input_json_temp)
+#
+#     return input_workorder_getresult
+
+def process_work_order_get_result(err_cd, uri_client, input_json_str,
+                                  tamper_get_result, work_order_id, request_id,
+                                  check_get_result) :
+    """ Function to process work order get result response. """
 
     logger.info("------ Testing WorkOrderGetResult ------")
 
     processing_time = ""
 
     if err_cd == 0 :
-        if input_type == "object" :
+        if input_json_str == {} :
             # process work order get result and retrieve response
             logger.info("----- Constructing WorkOrderGetResult -----")
-            request_obj = WorkOrderGetResult()
-            request_obj.set_work_order_id(work_order_id)
-            request_obj.set_request_id(request_id)
-            input_get_result = json.loads(request_obj.to_string())
-        else :
-            request_obj = WorkOrderGetResult()
-            request_obj.set_work_order_id(work_order_id)
-            request_obj.set_request_id(request_id)
-            input_get_result = json.loads(request_obj.to_string())
+            get_result_obj = WorkOrderGetResult()
+            get_result_obj.set_work_order_id(work_order_id)
+            get_result_obj.set_request_id(request_id)
 
+            input_get_result = json.loads(get_result_obj.to_string())
+        else :
+            input_get_result = input_json_str
+
+        # input_json_str = create_work_order_get_result(work_order_id, request_id)
         logger.info("----- Validating WorkOrderGetResult Response ------")
         response = {}
+        output_json_file_name = 'work_order_get_result'
 
         response_timeout_start = time.time()
         response_timeout_multiplier = ((6000/3600) + 6) * 3

@@ -83,12 +83,9 @@ class WorkOrderSubmit():
         if "workerEncryptionKey" in input_params_list :
             if input_json_temp["params"]["workerEncryptionKey"] != "" :
                 self.set_worker_encryption_key(
-                input_json_temp["params"]["workerEncryptionKey"].encode(
-                    "UTF-8").hex())
+                input_json_temp["params"]["workerEncryptionKey"])
             else :
-                self.set_worker_encryption_key(
-                        enclave_helper.strip_rsa_begin_end_key(
-                        worker_obj.encryption_key).encode("UTF-8").hex())
+                self.set_worker_encryption_key(worker_obj.encryption_key)
 
         if "dataEncryptionAlgorithm" in input_params_list :
             if input_json_temp["params"]["dataEncryptionAlgorithm"] != "" :
@@ -100,8 +97,6 @@ class WorkOrderSubmit():
         if "encryptedSessionKey" in input_params_list :
             if input_json_temp["params"]["encryptedSessionKey"] != "" :
                 self.set_encrypted_session_key(
-                     input_json_temp["params"]["encryptedSessionKey"])
-                self.encrypted_session_key = (
                      input_json_temp["params"]["encryptedSessionKey"])
             else :
                 self.encrypted_session_key = (
