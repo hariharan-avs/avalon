@@ -229,7 +229,7 @@ class WorkOrderSubmit():
 
         final_string = self.hash_1 + self.hash_2 + self.hash_3
         self.final_hash = crypto.compute_message_hash(
-                          bytes(concat_string, 'UTF-8'))
+                          bytes(final_string, 'UTF-8'))
 
         self.encrypted_request_hash = byte_array_to_hex_str(
                                       enclave_helper.encrypt_data(
