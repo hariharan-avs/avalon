@@ -6,7 +6,6 @@ import random
 
 import crypto.crypto as crypto
 import automation_framework.worker.worker_params as worker
-import automation_framework.utilities.utility as enclave_helper
 
 logger = logging.getLogger(__name__)
 NO_OF_BYTES = 16
@@ -97,9 +96,8 @@ class WorkOrderSubmit():
                 input_json_temp["params"]["workerEncryptionKey"].encode(
                     "UTF-8").hex())
             else :
-                self.set_worker_encryption_key(
-                        enclave_helper.strip_rsa_begin_end_key(
-                        worker_obj.encryption_key).encode("UTF-8").hex())
+                self.set_worker_encryption_key(self.strip_rsa_begin_end_key(
+                worker_obj.encryption_key).encode("UTF-8").hex())
 
         if "dataEncryptionAlgorithm" in input_params_list :
             if input_json_temp["params"]["dataEncryptionAlgorithm"] != "" :
@@ -124,7 +122,7 @@ class WorkOrderSubmit():
                      input_json_temp["params"]["encryptedSessionKey"])
             else :
                 self.encrypted_session_key = (
-                     enclave_helper.generate_encrypted_key (self.session_key,
+                     self.generate_encrypted_key (self.session_key,
                                     worker_obj.encryption_key))
                 #self.set_encrypted_session_key(self.encrypted_session_key)
                 self.set_encrypted_session_key(self.byte_array_to_hex_str(
@@ -246,7 +244,7 @@ class WorkOrderSubmit():
                           bytes(final_string, 'UTF-8'))
 
         self.encrypted_request_hash = self.byte_array_to_hex_str(
-                                      enclave_helper.encrypt_data(
+                                      self.encrypt_data(
                                       self.final_hash, self.session_key,
                                       self.session_iv))
 
@@ -264,6 +262,32 @@ class WorkOrderSubmit():
         Converts tuple of bytes to hex string
         '''
         return ''.join(format(i, '02x') for i in in_byte_array)
+
+    def strip_begin_end_key(self, key) :
+        """
+        Strips off newline chars, BEGIN PUBLIC KEY and END PUBLIC KEY.
+        """
+        return key.replace("\n", "").replace(
+               "-----BEGIN PUBLIC KEY-----", "").replace(
+               "-----END PUBLIC KEY-----", "")
+
+    def strip_rsa_begin_end_key(self, key) :
+        """
+        Strips off newline chars, BEGIN PUBLIC KEY and END PUBLIC KEY.
+        """
+        return key.replace("\n", "").replace(
+               "-----BEGIN RSA PUBLIC KEY-----", "").replace(
+               "-----END RSA PUBLIC KEY-----", "")
+
+    def generate_encrypted_key(self, key, encryption_key):
+        """
+        Function to generate session key for the client
+        Parameters:
+        - encryption_key is a one-time encryption used to encrypt the passed key
+        - key that needs to be encrypted
+        """
+        pub_enc_key = crypto.PKENC_PublicKey(encryption_key)
+        return pub_enc_key.EncryptMessage(key)
 
     def set_response_timeout_msecs(self, response_timeout_msecs):
         self.params_obj["responseTimeoutMSecs"] = \
@@ -330,7 +354,7 @@ class WorkOrderSubmit():
             else :
                 e_key = "null".encode('UTF-8')
             if (not e_key ) or (e_key == "null".encode('UTF-8')):
-                enc_data = enclave_helper.encrypt_data(data, self.session_key,
+                enc_data = self.encrypt_data(data, self.session_key,
                            self.session_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
@@ -348,7 +372,7 @@ class WorkOrderSubmit():
             else:
                 data_key = None
                 data_iv = None
-                enc_data = enclave_helper.encrypt_data(data, data_key, data_iv)
+                enc_data = self.encrypt_data(data, data_key, data_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
                     dataHash_enc_data = (self.byte_array_to_hex_str(
@@ -373,6 +397,24 @@ class WorkOrderSubmit():
             out_data_copy = self.params_obj["outData"]
             new_data_list = out_data_copy.append(outData_item)
             self.params_obj["outData"] = new_data_list
+
+    def encrypt_data(self, data, encryption_key, iv):
+        """
+        Function to encrypt data based on encryption key and iv
+        Parameters:
+            - data is each item in inData or outData part of workorder request
+              as per TCF API 6.1.7 Work Order Data Formats
+            - encryption_key is the key used to encrypt the data
+            - iv is an initialization vector if required by the data encryption algorithm.
+              The default is all zeros.iv must be a unique random number for every
+              encryption operation.
+        """
+        logger.debug("encrypted_session_key: %s", encryption_key)
+        if iv is not None:
+            encrypted_data = crypto.SKENC_EncryptMessage(encryption_key, iv, data)
+        else:
+            encrypted_data = crypto.SKENC_EncryptMessage(encryption_key, 0,  data)
+        return encrypted_data
 
     def get_params(self):
         params_copy = self.params_obj.copy()
