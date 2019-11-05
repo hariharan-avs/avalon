@@ -74,7 +74,7 @@ RUN apt-get update \
 
 # Install setuptools, py-solc and web3 packages using pip because
 # these are not available in apt repository.
-RUN pip3 install --upgrade setuptools json-rpc py-solc web3
+RUN pip3 install --upgrade setuptools json-rpc py-solc web3 pytest pytest-json-report
 
 # Make Python3 default
 RUN ln -s /usr/bin/python3 /usr/bin/python
@@ -172,4 +172,3 @@ ENV WALLET_PRIVATE_KEY="B413189C95B48737AE2D9AF4CAE97EB03F4DE40599DF8E6C89DCE4C2
 ENV DISPLAY=:0
 
 WORKDIR /project/TrustedComputeFramework/tools/build
-

@@ -20,7 +20,7 @@ class WorkOrderSubmit():
         self.session_key = enclave_helper.generate_key()
         self.session_iv = enclave_helper.generate_iv()
 
-    def add_json_values(self, input_json, worker_obj):
+    def add_json_values(self, input_json, worker_obj, private_key):
 
         # input_json_temp = json.loads(input_json)
         input_json_temp = input_json
@@ -96,7 +96,7 @@ class WorkOrderSubmit():
                 input_json_temp["params"]["dataEncryptionAlgorithm"])
             else :
                 self.set_data_encryption_algorithm("AES-GCM-256")
-                
+
         if "sessionKeyIv" in input_params_list :
             if input_json_temp["params"]["sessionKeyIv"] != "" :
                 self.set_session_key_iv(
@@ -121,23 +121,19 @@ class WorkOrderSubmit():
 
         if "requesterNonce" in input_params_list :
             if input_json_temp["params"]["requesterNonce"] != "" :
-                self.set_requester_nonce(input_json_temp["params"]["requesterNonce"])
+                self.nonce = crypto.string_to_byte_array(
+                             input_json_temp["params"]["requesterNonce"])
+                self.nonce_hash = (crypto.byte_array_to_base64(
+                                  crypto.compute_message_hash(
+                                  nonce))).encode('UTF-8')
+                self.set_requester_nonce(
+                input_json_temp["params"]["requesterNonce"])
             else :
+                self.nonce = crypto.random_bit_string(NO_OF_BYTES)
+                self.nonce_hash = (crypto.byte_array_to_base64(
+                                  crypto.compute_message_hash(
+                                  nonce))).encode('UTF-8')
                 self.set_requester_nonce("")
-
-        if "encryptedRequestHash" in input_params_list :
-            if input_json_temp["params"]["encryptedRequestHash"] != "" :
-                self.params_obj["encryptedRequestHash"] = \
-                     input_json_temp["params"]["encryptedRequestHash"]
-            else :
-                self.params_obj["encryptedRequestHash"] = ""
-
-        if "requesterSignature" in input_params_list :
-            if input_json_temp["params"]["requesterSignature"] != "" :
-                self.params_obj["requesterSignature"] = \
-                     input_json_temp["params"]["requesterSignature"]
-            else :
-                self.params_obj["requesterSignature"] = ""
 
         if "inData" in input_params_list :
             if input_json_temp["params"]["inData"] != "" :
@@ -153,15 +149,101 @@ class WorkOrderSubmit():
             else :
                 self.params_obj["outData"] = ""
 
+        if "encryptedRequestHash" in input_params_list :
+            if input_json_temp["params"]["encryptedRequestHash"] != "" :
+                self.params_obj["encryptedRequestHash"] = \
+                     input_json_temp["params"]["encryptedRequestHash"]
+            else :
+                self.compute_encrypted_request_hash()
+
+        if "requesterSignature" in input_params_list :
+            if input_json_temp["params"]["requesterSignature"] != "" :
+                self.params_obj["requesterSignature"] = \
+                     input_json_temp["params"]["requesterSignature"]
+            else :
+                self.compute_requester_signature()
+
         if "verifyingKey" in input_params_list :
             if input_json_temp["params"]["verifyingKey"] != "" :
-                self.params_obj["verifyingKey"] = input_json_temp["params"]["verifyingKey"]
+                self.params_obj["verifyingKey"] = \
+                     input_json_temp["params"]["verifyingKey"]
             else :
-                self.params_obj["verifyingKey"] = ""
+                self.params_obj["verifyingKey"] = self.public_key
+
+    def compute_encrypted_request_hash(self) :
+        worker_order_id = self.get_work_order_id().encode('UTF-8')
+        worker_id = self.get_worker_id().encode('UTF-8')
+        workload_id - self.get_workload_id().encode('UTF-8')
+        requester_id = self.get_requester_id().encode('UTF-8')
+
+        concat_string = (self.nonce_hash + workorder_id + worker_id +
+                         workload_id + requester_id)
+        concat_hash =  bytes(concat_string)
+        self.hash_1 = crypto.byte_array_to_base64(
+                      crypto.compute_message_hash(concat_hash))
+
+        in_data = self.get_in_data()
+        out_data = self.get_out_data()
+
+        self.hash_2 = ""
+        if in_data is not None:
+            for in_data_item in in_data :
+                datahash = "".encode('UTF-8')
+                e_key = "".encode('UTF-8')
+                iv = "".encode('UTF-8')
+                if 'dataHash' in item:
+                    datahash = item['dataHash'].encode('UTF-8')
+                data = item['data'].encode('UTF-8')
+                if 'encryptedDataEncryptionKey' in item:
+                    e_key = item['encryptedDataEncryptionKey'].encode('UTF-8')
+                if 'iv' in item:
+                    iv = item['iv'].encode('UTF-8')
+                concat_string =  datahash + data + e_key + iv
+                concat_hash = bytes(concat_string)
+                hash = crypto.compute_message_hash(concat_hash)
+                hash_str = hash_str + crypto.byte_array_to_base64(hash)
+            self.hash_2 = hash_str
+
+        self.hash_3 = ""
+        if out_data is not None:
+            for out_data_item in out_data :
+                datahash = "".encode('UTF-8')
+                e_key = "".encode('UTF-8')
+                iv = "".encode('UTF-8')
+                if 'dataHash' in item:
+                    datahash = item['dataHash'].encode('UTF-8')
+                data = item['data'].encode('UTF-8')
+                if 'encryptedDataEncryptionKey' in item:
+                    e_key = item['encryptedDataEncryptionKey'].encode('UTF-8')
+                if 'iv' in item:
+                    iv = item['iv'].encode('UTF-8')
+                concat_string =  datahash + data + e_key + iv
+                concat_hash = bytes(concat_string)
+                hash = crypto.compute_message_hash(concat_hash)
+                hash_str = hash_str + crypto.byte_array_to_base64(hash)
+            self.hash_3 = hash_str
+
+        final_string = self.hash_1 + self.hash_2 + self.hash_3
+        self.final_hash = crypto.compute_message_hash(
+                          bytes(concat_string, 'UTF-8'))
+
+        self.encrypted_request_hash = byte_array_to_hex_str(
+                                      enclave_helper.encrypt_data(
+                                      self.final_hash, self.session_key,
+                                      self.session_iv)
+
+        self.params_obj["encryptedRequestHash"] = self.encrypted_request_hash
+
+    def compute_requester_signature(self):
+        self.public_key =  self.private_key.GetPublicKey().Serialize()
+        signature_result =  self.private_key.SignMessage(hash)
+        self.requester_signature  =  crypto.byte_array_to_base64(
+                                     signature_result)
+        self.params_obj["requesterSignature"] = self.requester_signature
 
     def set_response_timeout_msecs(self, response_timeout_msecs):
-            self.params_obj["responseTimeoutMSecs"] = \
-                    response_timeout_msecs
+        self.params_obj["responseTimeoutMSecs"] = \
+                response_timeout_msecs
 
     def set_payload_format(self, payload_format):
         self.params_obj["payloadFormat"] = payload_format
@@ -213,9 +295,49 @@ class WorkOrderSubmit():
         if not "inData" in self.params_obj:
             self.params_obj["inData"] = []
 
+        input_json_inData.sort(key=lambda x: x['index'])
         for inData_item in input_json_inData :
             in_data_copy = self.params_obj["inData"]
-            in_data_copy.append(inData_item)
+
+            index = inData_item['index']
+            data = inData_item['data'].encode('UTF-8')
+            if 'encryptedDataEncryptionKey' in item :
+                e_key = inData_item['encryptedDataEncryptionKey'].encode('UTF-8')
+            else :
+                e_key = "null".encode('UTF-8')
+            if (not e_key ) or (e_key == "null".encode('UTF-8')):
+                enc_data = enclave_helper.encrypt_data(data, self.session_key,
+                           self.session_iv)
+                base64_enc_data = (crypto.byte_array_to_base64(enc_data))
+                if 'dataHash' in inData_item :
+                    dataHash_enc_data = (byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
+                logger.debug("encrypted indata - %s",
+                       crypto.byte_array_to_base64(enc_data))
+            elif e_key == "-".encode('UTF-8'):
+                # Skip encryption and just encode workorder data
+                # to base64 format
+                base64_enc_data = (crypto.byte_array_to_base64(data))
+                if 'dataHash' in inData_item :
+                    dataHash_enc_data = (byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
+            else:
+                data_key = None
+                data_iv = None
+                enc_data = enclave_helper.encrypt_data(data, data_key, data_iv)
+                base64_enc_data = (crypto.byte_array_to_base64(enc_data))
+                if 'dataHash' in inData_item :
+                    dataHash_enc_data = (byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
+                logger.debug("encrypted indata - %s",
+                       crypto.byte_array_to_base64(enc_data))
+                enc_indata_item = {'index': index,
+                                   'dataHash': dataHash_enc_data,
+                                   'data': base64_enc_data,
+                                   'encryptedDataEncryptionKey' : \
+                                   inData_item['encryptedDataEncryptionKey'],
+                                   'iv' : inData_item['iv']}
+            in_data_copy.append(enc_indata_item)
             self.params_obj["inData"] = in_data_copy
 
     def add_out_data(self, input_json_outData):
