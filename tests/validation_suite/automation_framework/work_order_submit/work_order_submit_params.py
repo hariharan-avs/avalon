@@ -171,8 +171,8 @@ class WorkOrderSubmit():
             if input_json_temp["params"]["verifyingKey"] != "" :
                 self.params_obj["verifyingKey"] = \
                      input_json_temp["params"]["verifyingKey"]
-            else :
-                self.params_obj["verifyingKey"] = self.public_key
+        else :
+            self.params_obj["verifyingKey"] = self.public_key
 
     def compute_encrypted_request_hash(self) :
         worker_order_id = self.get_work_order_id().encode('UTF-8')
