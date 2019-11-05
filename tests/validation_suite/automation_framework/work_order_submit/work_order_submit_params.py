@@ -6,9 +6,7 @@ import random
 
 import crypto.crypto as crypto
 import automation_framework.worker.worker_params as worker
-# import automation_framework.utilities.signature as signature
 import automation_framework.utilities.utility as enclave_helper
-from automation_framework.utilities.hex_utils import is_hex, byte_array_to_hex_str
 
 logger = logging.getLogger(__name__)
 NO_OF_BYTES = 16
@@ -249,6 +247,12 @@ class WorkOrderSubmit():
                                      signature_result)
         self.params_obj["requesterSignature"] = self.requester_signature
 
+    def byte_array_to_hex_str(in_byte_array):
+        '''
+        Converts tuple of bytes to hex string
+        '''
+        return ''.join(format(i, '02x') for i in in_byte_array)
+
     def set_response_timeout_msecs(self, response_timeout_msecs):
         self.params_obj["responseTimeoutMSecs"] = \
                 response_timeout_msecs
@@ -425,15 +429,3 @@ class WorkOrderSubmit():
             json_rpc_request["params"]["outData"] = out_data
 
         return json.dumps(json_rpc_request, indent=4)
-
-    # def generate_signature(self, private_key):
-    #
-    #     sig_obj = signature.ClientSignature()
-    #     data_key = None
-    #     data_iv = None
-    #     sign_result = sig_obj.generate_client_signature(self.to_string(),
-    #             self.worker_obj, private_key, self.session_key, self.session_iv,
-    #             self.encrypted_session_key,
-    #             data_key, data_iv)
-    #
-    #     return sign_result
