@@ -57,8 +57,8 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
 
             # if sign_cd != 0:
             input_work_order = wo_obj.to_string()
-                logger.info('''Request signing failed.
-                            Submitting usigned request''')
+            logger.info('''Request signing failed.
+                        Submitting usigned request''')
 
         logger.info('''Request to be submitted : %s \n''', input_work_order)
         input_json_str1 = json.loads(input_work_order)
