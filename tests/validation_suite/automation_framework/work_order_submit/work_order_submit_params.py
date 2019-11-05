@@ -22,6 +22,7 @@ class WorkOrderSubmit():
 
     def add_json_values(self, input_json, worker_obj, private_key):
 
+        self.private_key = private_key
         # input_json_temp = json.loads(input_json)
         input_json_temp = input_json
         self.worker_obj = worker_obj
