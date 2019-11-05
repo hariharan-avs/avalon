@@ -186,6 +186,7 @@ class WorkOrderSubmit():
         out_data = self.get_out_data()
 
         self.hash_2 = ""
+        hash_str = ""
         if in_data is not None:
             for in_data_item in in_data :
                 datahash = "".encode('UTF-8')
@@ -206,6 +207,7 @@ class WorkOrderSubmit():
             self.hash_2 = hash_str
 
         self.hash_3 = ""
+        hash_str = ""
         if out_data is not None:
             for out_data_item in out_data :
                 datahash = "".encode('UTF-8')
