@@ -101,7 +101,7 @@ class WorkOrderSubmit():
                 self.set_session_key_iv(
                      input_json_temp["params"]["sessionKeyIv"])
             else :
-                self.set_session_key_iv(byte_array_to_hex_str(
+                self.set_session_key_iv(self.byte_array_to_hex_str(
                      self.session_iv))
 
         if "encryptedSessionKey" in input_params_list :
@@ -115,7 +115,7 @@ class WorkOrderSubmit():
                      enclave_helper.generate_encrypted_key (self.session_key,
                                     worker_obj.encryption_key))
                 #self.set_encrypted_session_key(self.encrypted_session_key)
-                self.set_encrypted_session_key(byte_array_to_hex_str(
+                self.set_encrypted_session_key(self.byte_array_to_hex_str(
                                                self.encrypted_session_key))
 
         if "requesterNonce" in input_params_list :
@@ -233,7 +233,7 @@ class WorkOrderSubmit():
         self.final_hash = crypto.compute_message_hash(
                           bytes(final_string, 'UTF-8'))
 
-        self.encrypted_request_hash = byte_array_to_hex_str(
+        self.encrypted_request_hash = self.byte_array_to_hex_str(
                                       enclave_helper.encrypt_data(
                                       self.final_hash, self.session_key,
                                       self.session_iv))
@@ -322,7 +322,7 @@ class WorkOrderSubmit():
                            self.session_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = (byte_array_to_hex_str(
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
                        crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
@@ -331,7 +331,7 @@ class WorkOrderSubmit():
                 # to base64 format
                 base64_enc_data = (crypto.byte_array_to_base64(data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = (byte_array_to_hex_str(
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
                        crypto.compute_message_hash(data)))
             else:
                 data_key = None
@@ -339,7 +339,7 @@ class WorkOrderSubmit():
                 enc_data = enclave_helper.encrypt_data(data, data_key, data_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = (byte_array_to_hex_str(
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
                        crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
