@@ -6,7 +6,7 @@ import random
 
 import crypto.crypto as crypto
 import automation_framework.worker.worker_params as worker
-import automation_framework.utilities.signature as signature
+# import automation_framework.utilities.signature as signature
 import automation_framework.utilities.utility as enclave_helper
 from automation_framework.utilities.hex_utils import is_hex, byte_array_to_hex_str
 
@@ -426,14 +426,14 @@ class WorkOrderSubmit():
 
         return json.dumps(json_rpc_request, indent=4)
 
-    def generate_signature(self, private_key):
-
-        sig_obj = signature.ClientSignature()
-        data_key = None
-        data_iv = None
-        sign_result = sig_obj.generate_client_signature(self.to_string(),
-                self.worker_obj, private_key, self.session_key, self.session_iv,
-                self.encrypted_session_key,
-                data_key, data_iv)
-
-        return sign_result
+    # def generate_signature(self, private_key):
+    #
+    #     sig_obj = signature.ClientSignature()
+    #     data_key = None
+    #     data_iv = None
+    #     sign_result = sig_obj.generate_client_signature(self.to_string(),
+    #             self.worker_obj, private_key, self.session_key, self.session_iv,
+    #             self.encrypted_session_key,
+    #             data_key, data_iv)
+    #
+    #     return sign_result
