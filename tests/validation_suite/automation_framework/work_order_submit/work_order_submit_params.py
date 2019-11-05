@@ -176,7 +176,7 @@ class WorkOrderSubmit():
         workload_id = self.get_workload_id().encode('UTF-8')
         requester_id = self.get_requester_id().encode('UTF-8')
 
-        concat_string = (self.nonce_hash + workorder_id + worker_id +
+        concat_string = (self.nonce_hash + worker_order_id + worker_id +
                          workload_id + requester_id)
         concat_hash =  bytes(concat_string)
         self.hash_1 = crypto.byte_array_to_base64(
