@@ -301,7 +301,7 @@ class WorkOrderSubmit():
 
             index = inData_item['index']
             data = inData_item['data'].encode('UTF-8')
-            if 'encryptedDataEncryptionKey' in item :
+            if 'encryptedDataEncryptionKey' in inData_item :
                 e_key = inData_item['encryptedDataEncryptionKey'].encode('UTF-8')
             else :
                 e_key = "null".encode('UTF-8')
