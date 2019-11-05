@@ -331,12 +331,13 @@ class WorkOrderSubmit():
                        crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
-                enc_indata_item = {'index': index,
-                                   'dataHash': dataHash_enc_data,
-                                   'data': base64_enc_data,
-                                   'encryptedDataEncryptionKey' : \
-                                   inData_item['encryptedDataEncryptionKey'],
-                                   'iv' : inData_item['iv']}
+                       
+            enc_indata_item = {'index': index,
+                               'dataHash': dataHash_enc_data,
+                               'data': base64_enc_data,
+                               'encryptedDataEncryptionKey' : \
+                               inData_item['encryptedDataEncryptionKey'],
+                               'iv' : inData_item['iv']}
             in_data_copy.append(enc_indata_item)
             self.params_obj["inData"] = in_data_copy
 
