@@ -261,7 +261,10 @@ class WorkOrderSubmit():
         '''
         Converts tuple of bytes to hex string
         '''
-        return ''.join(format(i, '02x') for i in in_byte_array)
+        logger.debug("Input Byte Array: %s", in_byte_array)
+        hex_str = ''.join(format(i, '02x') for i in in_byte_array)
+        logger.debug("Output Byte Array to str: %s", hex_str)
+        return hex_str
 
     def strip_begin_end_key(self, key) :
         """
