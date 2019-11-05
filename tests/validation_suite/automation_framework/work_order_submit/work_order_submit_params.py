@@ -135,7 +135,7 @@ class WorkOrderSubmit():
                                   crypto.compute_message_hash(
                                   self.nonce))).encode('UTF-8')
                 self.set_requester_nonce(crypto.byte_array_to_base64(
-                                         self.nonce_hash)
+                                         self.nonce_hash))
 
         if "inData" in input_params_list :
             if input_json_temp["params"]["inData"] != "" :
