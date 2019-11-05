@@ -38,25 +38,25 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
         else :
             # create work order request
             wo_obj = WorkOrderSubmit()
-            wo_obj.add_json_values(input_request, worker_obj)
+            wo_obj.add_json_values(input_request, worker_obj, private_key)
 
-            sign_output = wo_obj.generate_signature(private_key)
+            #sign_output = wo_obj.generate_signature(private_key)
 
-            logger.info('''sign_output : %s \n''', sign_output)
-            sign_cd = 0
-            if sign_output is None :
-                sign_cd = 1
-                logger.info('''Request signing failed with 'None' response''')
-            else:
-                if sign_output is not SignatureStatus.FAILED :
-                    input_work_order = sign_output[0]
-                else:
-                    sign_cd = 2
-                    logger.info('''Request signing failed with
-                                'SignatureStatus.FAILED' response''')
+            # logger.info('''sign_output : %s \n''', sign_output)
+            # sign_cd = 0
+            # if sign_output is None :
+            #     sign_cd = 1
+            #     logger.info('''Request signing failed with 'None' response''')
+            # else:
+            #     if sign_output is not SignatureStatus.FAILED :
+            #         input_work_order = sign_output[0]
+            #     else:
+            #         sign_cd = 2
+            #         logger.info('''Request signing failed with
+            #                     'SignatureStatus.FAILED' response''')
 
-            if sign_cd != 0:
-                input_work_order = wo_obj.to_string()
+            # if sign_cd != 0:
+            input_work_order = wo_obj.to_string()
                 logger.info('''Request signing failed.
                             Submitting usigned request''')
 
