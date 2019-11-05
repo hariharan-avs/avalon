@@ -230,7 +230,7 @@ class WorkOrderSubmit():
         self.encrypted_request_hash = byte_array_to_hex_str(
                                       enclave_helper.encrypt_data(
                                       self.final_hash, self.session_key,
-                                      self.session_iv)
+                                      self.session_iv))
 
         self.params_obj["encryptedRequestHash"] = self.encrypted_request_hash
 
