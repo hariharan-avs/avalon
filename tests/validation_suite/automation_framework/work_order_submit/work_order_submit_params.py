@@ -173,7 +173,7 @@ class WorkOrderSubmit():
     def compute_encrypted_request_hash(self) :
         worker_order_id = self.get_work_order_id().encode('UTF-8')
         worker_id = self.get_worker_id().encode('UTF-8')
-        workload_id - self.get_workload_id().encode('UTF-8')
+        workload_id = self.get_workload_id().encode('UTF-8')
         requester_id = self.get_requester_id().encode('UTF-8')
 
         concat_string = (self.nonce_hash + workorder_id + worker_id +
@@ -331,7 +331,7 @@ class WorkOrderSubmit():
                        crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
-                       
+
             enc_indata_item = {'index': index,
                                'dataHash': dataHash_enc_data,
                                'data': base64_enc_data,
