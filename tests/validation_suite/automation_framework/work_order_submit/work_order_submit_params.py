@@ -247,7 +247,7 @@ class WorkOrderSubmit():
                                      signature_result)
         self.params_obj["requesterSignature"] = self.requester_signature
 
-    def byte_array_to_hex_str(in_byte_array):
+    def byte_array_to_hex_str(self, in_byte_array):
         '''
         Converts tuple of bytes to hex string
         '''
