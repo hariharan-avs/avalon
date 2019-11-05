@@ -241,7 +241,7 @@ class WorkOrderSubmit():
 
     def compute_requester_signature(self):
         self.public_key =  self.private_key.GetPublicKey().Serialize()
-        signature_result =  self.private_key.SignMessage(hash)
+        signature_result =  self.private_key.SignMessage(self.final_hash)
         self.requester_signature  =  crypto.byte_array_to_base64(
                                      signature_result)
         self.params_obj["requesterSignature"] = self.requester_signature
