@@ -191,13 +191,14 @@ class WorkOrderSubmit():
                 datahash = "".encode('UTF-8')
                 e_key = "".encode('UTF-8')
                 iv = "".encode('UTF-8')
-                if 'dataHash' in item:
-                    datahash = item['dataHash'].encode('UTF-8')
-                data = item['data'].encode('UTF-8')
-                if 'encryptedDataEncryptionKey' in item:
-                    e_key = item['encryptedDataEncryptionKey'].encode('UTF-8')
-                if 'iv' in item:
-                    iv = item['iv'].encode('UTF-8')
+                if 'dataHash' in in_data_item:
+                    datahash = in_data_item['dataHash'].encode('UTF-8')
+                data = in_data_item['data'].encode('UTF-8')
+                if 'encryptedDataEncryptionKey' in in_data_item:
+                    e_key = \
+                    in_data_item['encryptedDataEncryptionKey'].encode('UTF-8')
+                if 'iv' in in_data_item:
+                    iv = in_data_item['iv'].encode('UTF-8')
                 concat_string =  datahash + data + e_key + iv
                 concat_hash = bytes(concat_string)
                 hash = crypto.compute_message_hash(concat_hash)
@@ -210,13 +211,14 @@ class WorkOrderSubmit():
                 datahash = "".encode('UTF-8')
                 e_key = "".encode('UTF-8')
                 iv = "".encode('UTF-8')
-                if 'dataHash' in item:
-                    datahash = item['dataHash'].encode('UTF-8')
-                data = item['data'].encode('UTF-8')
-                if 'encryptedDataEncryptionKey' in item:
-                    e_key = item['encryptedDataEncryptionKey'].encode('UTF-8')
-                if 'iv' in item:
-                    iv = item['iv'].encode('UTF-8')
+                if 'dataHash' in out_data_item:
+                    datahash = out_data_item['dataHash'].encode('UTF-8')
+                data = out_data_item['data'].encode('UTF-8')
+                if 'encryptedDataEncryptionKey' in out_data_item:
+                    e_key = \
+                    out_data_item['encryptedDataEncryptionKey'].encode('UTF-8')
+                if 'iv' in out_data_item:
+                    iv = out_data_item['iv'].encode('UTF-8')
                 concat_string =  datahash + data + e_key + iv
                 concat_hash = bytes(concat_string)
                 hash = crypto.compute_message_hash(concat_hash)
