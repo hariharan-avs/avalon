@@ -15,8 +15,20 @@ class WorkOrderSubmit():
     def __init__(self):
         self.id_obj = {"jsonrpc": "2.0", "method": "WorkOrderSubmit", "id": 3}
         self.params_obj = {}
-        self.session_key = enclave_helper.generate_key()
-        self.session_iv = enclave_helper.generate_iv()
+        self.session_key = self.generate_key()
+        self.session_iv = self.generate_iv()
+
+    def generate_key(self):
+        """
+        Function to generate symmetric key
+        """
+        return crypto.SKENC_GenerateKey()
+
+    def generate_iv(self):
+        """
+        Function to generate random initialization vector
+        """
+        return crypto.SKENC_GenerateIV()
 
     def add_json_values(self, input_json, worker_obj, private_key):
 
