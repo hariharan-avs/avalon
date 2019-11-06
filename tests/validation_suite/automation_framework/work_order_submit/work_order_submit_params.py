@@ -17,18 +17,6 @@ class WorkOrderSubmit():
         self.session_key = self.generate_key()
         self.session_iv = self.generate_iv()
 
-    def generate_key(self):
-        """
-        Function to generate symmetric key
-        """
-        return crypto.SKENC_GenerateKey()
-
-    def generate_iv(self):
-        """
-        Function to generate random initialization vector
-        """
-        return crypto.SKENC_GenerateIV()
-
     def add_json_values(self, input_json, worker_obj, private_key):
 
         self.private_key = private_key
@@ -166,21 +154,23 @@ class WorkOrderSubmit():
                 self.params_obj["encryptedRequestHash"] = \
                      input_json_temp["params"]["encryptedRequestHash"]
             else :
-                self.compute_encrypted_request_hash()
+                self.params_obj["encryptedRequestHash"] = ""
+                # self.compute_encrypted_request_hash()
 
         if "requesterSignature" in input_params_list :
             if input_json_temp["params"]["requesterSignature"] != "" :
                 self.params_obj["requesterSignature"] = \
                      input_json_temp["params"]["requesterSignature"]
             else :
-                self.compute_requester_signature()
+                self.params_obj["requesterSignature"] = ""
+                # self.compute_requester_signature()
 
         if "verifyingKey" in input_params_list :
             if input_json_temp["params"]["verifyingKey"] != "" :
                 self.params_obj["verifyingKey"] = \
                      input_json_temp["params"]["verifyingKey"]
-        else :
-            self.params_obj["verifyingKey"] = self.public_key
+            else :
+                self.params_obj["verifyingKey"] = self.public_key
 
     def compute_encrypted_request_hash(self) :
         worker_order_id = self.get_work_order_id().encode('UTF-8')
@@ -281,6 +271,18 @@ class WorkOrderSubmit():
         return key.replace("\n", "").replace(
                "-----BEGIN RSA PUBLIC KEY-----", "").replace(
                "-----END RSA PUBLIC KEY-----", "")
+
+    def generate_key(self):
+        """
+        Function to generate symmetric key
+        """
+        return crypto.SKENC_GenerateKey()
+
+    def generate_iv(self):
+        """
+        Function to generate random initialization vector
+        """
+        return crypto.SKENC_GenerateIV()
 
     def generate_encrypted_key(self, key, encryption_key):
         """
@@ -471,6 +473,18 @@ class WorkOrderSubmit():
             return self.params_obj["requesterSignature"]
         else :
             return None
+
+    def compute_signature(self, tamper):
+
+        self.compute_encrypted_request_hash()
+        self.compute_requester_signature()
+
+        input_after_sign = json.loads(self.to_string())
+        tamper_instance = 'after_sign'
+        tampered_request = tamper_request(input_before_sign, tamper_instance,
+                                          tamper)
+
+        return json.dumps(tampered_request, indent=4)
 
     def to_string(self):
         json_rpc_request = self.id_obj

@@ -1,11 +1,11 @@
 import pytest
 import json
 
-def tamper_request(input_json_str1, tamper_instance, tamper):
+def tamper_request(input_json, tamper_instance, tamper):
     '''Function to tamper the input request at required instances.
        Valid instances used in test framework are :
-       init, add, remove.
-       init : used by WorkOrderSubmit() class primarily to force null values.
+       force, add, remove.
+       force : used by WorkOrderSubmit() class primarily to force null values.
        add : can be used to add a parameter and value not in input json,
              also can be used to replace a value for parameter in input json
        remove : deletes the parameter from input json
@@ -15,8 +15,8 @@ def tamper_request(input_json_str1, tamper_instance, tamper):
 
        A blank tamper dictionary is required for all test cases, in cases where
        tamper functionality is not required. Example : tamper{"params":{}}'''
-             
-             
+
+
     before_sign_keys = []
     after_sign_keys = []
     input_json_temp = json.loads(input_json_str1)
@@ -35,4 +35,4 @@ def tamper_request(input_json_str1, tamper_instance, tamper):
 
     input_json_str1 = json.dumps(input_json_temp)
 
-    return input_json_str1
+    return tampered_json
