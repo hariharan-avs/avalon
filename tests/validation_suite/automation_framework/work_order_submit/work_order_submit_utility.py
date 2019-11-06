@@ -15,8 +15,7 @@ from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 from automation_framework.work_order_submit.work_order_submit_params \
                                               import WorkOrderSubmit
-
-import automation_framework.utilities.signature as signature
+import automation_framework.utilities.sign_utility as sign_utility
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +87,7 @@ def verify_work_order_signature(response, worker_obj):
     verify_key = worker_obj.verification_key
 
     try:
-        sig_obj = signature.ClientSignature()
-        sig_bool = sig_obj.verify_signature(response, verify_key)
+        sig_bool = sign_utility.verify_signature(response, verify_key)
 
         logger.info("Signature return verify: %s \n", sig_bool)
         if sig_bool is SignatureStatus.PASSED :

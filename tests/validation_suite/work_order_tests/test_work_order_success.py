@@ -77,7 +77,7 @@ def test_work_order_success(setup_config):
     if err_cd == 0:
         # verify signature if work order processed as expected
         err_cd = wo_utility.verify_work_order_signature(response,
-                 sig_obj, worker_obj)
+                 worker_obj)
 
     if err_cd == 0:
         # decrypt signature if verify signature is successfull
