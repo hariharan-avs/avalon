@@ -500,4 +500,5 @@ class WorkOrderSubmit():
         if out_data is not None:
             json_rpc_request["params"]["outData"] = out_data
 
-        return json.dumps(json_rpc_request, indent=4)
+        # return json.dumps(json_rpc_request, indent=4)
+        return json_rpc_request
