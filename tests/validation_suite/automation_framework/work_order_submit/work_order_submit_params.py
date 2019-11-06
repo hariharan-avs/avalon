@@ -233,18 +233,14 @@ class WorkOrderSubmit():
             iv = "".encode('UTF-8')
             if 'dataHash' in data_item:
                 datahash = data_item['dataHash'].encode('UTF-8')
-                hash_string = datahash
             if 'data' in data_item:
                 data = data_item['data'].encode('UTF-8')
-                hash_string = hash_string + data
             if 'encryptedDataEncryptionKey' in data_item:
                 e_key = \
                 data_item['encryptedDataEncryptionKey'].encode('UTF-8')
-                hash_string = hash_string + e_key
             if 'iv' in data_item:
                 iv = data_item['iv'].encode('UTF-8')
-                hash_string = hash_string + iv
-
+            hash_string =  datahash + data + e_key + iv
             complete_bytes = bytes(hash_string)
             hash = crypto.compute_message_hash(complete_bytes)
             final_hash_str = final_hash_str + crypto.byte_array_to_base64(hash)
