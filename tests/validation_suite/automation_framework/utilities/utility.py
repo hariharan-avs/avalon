@@ -33,61 +33,61 @@ TCFHOME = os.environ.get("TCF_HOME", "../../")
 # No of bytes of encrypted session key to encrypt data
 NO_OF_BYTES = 16
 
-# class GenericServiceClient(object) :
-#
-#     def __init__(self, url) :
-#         self.ServiceURL = url
-#         self.ProxyHandler = urllib.request.ProxyHandler({})
-#
-#     def _postmsg(self, request) :
-#         """
-#         Post a request JSON string and return the response.
-#         """
-#
-#         data = request.encode('utf8')
-#         datalen = len(data)
-#
-#         url = self.ServiceURL
-#
-#         logger.debug('post request to %s with DATALEN=%d, DATA=<%s>',
-#             url, datalen, data)
-#
-#         try :
-#             request = urllib.request.Request(url, data,
-#                 {'Content-Type': 'application/json', 'Content-Length': datalen})
-#             opener = urllib.request.build_opener(self.ProxyHandler)
-#             response = opener.open(request, timeout=10)
-#
-#         except urllib.error.HTTPError as err :
-#             logger.warn('operation failed with response: %s', err.code)
-#             raise MessageException(
-#                 'operation failed with response: {0}'.format(err.code))
-#
-#         except urllib.error.URLError as err :
-#             logger.warn('operation failed: %s', err.reason)
-#             raise MessageException('operation failed: {0}'.format(err.reason))
-#
-#         except :
-#             logger.exception('no response from server')
-#             raise MessageException('no response from server')
-#
-#         content = response.read()
-#         headers = response.info()
-#         response.close()
-#
-#         encoding = headers.get('Content-Type')
-#         if encoding != 'application/json' :
-#             logger.info('server responds with message %s of type %s',
-#                 content, encoding)
-#             return None
-#
-#         # Attempt to decode the content if it is not already a string
-#         try:
-#             content = content.decode('utf-8')
-#         except AttributeError:
-#             pass
-#         value = json.loads(content)
-#         return value
+class GenericServiceClient(object) :
+
+    def __init__(self, url) :
+        self.ServiceURL = url
+        self.ProxyHandler = urllib.request.ProxyHandler({})
+
+    def _postmsg(self, request) :
+        """
+        Post a request JSON string and return the response.
+        """
+
+        data = request.encode('utf8')
+        datalen = len(data)
+
+        url = self.ServiceURL
+
+        logger.debug('post request to %s with DATALEN=%d, DATA=<%s>',
+            url, datalen, data)
+
+        try :
+            request = urllib.request.Request(url, data,
+                {'Content-Type': 'application/json', 'Content-Length': datalen})
+            opener = urllib.request.build_opener(self.ProxyHandler)
+            response = opener.open(request, timeout=10)
+
+        except urllib.error.HTTPError as err :
+            logger.warn('operation failed with response: %s', err.code)
+            raise MessageException(
+                'operation failed with response: {0}'.format(err.code))
+
+        except urllib.error.URLError as err :
+            logger.warn('operation failed: %s', err.reason)
+            raise MessageException('operation failed: {0}'.format(err.reason))
+
+        except :
+            logger.exception('no response from server')
+            raise MessageException('no response from server')
+
+        content = response.read()
+        headers = response.info()
+        response.close()
+
+        encoding = headers.get('Content-Type')
+        if encoding != 'application/json' :
+            logger.info('server responds with message %s of type %s',
+                content, encoding)
+            return None
+
+        # Attempt to decode the content if it is not already a string
+        try:
+            content = content.decode('utf-8')
+        except AttributeError:
+            pass
+        value = json.loads(content)
+        return value
 #
 # def read_toml_file(input_file, config_name = None, confpaths = [".", TCFHOME + "/" + "config"]):
 #     """
