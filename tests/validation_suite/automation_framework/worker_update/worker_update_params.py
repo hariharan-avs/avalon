@@ -56,8 +56,17 @@ class WorkerUpdate():
             logger.info("------ param : %s , value : %s------\n", param, value)
             self.set_unknown_parameter(param, value)
 
+        for key in tamper["params"]["details"].keys() :
+            detail = key
+            value = tamper["params"][key]
+            logger.info("------ param : %s , value : %s------\n", detail, value)
+            self.set_unknown_parameter_detail(param, value)
+
     def set_unknown_parameter(self, param, value):
         self.params_obj[param] = value
+
+    def set_unknown_parameter_detail(self, detail, value):
+        self.params_obj[detail] = value
 
     def set_worker_id(self, worker_id):
         self.params_obj["workerId"] = worker_id
