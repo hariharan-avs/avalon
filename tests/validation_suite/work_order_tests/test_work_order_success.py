@@ -22,7 +22,7 @@ def test_work_order_success(setup_config):
 
     # input file name
     # input_json_file = './work_order_tests/input/work_order_success.json'
-    input_json_file = './input/work_order_success.json'
+    input_json_file = 'input/work_order_success.json'
     # input type - file, string or object
     input_type = 'file'
     # output filename
