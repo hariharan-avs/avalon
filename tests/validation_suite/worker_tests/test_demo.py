@@ -24,7 +24,7 @@ def test_worker_update(setup_config):
     input_type = 'file'
     output_json_file_name = 'worker_update'
     tamper = {"params": {}}
-    request_method = ""
+    request_method = "WorkerUpdate"
     request_id = 0
 
     # expected response
