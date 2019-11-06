@@ -58,7 +58,7 @@ class WorkerUpdate():
 
         for key in tamper["params"]["details"].keys() :
             detail = key
-            value = tamper["params"][key]
+            value = tamper["params"]["details"][key]
             logger.info("------ param : %s , value : %s------\n", detail, value)
             self.set_unknown_parameter_detail(param, value)
 
