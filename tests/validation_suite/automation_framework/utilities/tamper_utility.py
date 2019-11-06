@@ -19,7 +19,7 @@ def tamper_request(input_json, tamper_instance, tamper):
 
     before_sign_keys = []
     after_sign_keys = []
-    input_json_temp = json.loads(input_json_str1)
+    input_json_temp = json.loads(input_json)
 
     if tamper_instance in tamper["params"].keys() :
         tamper_instance_keys = tamper["params"][tamper_instance].keys()
@@ -33,6 +33,6 @@ def tamper_request(input_json, tamper_instance, tamper):
                 elif action_key == "remove" :
                     del input_json_temp["params"][tamper_key]
 
-    input_json_str1 = json.dumps(input_json_temp)
+    tampered_json = json.dumps(input_json_temp)
 
     return tampered_json
