@@ -172,14 +172,32 @@ class WorkOrderSubmit():
                      input_json_temp["params"]["verifyingKey"]
 
     def compute_encrypted_request_hash(self) :
-        worker_order_id = self.get_work_order_id().encode('UTF-8')
-        worker_id = self.get_worker_id().encode('UTF-8')
-        workload_id = self.get_workload_id().encode('UTF-8')
-        requester_id = self.get_requester_id().encode('UTF-8')
+        first_string = self.nonce_hash
+        worker_order_id = self.get_work_order_id()
+        if worker_order_id is not None:
+            first_string = first_string + worker_order_id.encode('UTF-8')
+        else :
+            first_string = first_string + "".encode('UTF-8')
 
-        concat_string = (self.nonce_hash + worker_order_id + worker_id +
-                         workload_id + requester_id)
-        concat_hash =  bytes(concat_string)
+        worker_id = self.get_worker_id()
+        if worker_id is not None:
+            first_string = first_string + worker_id.encode('UTF-8')
+        else :
+            first_string = first_string + "".encode('UTF-8')
+
+        workload_id = self.get_workload_id()
+        if workload_id is not None:
+            first_string = first_string + workload_id.encode('UTF-8')
+        else :
+            first_string = first_string + "".encode('UTF-8')
+
+        requester_id = self.get_requester_id().encode('UTF-8')
+        if worker_id is not None:
+            first_string = first_string + worker_id.encode('UTF-8')
+        else :
+            first_string = first_string + "".encode('UTF-8')
+
+        concat_hash =  bytes(first_string)
         self.hash_1 = crypto.byte_array_to_base64(
                       crypto.compute_message_hash(concat_hash))
 
@@ -187,46 +205,12 @@ class WorkOrderSubmit():
         out_data = self.get_out_data()
 
         self.hash_2 = ""
-        hash_str = ""
         if in_data is not None:
-            for in_data_item in in_data :
-                datahash = "".encode('UTF-8')
-                e_key = "".encode('UTF-8')
-                iv = "".encode('UTF-8')
-                if 'dataHash' in in_data_item:
-                    datahash = in_data_item['dataHash'].encode('UTF-8')
-                data = in_data_item['data'].encode('UTF-8')
-                if 'encryptedDataEncryptionKey' in in_data_item:
-                    e_key = \
-                    in_data_item['encryptedDataEncryptionKey'].encode('UTF-8')
-                if 'iv' in in_data_item:
-                    iv = in_data_item['iv'].encode('UTF-8')
-                concat_string =  datahash + data + e_key + iv
-                concat_hash = bytes(concat_string)
-                hash = crypto.compute_message_hash(concat_hash)
-                hash_str = hash_str + crypto.byte_array_to_base64(hash)
-            self.hash_2 = hash_str
+            self.hash_2 = self.compute_hash_string(in_data)
 
         self.hash_3 = ""
-        hash_str = ""
         if out_data is not None:
-            for out_data_item in out_data :
-                datahash = "".encode('UTF-8')
-                e_key = "".encode('UTF-8')
-                iv = "".encode('UTF-8')
-                if 'dataHash' in out_data_item:
-                    datahash = out_data_item['dataHash'].encode('UTF-8')
-                data = out_data_item['data'].encode('UTF-8')
-                if 'encryptedDataEncryptionKey' in out_data_item:
-                    e_key = \
-                    out_data_item['encryptedDataEncryptionKey'].encode('UTF-8')
-                if 'iv' in out_data_item:
-                    iv = out_data_item['iv'].encode('UTF-8')
-                concat_string =  datahash + data + e_key + iv
-                concat_hash = bytes(concat_string)
-                hash = crypto.compute_message_hash(concat_hash)
-                hash_str = hash_str + crypto.byte_array_to_base64(hash)
-            self.hash_3 = hash_str
+            self.hash_3 = self.compute_hash_string(out_data)
 
         final_string = self.hash_1 + self.hash_2 + self.hash_3
         self.final_hash = crypto.compute_message_hash(
@@ -238,6 +222,33 @@ class WorkOrderSubmit():
                                       self.session_iv))
 
         self.params_obj["encryptedRequestHash"] = self.encrypted_request_hash
+
+    def compute_hash_string(self, data):
+        final_hash_str = ""
+        for data_item in data :
+            data = "".encode('UTF-8')
+            datahash = "".encode('UTF-8')
+            e_key = "".encode('UTF-8')
+            iv = "".encode('UTF-8')
+            hash_string = ""
+            if 'dataHash' in data_item:
+                datahash = data_item['dataHash'].encode('UTF-8')
+                hash_string = hash_string + datahash
+            if 'data' in data_item:
+                data = data_item['data'].encode('UTF-8')
+                hash_string = hash_string + data
+            if 'encryptedDataEncryptionKey' in data_item:
+                e_key = \
+                data_item['encryptedDataEncryptionKey'].encode('UTF-8')
+                hash_string = hash_string + e_key
+            if 'iv' in data_item:
+                iv = data_item['iv'].encode('UTF-8')
+                hash_string = hash_string + iv
+
+            complete_bytes = bytes(hash_string)
+            hash = crypto.compute_message_hash(complete_bytes)
+            final_hash_str = final_hash_str + crypto.byte_array_to_base64(hash)
+        return final_hash_str
 
     def compute_requester_signature(self):
         self.public_key =  self.private_key.GetPublicKey().Serialize()
@@ -451,19 +462,31 @@ class WorkOrderSubmit():
         return self.params_obj["requesterNonce"]
 
     def get_worker_id(self):
-        return self.params_obj["workerId"]
+        if "workerId" in self.params_obj:
+            return self.params_obj["workerId"]
+        else :
+            return None
 
     def get_workload_id(self):
-        return self.params_obj["workloadId"]
+        if "workloadId" in self.params_obj:
+            return self.params_obj["workloadId"]
+        else :
+            return None
 
     def get_requester_id(self):
-        return self.params_obj["requesterId"]
+        if "requesterId" in self.params_obj:
+            return self.params_obj["requesterId"]
+        else :
+            return None
 
     def get_session_key_iv(self):
         return self.params_obj["sessionKeyIv"]
 
     def get_work_order_id(self):
-        return self.params_obj["workOrderId"]
+        if "workOrderId" in self.params_obj:
+            return self.params_obj["workOrderId"]
+        else :
+            return None
 
     def get_encrypted_session_key(self):
         return self.params_obj["encryptedSessionKey"]
@@ -501,7 +524,6 @@ class WorkOrderSubmit():
 
         workorder_id = (input_json_params['workOrderId']).encode('UTF-8')
         worker_id = (input_json_params['workerId']).encode('UTF-8')
-        workload_id = "".encode('UTF-8')
         workload_id = (input_json_params['workloadId']).encode('UTF-8')
         requester_id = (input_json_params['requesterId']).encode('UTF-8')
 
