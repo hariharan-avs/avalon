@@ -1,5 +1,8 @@
 import pytest
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 def tamper_request(input_json, tamper_instance, tamper):
     '''Function to tamper the input request at required instances.
