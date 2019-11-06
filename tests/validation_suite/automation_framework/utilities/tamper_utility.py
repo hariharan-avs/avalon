@@ -1,7 +1,7 @@
 import pytest
 import json
 
-def tamper_request(input_json_temp, tamper_instance, tamper):
+def tamper_request(input_json, tamper_instance, tamper):
     '''Function to tamper the input request at required instances.
        Valid instances used in test framework are :
        force, add, remove.
@@ -19,7 +19,7 @@ def tamper_request(input_json_temp, tamper_instance, tamper):
 
     before_sign_keys = []
     after_sign_keys = []
-    # input_json_temp = json.loads(input_json)
+    input_json_temp = json.loads(input_json)
 
     if tamper_instance in tamper["params"].keys() :
         tamper_instance_keys = tamper["params"][tamper_instance].keys()

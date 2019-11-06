@@ -480,7 +480,7 @@ class WorkOrderSubmit():
         self.compute_encrypted_request_hash()
         self.compute_requester_signature()
 
-        input_after_sign = json.loads(self.to_string())
+        input_after_sign = self.to_string()
         tamper_instance = 'after_sign'
         tampered_request = tamper_request(input_after_sign, tamper_instance,
                                           tamper)
