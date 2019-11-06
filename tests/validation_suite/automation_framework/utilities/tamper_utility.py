@@ -21,7 +21,7 @@ def tamper_request(input_json, tamper_instance, tamper):
     after_sign_keys = []
     input_json_temp = json.loads(input_json_str1)
 
-    is tamper_instance in tamper["params"].keys() :
+    if tamper_instance in tamper["params"].keys() :
         tamper_instance_keys = tamper["params"][tamper_instance].keys()
 
         for tamper_key in tamper_instance_keys :
