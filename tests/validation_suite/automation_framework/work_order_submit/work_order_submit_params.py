@@ -482,7 +482,7 @@ class WorkOrderSubmit():
 
         input_after_sign = json.loads(self.to_string())
         tamper_instance = 'after_sign'
-        tampered_request = tamper_request(input_before_sign, tamper_instance,
+        tampered_request = tamper_request(input_after_sign, tamper_instance,
                                           tamper)
 
         return json.dumps(tampered_request, indent=4)
