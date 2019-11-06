@@ -24,7 +24,7 @@ import crypto.crypto as crypto
 
 import automation_framework.utilities.config as pconfig
 import automation_framework.utilities.file_utils as futils
-import automation_framework.utilities.hex_utils as hex_utils
+# import automation_framework.utilities.hex_utils as hex_utils
 logger = logging.getLogger(__name__)
 
 """
@@ -331,7 +331,7 @@ def verify_data_hash(msg, data_hash):
     verify_success = True
     msg_hash = compute_data_hash(msg)
     # Convert both hash hex string values to upper case
-    msg_hash_hex = hex_utils.byte_array_to_hex_str(msg_hash).upper()
+    msg_hash_hex = byte_array_to_hex_str(msg_hash).upper()
     data_hash = data_hash.upper()
     if msg_hash_hex == data_hash:
         logger.info("Computed hash of message matched with data hash")
@@ -339,7 +339,10 @@ def verify_data_hash(msg, data_hash):
         logger.error("Computed hash of message does not match with data hash")
         verify_success = False
     return verify_success
+#------------
 
+def byte_array_to_hex_str(message) :
+    res = binascii.hexlify(bytearray(message))
 #---------------------------------------------------------------------------------------------
 def human_read_to_byte(size):
     size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
