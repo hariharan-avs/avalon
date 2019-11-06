@@ -225,12 +225,12 @@ class WorkOrderSubmit():
 
     def compute_hash_string(self, data):
         final_hash_str = ""
+        hash_string = ""
         for data_item in data :
             data = "".encode('UTF-8')
             datahash = "".encode('UTF-8')
             e_key = "".encode('UTF-8')
             iv = "".encode('UTF-8')
-            hash_string = ""
             if 'dataHash' in data_item:
                 datahash = data_item['dataHash'].encode('UTF-8')
                 hash_string = hash_string + datahash
