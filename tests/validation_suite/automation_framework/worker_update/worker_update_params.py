@@ -1,7 +1,7 @@
 import json
 import logging
 import automation_framework.worker.worker_params as worker
-from automation_framework.utilities.tamper_utility import tamper_object
+# from automation_framework.utilities.tamper_utility import tamper_object
 
 logger = logging.getLogger(__name__)
 
