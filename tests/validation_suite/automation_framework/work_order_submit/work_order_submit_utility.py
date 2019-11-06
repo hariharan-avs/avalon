@@ -38,6 +38,7 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
         else :
             # create work order request
             wo_obj = WorkOrderSubmit()
+            wo_obj.set_private_key(private_key)
             wo_obj.add_json_values(input_request, worker_obj, private_key)
 
             #sign_output = wo_obj.generate_signature(private_key)
