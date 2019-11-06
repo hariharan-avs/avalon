@@ -98,8 +98,7 @@ def test_work_order_success_with_verification_key(setup_config):
     err_cd = setup_config[4]
 
     # input file name
-    input_json_file = '''./work_order_tests/input
-                         /work_order_successwith_verification_key.json'''
+    input_json_file = './work_order_tests/input/work_order_successwith_verification_key.json'
     # input type - file, string or object
     input_type = 'file'
     # output filename
