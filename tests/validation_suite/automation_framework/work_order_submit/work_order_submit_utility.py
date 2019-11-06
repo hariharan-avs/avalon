@@ -13,12 +13,18 @@ import automation_framework.utilities.utility as enclave_helper
 import automation_framework.utilities.file_utils as futils
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
-from automation_framework.work_order_submit.work_order_submit_params import WorkOrderSubmit
+from automation_framework.work_order_submit.work_order_submit_params \
+                                              import WorkOrderSubmit
+
+import automation_framework.utilities.signature as signature
 
 logger = logging.getLogger(__name__)
 
+# def process_work_order(input_request, input_type, tamper, output_json_file_name,
+#         uri_client, worker_obj, sig_obj, request_method, private_key, err_cd,
+#         check_submit):
 def process_work_order(input_request, input_type, tamper, output_json_file_name,
-        uri_client, worker_obj, sig_obj, request_method, private_key, err_cd,
+        uri_client, worker_obj, request_method, private_key, err_cd,
         check_submit):
     """ Function to process work order
         Read input request from string or object and process request.
@@ -77,11 +83,12 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
 
     return response_tup
 
-def verify_work_order_signature(response, sig_obj, worker_obj):
+def verify_work_order_signature(response, worker_obj):
 
     verify_key = worker_obj.verification_key
 
     try:
+        sig_obj = signature.ClientSignature()
         sig_bool = sig_obj.verify_signature(response, verify_key)
 
         logger.info("Signature return verify: %s \n", sig_bool)

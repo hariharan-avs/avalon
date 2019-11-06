@@ -12,7 +12,6 @@ import automation_framework.utilities.config as pconfig
 from automation_framework.utilities.utility import GenericServiceClient
 import utility.logger as plogger
 import crypto.crypto as crypto
-import automation_framework.utilities.signature as signature
 import automation_framework.worker.worker_params as worker
 from automation_framework.worker_lookup.worker_lookup_params import WorkerLookUp
 from automation_framework.worker_retrieve.worker_retrieve_params import WorkerRetrieve
@@ -65,28 +64,16 @@ def setup_config(args=None):
     logger.info("configuration for the session: %s", config)
     uri_client = GenericServiceClient(server_uri)
 
-    sig_obj, worker_obj, private_key = initialize_objects(config, remainder)
-    worker_obj, err_cd = worker_lookup_retrieve(config, worker_obj, uri_client)
-
-    return worker_obj, sig_obj, uri_client, private_key, err_cd
-
-def initialize_objects(config, args):
-    """ Function to initialize common objects for tests. """
-
-    logger.info('***** INTEL TRUSTED COMPUTE FRAMEWORK (TCF) *****')
-
     # private_key of client
     private_key = enclave_helper.generate_signing_keys()
 
-    # Initializing Signature object, Worker Object
-    sig_obj = signature.ClientSignature()
+    # Initializing worker object to pass client default worker data to testcases
     worker_obj = worker.SGXWorkerDetails()
 
-    # Log computed objects
-    logger.info("sig_obj: %s", sig_obj)
-    logger.info("worker_obj: %s", worker_obj)
+    worker_obj, err_cd = worker_lookup_retrieve(config, worker_obj, uri_client)
 
-    return sig_obj, worker_obj, private_key
+    # return worker_obj, sig_obj, uri_client, private_key, err_cd
+    return worker_obj, uri_client, private_key, err_cd
 
 def worker_lookup_retrieve(config, worker_obj, uri_client):
     """ Function for computing worker lookup and retrieve once per session. """
@@ -99,20 +86,8 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
     response = None
 
     err_cd = 0
-    #----------------------------------------------------------------------
     # create worker lookup request
     output_json_file_name = 'worker_lookup'
-    # input_worker_look_up = '''{"jsonrpc": "2.0", "method": "WorkerLookUp",
-    #                         "id": 1, "params": {"workerType": 1}}'''
-    # input_worker_look_up = {
-    #         "jsonrpc": "2.0",
-    #         "method": "WorkerLookUp",
-    #         "id": 1
-    # }
-    #
-    # input_worker_look_up["params"] = {
-    #         "workerType": 1
-    # }
 
     lookup_obj = WorkerLookUp()
     lookup_obj.set_worker_type(1)
@@ -135,20 +110,6 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
                     No Workers exist to process workorder.''')
 
     if err_cd == 0:
-        # create worker retrieve request
-        # input_worker_retrieve = '''{"jsonrpc": "2.0", "method": "WorkerRetrieve"
-        #                         , "id": 2, "params": {"workerId": ""}}'''
-        # input_json_str1 = json.loads(input_worker_retrieve)
-
-        # input_worker_retrieve = {
-        #         "jsonrpc": "2.0",
-        #         "method": "WorkerRetrieve",
-        #         "id": 2
-        # }
-        #
-        # input_worker_retrieve["params"] = {
-        #         "workerId": ""
-        # }
 
         retrieve_obj = WorkerRetrieve()
 
@@ -156,16 +117,9 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
         # Retrieving the worker id from the "WorkerLookUp" response and
         # update the worker id information for the further json requests
         if "result" in response and "ids" in response["result"].keys():
-                #input_json_final = input_json_str1
-                #input_json_final["params"]["workerId"] = (enclave_helper.
-                #strip_begin_end_key(response["result"]["ids"][0]))
                 retrieve_obj.set_worker_id(enclave_helper.
                 strip_begin_end_key(response["result"]["ids"][0]))
                 input_worker_retrieve = json.loads(retrieve_obj.to_string())
-                # input_worker_retrieve["params"]["workerId"] = (enclave_helper.
-                # strip_begin_end_key(response["result"]["ids"][0]))
-                #input_json_str1 = json.dumps(input_json_final)
-
                 logger.info('''*****Worker details Updated with Worker ID*****
                            \n%s\n''', input_worker_retrieve)
         else:

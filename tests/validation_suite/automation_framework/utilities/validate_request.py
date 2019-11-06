@@ -55,15 +55,23 @@ def validate_request(request_tup) :
 
     if input_method == "WorkOrderSubmit" :
         worker_obj = request_tup[6]
-        sig_obj = request_tup[7]
-        private_key = request_tup[8]
-        err_cd = request_tup[9]
-        check_result_1 = request_tup[10]
+        # sig_obj = request_tup[7]
+        # private_key = request_tup[8]
+        # err_cd = request_tup[9]
+        # check_result_1 = request_tup[10]
+        private_key = request_tup[7]
+        err_cd = request_tup[8]
+        check_result_1 = request_tup[9]
+
+        # response_tup = wo_utility.process_work_order(input_request, input_type,
+        #                tamper, output_json_file_name, uri_client, worker_obj,
+        #                sig_obj, input_method, private_key, err_cd,
+        #                check_result_1)
 
         response_tup = wo_utility.process_work_order(input_request, input_type,
                        tamper, output_json_file_name, uri_client, worker_obj,
-                       sig_obj, input_method, private_key, err_cd,
-                       check_result_1)
+                       input_method, private_key, err_cd, check_result_1)
+                       
     elif input_method is "WorkOrderGetResult" :
         check_get_result = request_tup[7]
 
