@@ -480,12 +480,16 @@ class WorkOrderSubmit():
         self.compute_encrypted_request_hash()
         self.compute_requester_signature()
 
+        json_rpc_request = self.id_obj
+        json_rpc_request["params"] = self.get_params()
+
         input_after_sign = self.to_string()
         tamper_instance = 'after_sign'
         tampered_request = tamper_request(input_after_sign, tamper_instance,
                                           tamper)
 
-        return json.dumps(tampered_request, indent=4)
+        # return json.dumps(tampered_request, indent=4)
+        return tampered_request
 
     def to_string(self):
         json_rpc_request = self.id_obj
@@ -500,5 +504,4 @@ class WorkOrderSubmit():
         if out_data is not None:
             json_rpc_request["params"]["outData"] = out_data
 
-        # return json.dumps(json_rpc_request, indent=4)
-        return json.dumps(json_rpc_request)
+        return json.dumps(json_rpc_request, indent=4)
