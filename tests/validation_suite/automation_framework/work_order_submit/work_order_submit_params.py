@@ -18,9 +18,6 @@ class WorkOrderSubmit():
         self.session_key = self.generate_key()
         self.session_iv = self.generate_iv()
 
-    def set_private_key(self, private_key) :
-        self.public_key =  private_key.GetPublicKey().Serialize()
-
     def add_json_values(self, input_json, worker_obj, private_key):
 
         self.private_key = private_key
@@ -158,8 +155,7 @@ class WorkOrderSubmit():
                 self.params_obj["encryptedRequestHash"] = \
                      input_json_temp["params"]["encryptedRequestHash"]
             else :
-                self.params_obj["encryptedRequestHash"] = ""
-                # self.compute_encrypted_request_hash()
+                self.compute_encrypted_request_hash()
 
         if "requesterSignature" in input_params_list :
             if input_json_temp["params"]["requesterSignature"] != "" :
@@ -173,8 +169,6 @@ class WorkOrderSubmit():
             if input_json_temp["params"]["verifyingKey"] != "" :
                 self.params_obj["verifyingKey"] = \
                      input_json_temp["params"]["verifyingKey"]
-        else :
-            self.params_obj["verifyingKey"] = self.public_key
 
     def compute_encrypted_request_hash(self) :
         worker_order_id = self.get_work_order_id().encode('UTF-8')
@@ -250,6 +244,11 @@ class WorkOrderSubmit():
         self.requester_signature  =  crypto.byte_array_to_base64(
                                      signature_result)
         self.params_obj["requesterSignature"] = self.requester_signature
+
+        verifying_key = self.get_verifying_key()
+
+        if verifying_key is not None:
+            self.params_obj["verifyingKey"] = self.public_key
 
     def byte_array_to_hex_str(self, in_byte_array):
         '''
@@ -425,6 +424,12 @@ class WorkOrderSubmit():
             encrypted_data = crypto.SKENC_EncryptMessage(encryption_key, 0,  data)
         return encrypted_data
 
+    def get_verifying_key(self):
+        if "verifyingKey" in self.params_obj:
+            return self.params_obj["verifyingKey"]
+        else :
+            return None
+
     def get_params(self):
         params_copy = self.params_obj.copy()
         if "inData" in params_copy:
@@ -480,7 +485,6 @@ class WorkOrderSubmit():
 
     def compute_signature(self, tamper):
 
-        self.compute_encrypted_request_hash()
         self.compute_requester_signature()
 
         json_rpc_request = self.id_obj
