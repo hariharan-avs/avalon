@@ -5,7 +5,7 @@
     "params": {
         "workerId": "",
         "details":{
-            "hashingAlgorithm": ""
+            "hashingAlgorithm": "KECCAK-256"
         }
     }
 }
