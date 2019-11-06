@@ -15,7 +15,6 @@ from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 from automation_framework.work_order_submit.work_order_submit_params \
                                               import WorkOrderSubmit
-import automation_framework.utilities.sign_utility as sign_utility
 
 logger = logging.getLogger(__name__)
 
@@ -44,24 +43,6 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
             # create work order request
             wo_obj = WorkOrderSubmit()
             wo_obj.add_json_values(input_request, worker_obj, private_key)
-
-            #sign_output = wo_obj.generate_signature(private_key)
-
-            # logger.info('''sign_output : %s \n''', sign_output)
-            # sign_cd = 0
-            # if sign_output is None :
-            #     sign_cd = 1
-            #     logger.info('''Request signing failed with 'None' response''')
-            # else:
-            #     if sign_output is not SignatureStatus.FAILED :
-            #         input_work_order = sign_output[0]
-            #     else:
-            #         sign_cd = 2
-            #         logger.info('''Request signing failed with
-            #                     'SignatureStatus.FAILED' response''')
-
-            # if sign_cd != 0:
-            # input_work_order = wo_obj.to_string()
             input_work_order = wo_obj.compute_signature(tamper)
             logger.info('''Compute Signature complete''')
 
