@@ -66,7 +66,7 @@ class WorkerUpdate():
         self.params_obj[param] = value
 
     def set_unknown_parameter_detail(self, detail, value):
-        self.params_obj[detail] = value
+        self.details_obj[detail] = value
 
     def set_worker_id(self, worker_id):
         self.params_obj["workerId"] = worker_id
