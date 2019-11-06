@@ -193,10 +193,15 @@ class WorkOrderSubmit():
             first_string = first_string + "".encode('UTF-8')
 
         requester_id = self.get_requester_id()
-        if worker_id is not None:
-            first_string = first_string + worker_id.encode('UTF-8')
+        if requester_id is not None:
+            first_string = first_string + requester_id.encode('UTF-8')
         else :
             first_string = first_string + "".encode('UTF-8')
+        # worker_order_id = self.get_work_order_id().encode('UTF-8')
+        # worker_id = self.get_worker_id().encode('UTF-8')
+        # workload_id = self.get_workload_id().encode('UTF-8')
+        # requester_id = self.get_requester_id().encode('UTF-8')
+        # first_string = self.nonce_hash + worker_order_id + worker_id + workload_id + requester_id
 
         concat_hash =  bytes(first_string)
         self.hash_1 = crypto.byte_array_to_base64(
