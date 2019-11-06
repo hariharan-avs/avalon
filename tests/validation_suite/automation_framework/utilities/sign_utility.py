@@ -14,7 +14,7 @@ from automation_framework.utilities.hex_utils import is_hex, byte_array_to_hex_s
 import automation_framework.worker.worker_params as worker
 from error_code.error_status import SignatureStatus
 
-def verify_signature(self, input_json, verification_key):
+def verify_signature(input_json, verification_key):
     """
     Function to verify the signature received from the enclave
     Parameters:
