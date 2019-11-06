@@ -53,6 +53,7 @@ class WorkerUpdate():
         for key in tamper["params"].keys() :
             param = key
             value = tamper["params"][key]
+            logger.info("------ param : %s , value : %s------\n", param, value)
             self.set_unknown_parameter(param, value)
 
     def set_unknown_parameter(self, param, value):
