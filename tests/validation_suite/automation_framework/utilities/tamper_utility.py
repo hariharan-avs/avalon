@@ -40,19 +40,19 @@ def tamper_request(input_json, tamper_instance, tamper):
 
     return tampered_json
 
-def tamper_object(input_obj, tamper):
-
-    tamper_items_list = tamper["params"].keys()
-    logger.info("------ Tamper item list : %s , %s------\n", tamper_items_list, type(tamper_items_list))
-
-    for key_item in tamper_items_list :
-        logger.info("------ Tamper item : %s , %s------\n", key_item, type(key_item))
-        input_obj[key_item] =tamper["params"][key_item]
-        # for key, value in item :
-        #     if key not in input_obj.keys() :
-        #         input_obj[key] = value
-
-    return input_obj
+# def tamper_object(input_obj, tamper):
+#
+#     tamper_items_list = tamper["params"].keys()
+#     logger.info("------ Tamper item list : %s , %s------\n", tamper_items_list, type(tamper_items_list))
+#
+#     for key_item in tamper_items_list :
+#         logger.info("------ Tamper item : %s , %s------\n", key_item, type(key_item))
+#         input_obj[key_item] = tamper["params"][key_item]
+#         # for key, value in item :
+#         #     if key not in input_obj.keys() :
+#         #         input_obj[key] = value
+#
+#     return input_obj
 
 
 
