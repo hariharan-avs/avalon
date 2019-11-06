@@ -244,11 +244,7 @@ class WorkOrderSubmit():
         self.requester_signature  =  crypto.byte_array_to_base64(
                                      signature_result)
         self.params_obj["requesterSignature"] = self.requester_signature
-
-        verifying_key = self.get_verifying_key()
-
-        if verifying_key is not None:
-            self.params_obj["verifyingKey"] = self.public_key
+        self.params_obj["verifyingKey"] = self.public_key
 
     def byte_array_to_hex_str(self, in_byte_array):
         '''
