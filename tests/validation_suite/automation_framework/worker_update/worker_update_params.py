@@ -1,6 +1,7 @@
 import json
 import logging
 import automation_framework.worker.worker_params as worker
+from automation_framework.utilities.tamper_utility import tamper_object
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +11,7 @@ class WorkerUpdate():
         self.params_obj = {}
         self.details_obj = {}
 
-    def add_json_values(self, input_json, worker_obj):
+    def add_json_values(self, input_json, worker_obj, tamper):
 
         input_json_temp = input_json
 
@@ -47,6 +48,8 @@ class WorkerUpdate():
                  input_json_temp["params"]["details"].keys()) :
                 self.set_data_encryption_algorithm(
                 input_json_temp["params"]["details"]["dataEncryptionAlgorithm"])
+
+        self.params_obj = tamper_object(self.params_obj.copy(), tamper)
 
     def set_worker_id(self, worker_id):
         self.params_obj["workerId"] = worker_id

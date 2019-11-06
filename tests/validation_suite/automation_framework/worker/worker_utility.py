@@ -49,7 +49,7 @@ def process_worker_actions(input_request, input_type, tamper,
         else :
             logger.info("----- Invalid Request method -----")
 
-        action_obj.add_json_values(input_request, worker_obj)
+        action_obj.add_json_values(input_request, worker_obj, tamper)
         input_action = json.loads(action_obj.to_string())
 
     # submit work order request and retrieve response

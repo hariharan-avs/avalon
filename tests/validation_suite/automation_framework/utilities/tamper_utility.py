@@ -36,3 +36,13 @@ def tamper_request(input_json, tamper_instance, tamper):
     tampered_json = json.dumps(input_json_temp)
 
     return tampered_json
+
+def tamper_object(input_obj, tamper):
+
+    tamper_keys_list = tamper.keys()
+
+    for tamper_keys in tamper_keys_list :
+        for key, value in tamper_keys :
+            input_obj[key] = value
+
+    return input_obj
