@@ -233,7 +233,7 @@ class WorkOrderSubmit():
             iv = "".encode('UTF-8')
             if 'dataHash' in data_item:
                 datahash = data_item['dataHash'].encode('UTF-8')
-                hash_string = hash_string + datahash
+                hash_string = datahash
             if 'data' in data_item:
                 data = data_item['data'].encode('UTF-8')
                 hash_string = hash_string + data
