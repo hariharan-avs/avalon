@@ -22,9 +22,7 @@ import logging
 import toml
 import crypto.crypto as crypto
 
-import automation_framework.utilities.config as pconfig
-import automation_framework.utilities.file_utils as futils
-# import automation_framework.utilities.hex_utils as hex_utils
+# import automation_framework.utilities.config as pconfig
 logger = logging.getLogger(__name__)
 
 """
@@ -35,113 +33,113 @@ TCFHOME = os.environ.get("TCF_HOME", "../../")
 # No of bytes of encrypted session key to encrypt data
 NO_OF_BYTES = 16
 
-class GenericServiceClient(object) :
-
-    def __init__(self, url) :
-        self.ServiceURL = url
-        self.ProxyHandler = urllib.request.ProxyHandler({})
-
-    def _postmsg(self, request) :
-        """
-        Post a request JSON string and return the response.
-        """
-
-        data = request.encode('utf8')
-        datalen = len(data)
-
-        url = self.ServiceURL
-
-        logger.debug('post request to %s with DATALEN=%d, DATA=<%s>',
-            url, datalen, data)
-
-        try :
-            request = urllib.request.Request(url, data,
-                {'Content-Type': 'application/json', 'Content-Length': datalen})
-            opener = urllib.request.build_opener(self.ProxyHandler)
-            response = opener.open(request, timeout=10)
-
-        except urllib.error.HTTPError as err :
-            logger.warn('operation failed with response: %s', err.code)
-            raise MessageException(
-                'operation failed with response: {0}'.format(err.code))
-
-        except urllib.error.URLError as err :
-            logger.warn('operation failed: %s', err.reason)
-            raise MessageException('operation failed: {0}'.format(err.reason))
-
-        except :
-            logger.exception('no response from server')
-            raise MessageException('no response from server')
-
-        content = response.read()
-        headers = response.info()
-        response.close()
-
-        encoding = headers.get('Content-Type')
-        if encoding != 'application/json' :
-            logger.info('server responds with message %s of type %s',
-                content, encoding)
-            return None
-
-        # Attempt to decode the content if it is not already a string
-        try:
-            content = content.decode('utf-8')
-        except AttributeError:
-            pass
-        value = json.loads(content)
-        return value
-
-def read_toml_file(input_file, config_name = None, confpaths = [".", TCFHOME + "/" + "config"]):
-    """
-    Function to read toml file and returns the toml content as a list
-    Parameters:
-        - input_file is any toml file which need to be read
-        - config_name is particular configuration to pull
-        - data_dir is the directory structure in which the toml file exists
-    """
-    conffiles = [input_file]
-    config = pconfig.parse_configuration_files(conffiles, confpaths)
-    if config_name is None:
-        return config
-    else :
-        result = config.get(config_name)
-        if result is None:
-            logger.error("%s is missing in toml file %s", config_name, input_file )
-            return None
-        else :
-            return result
-
-#---------------------------------------------------------------------------------------------
-def read_json_file(input_file, data_dir = ['./', '../', '/']) :
-    """
-    Function to read json file and returns the json content as a string
-    Parameters:
-        - input_file is any json file which need to be read
-        - data_dir is the directory structure in which the json file exists
-    """
-
-    file_name = putils.find_file_in_path(input_file, data_dir)
-    with open(file_name, "r") as input_json_file :
-        input_json = input_json_file.read()
-    return input_json
-
-#---------------------------------------------------------------------------------------------
-def write_json_file(file_name,input_data, data_dir ='./') :
-    """
-    Function to store data as json file
-    Parameters:
-        - file_name is the name in which the file should be stored
-        - input_data is any data which needs to be stored in a file
-        - data_dir is the directory path to store the file
-    """
-
-    logger.debug('Data file is stored at %s with name %s.json',data_dir, file_name)
-    result_info = dict()
-    result_info['Result'] = input_data.result
-    filename = os.path.realpath(os.path.join(data_dir, file_name + ".json"))
-    logger.debug('save result data to %s', filename)
-    with open(filename, "w") as file :
-        json.dump(result_info, file)
+# class GenericServiceClient(object) :
+#
+#     def __init__(self, url) :
+#         self.ServiceURL = url
+#         self.ProxyHandler = urllib.request.ProxyHandler({})
+#
+#     def _postmsg(self, request) :
+#         """
+#         Post a request JSON string and return the response.
+#         """
+#
+#         data = request.encode('utf8')
+#         datalen = len(data)
+#
+#         url = self.ServiceURL
+#
+#         logger.debug('post request to %s with DATALEN=%d, DATA=<%s>',
+#             url, datalen, data)
+#
+#         try :
+#             request = urllib.request.Request(url, data,
+#                 {'Content-Type': 'application/json', 'Content-Length': datalen})
+#             opener = urllib.request.build_opener(self.ProxyHandler)
+#             response = opener.open(request, timeout=10)
+#
+#         except urllib.error.HTTPError as err :
+#             logger.warn('operation failed with response: %s', err.code)
+#             raise MessageException(
+#                 'operation failed with response: {0}'.format(err.code))
+#
+#         except urllib.error.URLError as err :
+#             logger.warn('operation failed: %s', err.reason)
+#             raise MessageException('operation failed: {0}'.format(err.reason))
+#
+#         except :
+#             logger.exception('no response from server')
+#             raise MessageException('no response from server')
+#
+#         content = response.read()
+#         headers = response.info()
+#         response.close()
+#
+#         encoding = headers.get('Content-Type')
+#         if encoding != 'application/json' :
+#             logger.info('server responds with message %s of type %s',
+#                 content, encoding)
+#             return None
+#
+#         # Attempt to decode the content if it is not already a string
+#         try:
+#             content = content.decode('utf-8')
+#         except AttributeError:
+#             pass
+#         value = json.loads(content)
+#         return value
+#
+# def read_toml_file(input_file, config_name = None, confpaths = [".", TCFHOME + "/" + "config"]):
+#     """
+#     Function to read toml file and returns the toml content as a list
+#     Parameters:
+#         - input_file is any toml file which need to be read
+#         - config_name is particular configuration to pull
+#         - data_dir is the directory structure in which the toml file exists
+#     """
+#     conffiles = [input_file]
+#     config = pconfig.parse_configuration_files(conffiles, confpaths)
+#     if config_name is None:
+#         return config
+#     else :
+#         result = config.get(config_name)
+#         if result is None:
+#             logger.error("%s is missing in toml file %s", config_name, input_file )
+#             return None
+#         else :
+#             return result
+#
+# #---------------------------------------------------------------------------------------------
+# def read_json_file(input_file, data_dir = ['./', '../', '/']) :
+#     """
+#     Function to read json file and returns the json content as a string
+#     Parameters:
+#         - input_file is any json file which need to be read
+#         - data_dir is the directory structure in which the json file exists
+#     """
+#
+#     file_name = putils.find_file_in_path(input_file, data_dir)
+#     with open(file_name, "r") as input_json_file :
+#         input_json = input_json_file.read()
+#     return input_json
+#
+# #---------------------------------------------------------------------------------------------
+# def write_json_file(file_name,input_data, data_dir ='./') :
+#     """
+#     Function to store data as json file
+#     Parameters:
+#         - file_name is the name in which the file should be stored
+#         - input_data is any data which needs to be stored in a file
+#         - data_dir is the directory path to store the file
+#     """
+#
+#     logger.debug('Data file is stored at %s with name %s.json',data_dir, file_name)
+#     result_info = dict()
+#     result_info['Result'] = input_data.result
+#     filename = os.path.realpath(os.path.join(data_dir, file_name + ".json"))
+#     logger.debug('save result data to %s', filename)
+#     with open(filename, "w") as file :
+#         json.dump(result_info, file)
 
 #---------------------------------------------------------------------------------------------
 def create_error_response(code, jrpc_id, message):
