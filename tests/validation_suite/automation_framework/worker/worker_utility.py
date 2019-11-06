@@ -58,4 +58,5 @@ def process_worker_actions(input_request, input_type, tamper,
     # validate work order response and get error code
     err_cd = validate_response_code(response, check_action_result)
 
-    return err_cd, worker_obj, input_action, response
+    response_tup = (err_cd, input_action, response, worker_obj)
+    return response_tup
