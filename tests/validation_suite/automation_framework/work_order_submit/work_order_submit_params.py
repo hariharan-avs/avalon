@@ -18,6 +18,9 @@ class WorkOrderSubmit():
         self.session_key = self.generate_key()
         self.session_iv = self.generate_iv()
 
+    def set_private_key(self, private_key) :
+        self.public_key =  self.private_key.GetPublicKey().Serialize()
+
     def add_json_values(self, input_json, worker_obj, private_key):
 
         self.private_key = private_key
