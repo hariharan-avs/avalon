@@ -6,6 +6,7 @@ import random
 
 import crypto.crypto as crypto
 import automation_framework.worker.worker_params as worker
+from automation_framework.utilities.tamper_utility import tamper_request
 
 logger = logging.getLogger(__name__)
 NO_OF_BYTES = 16
