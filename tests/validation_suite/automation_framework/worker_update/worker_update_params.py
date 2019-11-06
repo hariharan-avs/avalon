@@ -10,7 +10,7 @@ class WorkerUpdate():
         self.params_obj = {}
         self.details_obj = {}
 
-    def add_json_values(self, input_json, worker_obj, sig_obj):
+    def add_json_values(self, input_json, worker_obj):
 
         input_json_temp = input_json
 

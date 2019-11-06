@@ -1,6 +1,8 @@
 import json
 import logging
 
+import automation_framework.worker.worker_params as worker
+
 logger = logging.getLogger(__name__)
 
 class WorkerRegister():
