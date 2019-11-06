@@ -9,7 +9,6 @@ import automation_framework.work_order_get_result.work_order_get_result_utility 
 import automation_framework.worker_update.worker_update_utility as worker_update
 import automation_framework.worker.worker_utility as worker_utility
 import automation_framework.worker.worker_params as worker
-#import automation_framework.worker.worker_utility as worker_utility
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 
@@ -55,23 +54,14 @@ def validate_request(request_tup) :
 
     if input_method == "WorkOrderSubmit" :
         worker_obj = request_tup[6]
-        # sig_obj = request_tup[7]
-        # private_key = request_tup[8]
-        # err_cd = request_tup[9]
-        # check_result_1 = request_tup[10]
         private_key = request_tup[7]
         err_cd = request_tup[8]
         check_result_1 = request_tup[9]
 
-        # response_tup = wo_utility.process_work_order(input_request, input_type,
-        #                tamper, output_json_file_name, uri_client, worker_obj,
-        #                sig_obj, input_method, private_key, err_cd,
-        #                check_result_1)
-
         response_tup = wo_utility.process_work_order(input_request, input_type,
                        tamper, output_json_file_name, uri_client, worker_obj,
                        input_method, private_key, err_cd, check_result_1)
-                       
+
     elif input_method is "WorkOrderGetResult" :
         check_get_result = request_tup[7]
 
@@ -79,16 +69,6 @@ def validate_request(request_tup) :
                        input_request, input_type, tamper, output_json_file_name,
                        uri_client, err_cd, work_order_id, request_id,
                        check_get_result)
-
-    # elif (input_method == "WorkerLookUp" or "WorkerRetrieve"
-    #       or "WorkerRegister" or "WorkerSetStatus") :
-    #     worker_obj = request_tup[5]
-    #     sig_obj = request_tup[6]
-    #     check_worker_result = request_tup[7]
-    #
-    #     response_tup = worker_utility.process_worker_actions(input_request,
-    #                    input_type, tamper, output_json_file_name, uri_client,
-    #                    worker_obj, sig_obj, check_worker_result)
 
     elif input_method in ("WorkerUpdate", "WorkerLookUp", "WorkerRetrieve",
                           "WorkerRegister", "WorkerSetStatus"):
