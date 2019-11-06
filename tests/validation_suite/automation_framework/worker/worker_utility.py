@@ -7,7 +7,7 @@ from automation_framework.worker_lookup.worker_lookup_params import WorkerLookUp
 from automation_framework.worker_retrieve.worker_retrieve_params \
                                              import WorkerRetrieve
 from automation_framework.worker_register.worker_register_params \
-                                             import WorkerRegister                                       
+                                             import WorkerRegister
 from automation_framework.worker_set_status.worker_set_status_params \
                                              import WorkerSetStatus
 from automation_framework.worker_update.worker_update_params import WorkerUpdate
@@ -35,15 +35,15 @@ def process_worker_actions(input_request, input_type, tamper,
         input_action = json.loads(action_obj.to_string())
     else :
         logger.info("----- Constructing Request from input json -----")
-        if request_method = "WorkerUpdate" :
+        if request_method == "WorkerUpdate" :
             action_obj = WorkerUpdate()
-        elif request_method = "WorkerSetStatus" :
+        elif request_method == "WorkerSetStatus" :
             action_obj = WorkerSetStatus()
-        elif request_method = "WorkerRegister" :
+        elif request_method == "WorkerRegister" :
             action_obj = WorkerRegister()
-        elif request_method = "WorkerLookUp" :
+        elif request_method == "WorkerLookUp" :
             action_obj = WorkerLookUp()
-        elif request_method = "WorkerRetrieve" :
+        elif request_method == "WorkerRetrieve" :
             action_obj = WorkerRetrieve()
         else :
             logger.info("----- Invalid Request method -----")
