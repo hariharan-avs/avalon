@@ -176,6 +176,7 @@ class WorkOrderSubmit():
         worker_order_id = self.get_work_order_id()
         if worker_order_id is not None:
             first_string = first_string + worker_order_id.encode('UTF-8')
+            logger.info("first_string - %s", first_string)
         else :
             first_string = first_string + "".encode('UTF-8')
 
@@ -191,7 +192,7 @@ class WorkOrderSubmit():
         else :
             first_string = first_string + "".encode('UTF-8')
 
-        requester_id = self.get_requester_id().encode('UTF-8')
+        requester_id = self.get_requester_id()
         if worker_id is not None:
             first_string = first_string + worker_id.encode('UTF-8')
         else :
