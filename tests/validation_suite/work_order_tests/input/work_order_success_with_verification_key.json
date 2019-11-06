@@ -18,6 +18,7 @@
         "requesterNonce": "",
         "encryptedRequestHash": "",
         "requesterSignature": "",
+        "verifyingKey" : ""
         "inData": [
 		               {"index": 2,
 	                  "dataHash": "",
@@ -31,7 +32,6 @@
                     "encryptedDataEncryptionKey": "",
                     "iv": ""
                    }
-        ],
-        "verification_key" : ""
+        ]
     }
 }
