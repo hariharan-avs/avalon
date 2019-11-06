@@ -90,7 +90,7 @@ def validate_request(request_tup) :
 
         response_tup = worker_utility.process_worker_actions(input_request,
                        input_type, tamper, output_json_file_name, uri_client,
-                       request_method, worker_obj, request_id,
+                       input_method, worker_obj, request_id,
                        check_action_result)
 
     else :
