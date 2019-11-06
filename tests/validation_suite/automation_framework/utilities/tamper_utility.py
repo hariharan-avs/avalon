@@ -39,10 +39,12 @@ def tamper_request(input_json, tamper_instance, tamper):
 
 def tamper_object(input_obj, tamper):
 
-    tamper_keys_list = tamper.keys()
+    tamper_items_list = tamper.items()
 
-    for tamper_keys in tamper_keys_list :
-        for key, value in tamper_keys :
+    for items in tamper_items_list :
+        for key, value in items :
+            if key in input_obj.keys() :
+                input_value = input_obj[key]
             input_obj[key] = value
 
     return input_obj
