@@ -25,6 +25,11 @@ class WorkerUpdate():
         if "id" in input_json_temp.keys() :
             self.set_request_id(input_json_temp["id"])
 
+        for key in tamper["params"].keys() :
+            param = key
+            value = tamper["params"][key]
+            self.set_unknown_parameter(param, value)
+
         if "details" in input_json_temp["params"].keys() :
             if ("hashingAlgorithm" in
                  input_json_temp["params"]["details"].keys()) :
@@ -49,18 +54,12 @@ class WorkerUpdate():
                 self.set_data_encryption_algorithm(
                 input_json_temp["params"]["details"]["dataEncryptionAlgorithm"])
 
-        # self.params_obj = tamper_object(self.params_obj.copy(), tamper)
-        for key in tamper["params"].keys() :
-            param = key
-            value = tamper["params"][key]
-            logger.info("------ param : %s , value : %s------\n", param, value)
-            self.set_unknown_parameter(param, value)
+            for key in tamper["params"]["details"].keys() :
+                detail = key
+                value = tamper["params"]["details"][key]
+                self.set_unknown_parameter_detail(param, value)
 
-        for key in tamper["params"]["details"].keys() :
-            detail = key
-            value = tamper["params"]["details"][key]
-            logger.info("------ param : %s , value : %s------\n", detail, value)
-            self.set_unknown_parameter_detail(param, value)
+        # self.params_obj = tamper_object(self.params_obj.copy(), tamper)
 
     def set_unknown_parameter(self, param, value):
         self.params_obj[param] = value
