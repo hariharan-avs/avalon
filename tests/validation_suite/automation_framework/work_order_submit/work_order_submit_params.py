@@ -7,6 +7,7 @@ import random
 import crypto.crypto as crypto
 import automation_framework.worker.worker_params as worker
 from automation_framework.utilities.tamper_utility import tamper_request
+from error_code.error_status import SignatureStatus
 
 logger = logging.getLogger(__name__)
 NO_OF_BYTES = 16
@@ -478,6 +479,80 @@ class WorkOrderSubmit():
             return self.params_obj["requesterSignature"]
         else :
             return None
+
+    def verify_signature(self, input_json, verification_key):
+        """
+        Function to verify the signature received from the enclave
+        Parameters:
+            - input_json is dictionary contains payload returned by the
+              Worker Service in response to successful workorder submit request
+              as per TCF API 6.1.2 Work Order Result Payload
+            - verification_key is ECDSA/SECP256K1 public key used to verify signatures
+              created by the Enclave
+        Returns enum type SignatureStatus
+        """
+
+        input_json_params = input_json['result']
+
+        nonce = (input_json_params['workerNonce']).encode('UTF-8')
+        signature = input_json_params['workerSignature']
+
+        hash_string_1 = ""
+
+        workorder_id = (input_json_params['workOrderId']).encode('UTF-8')
+        worker_id = (input_json_params['workerId']).encode('UTF-8')
+        workload_id = "".encode('UTF-8')
+        workload_id = (input_json_params['workloadId']).encode('UTF-8')
+        requester_id = (input_json_params['requesterId']).encode('UTF-8')
+
+        concat_string = nonce + workorder_id + worker_id + workload_id + requester_id
+        concat_hash =  bytes(concat_string)
+        #SHA-256 hashing is used
+        hash_1 = crypto.compute_message_hash(concat_hash)
+        hash_string_1 = crypto.byte_array_to_base64(hash_1)
+
+        data_objects = input_json_params['outData']
+        data_objects.sort(key = lambda x:x['index'])
+        hash_string_2 = ""
+
+        hash_str = ""
+        for item in data_objects:
+            datahash = "".encode('UTF-8')
+            e_key = "".encode('UTF-8')
+            iv = "".encode('UTF-8')
+            if 'dataHash' in item:
+                datahash = item['dataHash'].encode('UTF-8')
+            data = item['data'].encode('UTF-8')
+            if 'encryptedDataEncryptionKey' in item:
+                e_key = item['encryptedDataEncryptionKey'].encode('UTF-8')
+            if 'iv' in item:
+                iv = item['iv'].encode('UTF-8')
+            concat_string =  datahash + data + e_key + iv
+            concat_hash = bytes(concat_string)
+            hash = crypto.compute_message_hash(concat_hash)
+            hash_str = hash_str + crypto.byte_array_to_base64(hash)
+
+        hash_string_2 = hash_str
+
+        concat_string =  hash_string_1+ hash_string_2
+        concat_hash = bytes(concat_string, 'UTF-8')
+        final_hash = crypto.compute_message_hash(concat_hash)
+
+        try:
+            _verifying_key = crypto.SIG_PublicKey(verification_key)
+        except Exception as error:
+            logger.info("Error in verification key : %s", error)
+            return SignatureStatus.INVALID_VERIFICATION_KEY
+
+        decoded_signature = crypto.base64_to_byte_array(signature)
+        sig_result =_verifying_key.VerifySignature(final_hash, decoded_signature)
+
+        if sig_result == 1:
+            return SignatureStatus.PASSED
+        elif sig_result == 0:
+            return SignatureStatus.FAILED
+        else:
+            return SignatureStatus.INVALID_SIGNATURE_FORMAT
 
     def compute_signature(self, tamper):
 

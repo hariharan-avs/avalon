@@ -87,7 +87,8 @@ def verify_work_order_signature(response, worker_obj):
     verify_key = worker_obj.verification_key
 
     try:
-        sig_bool = sign_utility.verify_signature(response, verify_key)
+        verify_obj = WorkOrderSubmit()
+        sig_bool = verify_obj.verify_signature(response, verify_key)
 
         logger.info("Signature return verify: %s \n", sig_bool)
         if sig_bool is SignatureStatus.PASSED :
