@@ -27,8 +27,8 @@ def validate_request(request_tup) :
         if input_type == "file" :
             # read json input file for the test case
             logger.info("------ Input file name: %s ------\n", input_temp)
-            with open(input_temp) as f:
-                input_json = json.load(f)
+            with open(input_temp, "r") as file:
+                input_json = file.read().rstrip('\n')
             # input_json = futils.read_json_file(input_temp)
             logger.info("------ Loaded file data: %s ------\n", input_temp)
         elif input_type == "string" :
