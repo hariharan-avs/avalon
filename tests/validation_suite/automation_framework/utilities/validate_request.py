@@ -82,15 +82,16 @@ def validate_request(request_tup) :
     #                    input_type, tamper, output_json_file_name, uri_client,
     #                    worker_obj, sig_obj, check_worker_result)
 
-    elif input_method == "WorkerUpdate" :
+    elif input_method in ("WorkerUpdate", "WorkerLookUp", "WorkerRetrieve",
+                          "WorkerRegister", "WorkerSetStatus"):
         worker_obj = request_tup[6]
-        sig_obj = request_tup[7]
-        request_id = request_tup[8]
-        check_update_result = request_tup[9]
+        request_id = request_tup[7]
+        check_action_result = request_tup[8]
 
-        response_tup = worker_update.process_worker_update(input_request,
+        response_tup = worker_utility.process_worker_actions(input_request,
                        input_type, tamper, output_json_file_name, uri_client,
-                       worker_obj, sig_obj, request_id, check_update_result)
+                       request_method, worker_obj, request_id,
+                       check_action_result)
 
     else :
         response = process_request(uri_client, input_request,
