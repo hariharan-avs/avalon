@@ -23,18 +23,18 @@ def validate_request(request_tup) :
     uri_client = request_tup[4]
     request_method = request_tup[5]
 
-    try :
-        if input_type == "file" :
-            # read json input file for the test case
-            logger.info("------ Input file name: %s ------\n", input_temp)
-            with open(input_temp, "r") as file:
-                input_json = file.read().rstrip('\n')
-            # input_json = futils.read_json_file(input_temp)
-            logger.info("------ Loaded file data: %s ------\n", input_temp)
-        elif input_type == "string" :
-            input_json = input_temp
-            logger.info("------ Loaded string data: %s ------\n", input_request)
 
+    if input_type == "file" :
+        # read json input file for the test case
+        logger.info("------ Input file name: %s ------\n", input_temp)
+        with open(input_temp, "r") as file:
+            input_json = file.read().rstrip('\n')
+        # input_json = futils.read_json_file(input_temp)
+        logger.info("------ Loaded file data: %s ------\n", input_temp)
+    elif input_type == "string" :
+        input_json = input_temp
+        logger.info("------ Loaded string data: %s ------\n", input_request)
+    try :
         input_request = json.loads(input_json)
         logger.info("Json loaded : %s \n", input_request)
     except :
