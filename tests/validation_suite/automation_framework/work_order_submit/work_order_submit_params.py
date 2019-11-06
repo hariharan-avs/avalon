@@ -501,4 +501,4 @@ class WorkOrderSubmit():
             json_rpc_request["params"]["outData"] = out_data
 
         # return json.dumps(json_rpc_request, indent=4)
-        return json_rpc_request
+        return json.dumps(json_rpc_request)
