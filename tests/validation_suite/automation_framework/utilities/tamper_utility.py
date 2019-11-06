@@ -43,6 +43,7 @@ def tamper_request(input_json, tamper_instance, tamper):
 def tamper_object(input_obj, tamper):
 
     tamper_items_list = tamper["params"].items()
+    logger.info("------ Tamper item list : %s , %s------\n", tamper_items_list, type(tamper_items_list))
 
     for item in tamper_items_list :
         logger.info("------ Tamper item : %s , %s------\n", item, type(item))
