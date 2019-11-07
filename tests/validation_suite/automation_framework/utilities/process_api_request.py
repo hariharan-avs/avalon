@@ -55,8 +55,9 @@ def process_api_request(request_tup) :
         input_json = input_temp
         logger.info("------ Loaded string data: %s ------\n", input_request)
     try :
-        input_request = json.loads(input_json)
-        logger.info("Json loaded : %s \n", input_request)
+        if input_type != "object":
+            input_request = json.loads(input_json)
+            logger.info("Json loaded : %s \n", input_request)
     except :
         logger.info('''Invalid Json Input.
                 Submitting to enclave without modifications to test response''')
