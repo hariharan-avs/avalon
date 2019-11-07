@@ -368,8 +368,8 @@ class WorkOrderSubmit():
                            self.session_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = binascii.hexlify(bytearray(
-                       crypto.compute_message_hash(base64_enc_data)))
+                    dataHash_enc_data = binascii.hexlify(
+                       crypto.compute_message_hash(bytearray(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
             elif e_key == "-".encode('UTF-8'):
@@ -377,16 +377,16 @@ class WorkOrderSubmit():
                 # to base64 format
                 base64_enc_data = (crypto.byte_array_to_base64(data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = binascii.hexlify(bytearray(
-                       crypto.compute_message_hash(base64_enc_data)))
+                    dataHash_enc_data = binascii.hexlify(
+                       crypto.compute_message_hash(bytearray(data)))
             else:
                 data_key = None
                 data_iv = None
                 enc_data = self.encrypt_data(data, data_key, data_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = binascii.hexlify(bytearray(
-                       crypto.compute_message_hash(base64_enc_data)))
+                    dataHash_enc_data = binascii.hexlify(
+                       crypto.compute_message_hash(bytearray(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
 
