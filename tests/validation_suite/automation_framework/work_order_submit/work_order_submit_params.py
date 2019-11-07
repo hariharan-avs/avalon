@@ -167,7 +167,7 @@ class WorkOrderSubmit():
                 self.params_obj["encryptedRequestHash"] = \
                      input_json_temp["params"]["encryptedRequestHash"]
             else :
-                self.compute_encrypted_request_hash()
+                self._compute_encrypted_request_hash()
 
         if "requesterSignature" in input_params_list :
             if input_json_temp["params"]["requesterSignature"] != "" :
@@ -191,7 +191,7 @@ class WorkOrderSubmit():
     def set_unknown_parameter(self, param, value):
         self.params_obj[param] = value
 
-    def compute_encrypted_request_hash(self) :
+    def _compute_encrypted_request_hash(self) :
         first_string = self.nonce_hash
         worker_order_id = self.get_work_order_id()
         if worker_order_id is not None:
@@ -227,11 +227,11 @@ class WorkOrderSubmit():
 
         self.hash_2 = ""
         if in_data is not None:
-            self.hash_2 = self.compute_hash_string(in_data)
+            self.hash_2 = self._compute_hash_string(in_data)
 
         self.hash_3 = ""
         if out_data is not None:
-            self.hash_3 = self.compute_hash_string(out_data)
+            self.hash_3 = self._compute_hash_string(out_data)
 
         final_string = self.hash_1 + self.hash_2 + self.hash_3
         self.final_hash = crypto.compute_message_hash(
@@ -244,7 +244,7 @@ class WorkOrderSubmit():
 
         self.params_obj["encryptedRequestHash"] = self.encrypted_request_hash
 
-    def compute_hash_string(self, data):
+    def _compute_hash_string(self, data):
         final_hash_str = ""
         hash_string = ""
         for data_item in data :
@@ -267,7 +267,7 @@ class WorkOrderSubmit():
             final_hash_str = final_hash_str + crypto.byte_array_to_base64(hash)
         return final_hash_str
 
-    def compute_requester_signature(self):
+    def _compute_requester_signature(self):
         self.public_key =  self.private_key.GetPublicKey().Serialize()
         signature_result =  self.private_key.SignMessage(self.final_hash)
         self.requester_signature  =  crypto.byte_array_to_base64(
@@ -595,7 +595,7 @@ class WorkOrderSubmit():
 
     def compute_signature(self):
 
-        self.compute_requester_signature()
+        self._compute_requester_signature()
 
         json_rpc_request = self.id_obj
         json_rpc_request["params"] = self.get_params()
