@@ -181,9 +181,11 @@ class WorkOrderSubmit():
                 self.params_obj["verifyingKey"] = \
                      input_json_temp["params"]["verifyingKey"]
 
-        for key in tamper["default"]["params"].keys() :
-            param = key
-            value = tamper["default"]["params"][key]
+        if "default" in tamper.keys():
+            if "params" in tamper["default"].keys():
+                for key, value in tamper["default"]["params"] :
+                    param = key
+                    value = value
             self.set_unknown_parameter(param, value)
 
     def set_unknown_parameter(self, param, value):
