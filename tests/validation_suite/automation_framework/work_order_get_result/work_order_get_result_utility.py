@@ -45,7 +45,7 @@ def process_work_order_get_result(input_request, input_type, tamper,
         if input_type == "object" :
             # process work order get result and retrieve response
             logger.info("----- Constructing WorkOrderGetResult -----")
-            input_get_result = json.loads(request_obj.to_string())
+            input_get_result = json.loads(input_request.to_string())
         else :
             request_obj = WorkOrderGetResult()
             request_obj.set_work_order_id(work_order_id)
