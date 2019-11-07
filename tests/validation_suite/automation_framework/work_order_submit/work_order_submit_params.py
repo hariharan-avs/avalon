@@ -3,7 +3,6 @@ import logging
 import os
 import sys
 import random
-import binascii
 
 import crypto.crypto as crypto
 import automation_framework.worker.worker_params as worker
@@ -102,8 +101,8 @@ class WorkOrderSubmit():
                 self.set_session_key_iv(
                      input_json_temp["params"]["sessionKeyIv"])
             else :
-                self.set_session_key_iv(binascii.hexlify(bytearray(
-                                        self.session_iv)))
+                self.set_session_key_iv(self.byte_array_to_hex_str(
+                     self.session_iv))
 
         if "encryptedSessionKey" in input_params_list :
             if input_json_temp["params"]["encryptedSessionKey"] != "" :
@@ -116,8 +115,8 @@ class WorkOrderSubmit():
                      self.generate_encrypted_key (self.session_key,
                                     worker_obj.encryption_key))
                 #self.set_encrypted_session_key(self.encrypted_session_key)
-                self.set_encrypted_session_key(binascii.hexlify(bytearray(
-                                               self.encrypted_session_key)))
+                self.set_encrypted_session_key(self.byte_array_to_hex_str(
+                                               self.encrypted_session_key))
 
         if "requesterNonce" in input_params_list :
             if input_json_temp["params"]["requesterNonce"] != "" :
@@ -223,10 +222,10 @@ class WorkOrderSubmit():
         self.final_hash = crypto.compute_message_hash(
                           bytes(final_string, 'UTF-8'))
 
-        self.encrypted_request_hash = binascii.hexlify(bytearray(
+        self.encrypted_request_hash = self.byte_array_to_hex_str(
                                       self.encrypt_data(
                                       self.final_hash, self.session_key,
-                                      self.session_iv)))
+                                      self.session_iv))
 
         self.params_obj["encryptedRequestHash"] = self.encrypted_request_hash
 
@@ -260,6 +259,15 @@ class WorkOrderSubmit():
                                      signature_result)
         self.params_obj["requesterSignature"] = self.requester_signature
         self.params_obj["verifyingKey"] = self.public_key
+
+    def byte_array_to_hex_str(self, in_byte_array):
+        '''
+        Converts tuple of bytes to hex string
+        '''
+        logger.debug("Input Byte Array: %s", in_byte_array)
+        hex_str = ''.join(format(i, '02x') for i in in_byte_array)
+        logger.debug("Output Byte Array to str: %s", hex_str)
+        return hex_str
 
     def strip_begin_end_key(self, key) :
         """
@@ -368,8 +376,8 @@ class WorkOrderSubmit():
                            self.session_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = binascii.hexlify(
-                       crypto.compute_message_hash(bytearray(data)))
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
             elif e_key == "-".encode('UTF-8'):
@@ -377,16 +385,16 @@ class WorkOrderSubmit():
                 # to base64 format
                 base64_enc_data = (crypto.byte_array_to_base64(data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = binascii.hexlify(
-                       crypto.compute_message_hash(bytearray(data)))
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
             else:
                 data_key = None
                 data_iv = None
                 enc_data = self.encrypt_data(data, data_key, data_iv)
                 base64_enc_data = (crypto.byte_array_to_base64(enc_data))
                 if 'dataHash' in inData_item :
-                    dataHash_enc_data = binascii.hexlify(
-                       crypto.compute_message_hash(bytearray(data)))
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
                 logger.debug("encrypted indata - %s",
                        crypto.byte_array_to_base64(enc_data))
 
