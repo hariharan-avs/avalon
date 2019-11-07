@@ -15,9 +15,12 @@
 import pytest
 import logging
 import json
-from automation_framework.utilities.submit_request import submit_request
-import automation_framework.work_order_submit.work_order_submit_utility as wo_utility
-import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
+from automation_framework.utilities.process_api_request import \
+                                    process_api_request
+import automation_framework.work_order_submit.work_order_submit_utility as \
+                                                             wo_utility
+import automation_framework.work_order_get_result.work_order_get_result_utility \
+                                                               as wo_get_result
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +77,7 @@ def test_work_order_success(setup_config):
     request_get_result = (input_request, input_type, tamper, output_json_file_name,
                  uri_client, request_method, err_cd, work_order_id, request_id,
                  check_get_result )
-    response_get_result = submit_request(request_get_result)
+    response_get_result = process_api_request(request_get_result)
 
     # extract response values
     err_cd = response_get_result[0]

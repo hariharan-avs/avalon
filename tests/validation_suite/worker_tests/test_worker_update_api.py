@@ -17,9 +17,8 @@ import logging
 import json
 
 import automation_framework.worker.worker_params as worker
-from automation_framework.utilities.submit_request import submit_request
-import automation_framework.work_order_submit.work_order_submit_utility as wo_utility
-import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
+from automation_framework.utilities.process_api_request import \
+                                    process_api_request
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +47,7 @@ def test_worker_update(setup_config):
                    uri_client, request_method, worker_obj,
                    request_id, check_update_result)
 
-    response_tup = submit_request(request_tup)
+    response_tup = process_api_request(request_tup)
 
     err_cd = response_tup[0]
     input_update = response_tup[1]
@@ -88,7 +87,7 @@ def test_worker_update_invalid_parameter(setup_config):
                    uri_client, request_method, worker_obj,
                    request_id, check_update_result)
 
-    response_tup = submit_request(request_tup)
+    response_tup = process_api_request(request_tup)
 
     err_cd = response_tup[0]
     input_update = response_tup[1]
@@ -129,7 +128,7 @@ def test_worker_update_unknown_parameter(setup_config):
                    uri_client, request_method, worker_obj,
                    request_id, check_update_result)
 
-    response_tup = submit_request(request_tup)
+    response_tup = process_api_request(request_tup)
 
     err_cd = response_tup[0]
     input_update = response_tup[1]

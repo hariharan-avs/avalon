@@ -27,7 +27,16 @@ from automation_framework.utilities.workflow import validate_response_code
 
 logger = logging.getLogger(__name__)
 
-def submit_request(request_tup) :
+def process_api_request(request_tup) :
+    ''' submit_request funtion receives the request from test case.
+        extracts inputs for respective API requests from request_tup
+        validates if input request is valid json, and has valid method name
+        input_type :
+           file - reads input json file
+           string - uses string provided
+           object - extract request from object and submits to enclave
+        based on method name respective API utilities are called to construct
+        the request, tamper and submit to enclave. '''
 
     input_temp = request_tup[0]
     input_type = request_tup[1]
