@@ -3,7 +3,7 @@ import json
 import os
 import sys
 import logging
-import automation_framework.utilities.file_utils as futils
+
 import automation_framework.work_order_submit.work_order_submit_utility as wo_utility
 import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
 import automation_framework.worker_update.worker_update_utility as worker_update
@@ -29,7 +29,6 @@ def validate_request(request_tup) :
         logger.info("------ Input file name: %s ------\n", input_temp)
         with open(input_temp, "r") as file:
             input_json = file.read().rstrip('\n')
-        # input_json = futils.read_json_file(input_temp)
         logger.info("------ Loaded file data: %s ------\n", input_temp)
     elif input_type == "string" :
         input_json = input_temp
