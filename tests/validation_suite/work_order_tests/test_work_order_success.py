@@ -54,7 +54,7 @@ def test_work_order_success(setup_config):
     request_tup=(input_json_file, input_type, tamper, output_json_file_name,
                  uri_client, request_method, worker_obj, private_key, err_cd,
                  check_submit, check_get_result)
-    response_tup = submit_request(request_tup)
+    response_tup = process_api_request(request_tup)
 
     # extract response values
     err_cd = response_tup[0]
