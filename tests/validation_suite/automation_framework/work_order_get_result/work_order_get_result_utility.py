@@ -10,7 +10,6 @@ import logging
 from error_code.error_status import SignatureStatus
 import automation_framework.worker.worker_params as worker
 import automation_framework.utilities.utility as enclave_helper
-import automation_framework.utilities.file_utils as futils
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 from automation_framework.work_order_get_result.work_order_get_result_params import WorkOrderGetResult
