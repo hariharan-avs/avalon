@@ -31,9 +31,6 @@ from automation_framework.work_order_submit.work_order_submit_params \
 
 logger = logging.getLogger(__name__)
 
-# def process_work_order(input_request, input_type, tamper, output_json_file_name,
-#         uri_client, worker_obj, sig_obj, request_method, private_key, err_cd,
-#         check_submit):
 def process_work_order(input_request, input_type, tamper, output_json_file_name,
         uri_client, worker_obj, request_method, private_key, err_cd,
         check_submit):
@@ -55,9 +52,10 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
         else :
             # create work order request
             wo_obj = WorkOrderSubmit()
-            wo_obj.add_json_values(input_request, worker_obj, private_key)
+            wo_obj.add_json_values(input_request, worker_obj, private_key,
+                                   tamper)
             input_work_order = wo_obj.compute_signature(tamper)
-            logger.info('''Compute Signature complete''')
+            logger.info('''Compute Signature complete \n''')
 
         logger.info('''Request to be submitted : %s \n''', input_work_order)
         input_json_str1 = json.loads(input_work_order)

@@ -33,7 +33,7 @@ class WorkOrderSubmit():
         self.session_key = self.generate_key()
         self.session_iv = self.generate_iv()
 
-    def add_json_values(self, input_json, worker_obj, private_key):
+    def add_json_values(self, input_json, worker_obj, private_key, tamper):
 
         self.private_key = private_key
         # input_json_temp = json.loads(input_json)
