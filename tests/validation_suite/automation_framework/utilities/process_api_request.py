@@ -86,9 +86,10 @@ def process_api_request(request_tup) :
                        input_method, private_key, err_cd, check_result_1)
 
     elif input_method is "WorkOrderGetResult" :
-        work_order_id = request_tup[6]
-        request_id = request_tup[7]
-        check_get_result = request_tup[8]
+        err_cd = request_tup[6]
+        work_order_id = request_tup[7]
+        request_id = request_tup[8]
+        check_get_result = request_tup[9]
 
         response_tup = wo_get_result.process_work_order_get_result(
                        input_request, input_type, tamper, output_json_file_name,
