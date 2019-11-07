@@ -117,7 +117,7 @@ class WorkOrderSubmit():
                                     worker_obj.encryption_key))
                 #self.set_encrypted_session_key(self.encrypted_session_key)
                 self.set_encrypted_session_key(binascii.hexlify(bytearray(
-                                               self.encrypted_session_key))
+                                               self.encrypted_session_key)))
 
         if "requesterNonce" in input_params_list :
             if input_json_temp["params"]["requesterNonce"] != "" :
