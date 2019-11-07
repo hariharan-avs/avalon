@@ -8,7 +8,7 @@ import random
 import json
 import logging
 
-import automation_framework.utilities.config as pconfig
+import config.config as pconfig
 from automation_framework.utilities.utility import GenericServiceClient
 import utility.logger as plogger
 import crypto.crypto as crypto
@@ -16,7 +16,7 @@ import automation_framework.worker.worker_params as worker
 from automation_framework.worker_lookup.worker_lookup_params import WorkerLookUp
 from automation_framework.worker_retrieve.worker_retrieve_params import WorkerRetrieve
 import automation_framework.utilities.utility as enclave_helper
-import automation_framework.utilities.file_utils as futils
+
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 
