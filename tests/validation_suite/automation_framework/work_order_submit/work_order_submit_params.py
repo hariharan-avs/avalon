@@ -593,7 +593,7 @@ class WorkOrderSubmit():
         else:
             return SignatureStatus.INVALID_SIGNATURE_FORMAT
 
-    def compute_signature(self):
+    def compute_signature(self, tamper):
 
         self._compute_requester_signature()
 

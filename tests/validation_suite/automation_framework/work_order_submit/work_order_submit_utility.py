@@ -54,7 +54,7 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
             wo_obj = WorkOrderSubmit()
             wo_obj.add_json_values(input_request, worker_obj, private_key,
                                    tamper)
-            input_work_order = wo_obj.compute_signature()
+            input_work_order = wo_obj.compute_signature(tamper)
             logger.info('''Compute Signature complete \n''')
 
         logger.info('''Request to be submitted : %s \n''', input_work_order)
