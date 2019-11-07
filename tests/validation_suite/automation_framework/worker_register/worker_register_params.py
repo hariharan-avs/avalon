@@ -26,9 +26,7 @@ class WorkerRegister():
         self.details_obj = {}
         self.worker_type_data_obj = {}
 
-    def add_json_values(self, input_json, worker_obj):
-
-        input_json_temp = input_json
+    def add_json_values(self, input_json_temp, worker_obj, tamper):
 
         if "workerId" in input_json_temp["params"].keys() :
             if input_json_temp["params"]["workerId"] != "" :

@@ -15,7 +15,7 @@
 import pytest
 import logging
 import json
-from automation_framework.utilities.validate_request import validate_request
+from automation_framework.utilities.submit_request import submit_request
 import automation_framework.work_order_submit.work_order_submit_utility as wo_utility
 import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
 
@@ -26,16 +26,11 @@ def test_work_order_success(setup_config):
 
     # retrieve values from conftest session fixture
     worker_obj = setup_config[0]
-    # sig_obj = setup_config[1]
-    # uri_client = setup_config[2]
-    # private_key = setup_config[3]
-    # err_cd = setup_config[4]
     uri_client = setup_config[1]
     private_key = setup_config[2]
     err_cd = setup_config[3]
 
     # input file name
-    # input_json_file = './work_order_tests/input/work_order_success.json'
     input_json_file = 'work_order_tests/input/work_order_success.json'
     # input type - file, string or object
     input_type = 'file'
@@ -53,14 +48,10 @@ def test_work_order_success(setup_config):
                        "workerSignature": "", "outData": ""}}'''
     check_get_result = json.loads(check_result)
 
-    # process work order submit
-    # request_tup=(input_json_file, input_type, tamper, output_json_file_name,
-    #              uri_client, request_method, worker_obj, sig_obj,
-    #              private_key, err_cd, check_submit, check_get_result)
     request_tup=(input_json_file, input_type, tamper, output_json_file_name,
                  uri_client, request_method, worker_obj, private_key, err_cd,
                  check_submit, check_get_result)
-    response_tup = validate_request(request_tup)
+    response_tup = submit_request(request_tup)
 
     # extract response values
     err_cd = response_tup[0]
@@ -80,10 +71,10 @@ def test_work_order_success(setup_config):
     request_method = "WorkOrderGetResult"
 
     # process work order get result
-    response_get_result = wo_get_result.process_work_order_get_result(
-                          input_request, input_type, tamper,
-                          output_json_file_name, uri_client, err_cd,
-                          work_order_id, request_id, check_get_result)
+    request_get_result = (input_request, input_type, tamper, output_json_file_name,
+                 uri_client, request_method, err_cd, work_order_id, request_id,
+                 check_get_result )
+    response_get_result = submit_request(request_get_result)
 
     # extract response values
     err_cd = response_get_result[0]
@@ -95,7 +86,7 @@ def test_work_order_success(setup_config):
                  worker_obj)
 
     if err_cd == 0:
-        # decrypt signature if verify signature is successfull
+        # decrypt signature if verify signature is successful
         (err_cd, decrypted_data) = (wo_utility.
         decrypt_work_order_response(response, session_key, session_iv))
 

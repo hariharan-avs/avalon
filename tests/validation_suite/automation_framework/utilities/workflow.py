@@ -32,8 +32,9 @@ def process_request(uri_client, input_json_str1, output_json_file_name) :
     # write request to file
     signed_input_file = ('./results/' + output_json_file_name + '_'+ req_time
                         + '_request.json')
-    # with open(signed_input_file,"w") as req_file:
-    #     json.dump(input_json_str1, req_file)
+    with open(signed_input_file, 'w') as req_file:
+        req_file.write(json.dumps(input_json_str, ensure_ascii=False))
+        # json.dump(input_json_str1, req_file)
 
     logger.info("**********Received Request*********\n%s\n", input_json_str)
     # submit request and retrieve response
@@ -43,8 +44,8 @@ def process_request(uri_client, input_json_str1, output_json_file_name) :
     # write response to file
     response_output_file = ('./results/' + output_json_file_name + '_'+ req_time
                            + '_response.json')
-    # with open(response_output_file,"w") as resp_file:
-    #     json.dump(response, resp_file)
+    with open(response_output_file, 'w') as resp_file:
+        resp_file.write(json.dumps(response, ensure_ascii=False))
 
     return response
 

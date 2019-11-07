@@ -33,11 +33,9 @@ class WorkOrderSubmit():
         self.session_key = self.generate_key()
         self.session_iv = self.generate_iv()
 
-    def add_json_values(self, input_json, worker_obj, private_key, tamper):
+    def add_json_values(self, input_json_temp, worker_obj, private_key, tamper):
 
         self.private_key = private_key
-        # input_json_temp = json.loads(input_json)
-        input_json_temp = input_json
         self.worker_obj = worker_obj
 
         input_params_list = input_json_temp["params"].keys()
@@ -128,7 +126,6 @@ class WorkOrderSubmit():
                 self.encrypted_session_key = (
                      self.generate_encrypted_key (self.session_key,
                                     worker_obj.encryption_key))
-                #self.set_encrypted_session_key(self.encrypted_session_key)
                 self.set_encrypted_session_key(self.byte_array_to_hex_str(
                                                self.encrypted_session_key))
 
@@ -178,7 +175,6 @@ class WorkOrderSubmit():
                      input_json_temp["params"]["requesterSignature"]
             else :
                 self.params_obj["requesterSignature"] = ""
-                # self.compute_requester_signature()
 
         if "verifyingKey" in input_params_list :
             if input_json_temp["params"]["verifyingKey"] != "" :
@@ -219,11 +215,6 @@ class WorkOrderSubmit():
             first_string = first_string + requester_id.encode('UTF-8')
         else :
             first_string = first_string + "".encode('UTF-8')
-        # worker_order_id = self.get_work_order_id().encode('UTF-8')
-        # worker_id = self.get_worker_id().encode('UTF-8')
-        # workload_id = self.get_workload_id().encode('UTF-8')
-        # requester_id = self.get_requester_id().encode('UTF-8')
-        # first_string = self.nonce_hash + worker_order_id + worker_id + workload_id + requester_id
 
         concat_hash =  bytes(first_string)
         self.hash_1 = crypto.byte_array_to_base64(
@@ -600,7 +591,7 @@ class WorkOrderSubmit():
         else:
             return SignatureStatus.INVALID_SIGNATURE_FORMAT
 
-    def compute_signature(self, tamper):
+    def compute_signature(self):
 
         self.compute_requester_signature()
 
@@ -611,8 +602,6 @@ class WorkOrderSubmit():
         tamper_instance = 'after_sign'
         tampered_request = tamper_request(input_after_sign, tamper_instance,
                                           tamper)
-
-        # return json.dumps(tampered_request, indent=4)
         return tampered_request
 
     def to_string(self):

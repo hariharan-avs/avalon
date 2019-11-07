@@ -54,7 +54,7 @@ def process_work_order(input_request, input_type, tamper, output_json_file_name,
             wo_obj = WorkOrderSubmit()
             wo_obj.add_json_values(input_request, worker_obj, private_key,
                                    tamper)
-            input_work_order = wo_obj.compute_signature(tamper)
+            input_work_order = wo_obj.compute_signature()
             logger.info('''Compute Signature complete \n''')
 
         logger.info('''Request to be submitted : %s \n''', input_work_order)
@@ -84,7 +84,6 @@ def verify_work_order_signature(response, worker_obj):
 
         logger.info("Signature return verify: %s \n", sig_bool)
         if sig_bool is SignatureStatus.PASSED :
-        #if sig_bool > 0:
             err_cd = 0
             logger.info('''Success: Work Order Signature Verified''')
         else:

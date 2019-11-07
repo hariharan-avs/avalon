@@ -24,9 +24,7 @@ class WorkerUpdate():
         self.params_obj = {}
         self.details_obj = {}
 
-    def add_json_values(self, input_json, worker_obj, tamper):
-
-        input_json_temp = input_json
+    def add_json_values(self, input_json_temp, worker_obj, tamper):
 
         if "workerId" in input_json_temp["params"].keys() :
             if input_json_temp["params"]["workerId"] != "" :

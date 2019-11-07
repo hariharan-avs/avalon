@@ -27,7 +27,7 @@ from automation_framework.utilities.workflow import validate_response_code
 
 logger = logging.getLogger(__name__)
 
-def validate_request(request_tup) :
+def submit_request(request_tup) :
 
     input_temp = request_tup[0]
     input_type = request_tup[1]
@@ -35,7 +35,6 @@ def validate_request(request_tup) :
     output_json_file_name = request_tup[3]
     uri_client = request_tup[4]
     request_method = request_tup[5]
-
 
     if input_type == "file" :
         # read json input file for the test case
@@ -77,7 +76,9 @@ def validate_request(request_tup) :
                        input_method, private_key, err_cd, check_result_1)
 
     elif input_method is "WorkOrderGetResult" :
-        check_get_result = request_tup[7]
+        work_order_id = request_tup[6]
+        request_id = request_tup[7]
+        check_get_result = request_tup[8]
 
         response_tup = wo_get_result.process_work_order_get_result(
                        input_request, input_type, tamper, output_json_file_name,

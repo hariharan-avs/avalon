@@ -22,10 +22,7 @@ class WorkOrderGetResult():
         self.id_obj = {"jsonrpc": "2.0", "method": "WorkOrderGetResult", "id": 4}
         self.params_obj = {}
 
-    def add_json_values(self, input_json, tamper):
-
-        # input_json_temp = json.loads(input_json)
-        input_json_temp = input_json
+    def add_json_values(self, input_json_temp, tamper):
 
         input_params_list = input_json_temp["params"].keys()
 

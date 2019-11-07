@@ -24,9 +24,7 @@ class WorkerRetrieve():
         self.id_obj = {"jsonrpc": "2.0", "method": "WorkerRetrieve", "id": 2}
         self.params_obj = {}
 
-    def add_json_values(self, input_json, worker_obj):
-
-        input_json_temp = input_json
+    def add_json_values(self, input_json_temp, worker_obj, tamper):
 
         if "workerId" in input_json_temp["params"].keys() :
             if input_json_temp["params"]["workerId"] != "" :
