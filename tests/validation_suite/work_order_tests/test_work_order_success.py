@@ -74,9 +74,9 @@ def test_work_order_success(setup_config):
     request_method = "WorkOrderGetResult"
 
     # process work order get result
-    request_get_result = (input_request, input_type, tamper, output_json_file_name,
-                 uri_client, request_method, err_cd, work_order_id, request_id,
-                 check_get_result )
+    request_get_result = (input_request, input_type, tamper,
+                          output_json_file_name, uri_client, request_method,
+                          err_cd, work_order_id, request_id, check_get_result)
     response_get_result = process_api_request(request_get_result)
 
     # extract response values
