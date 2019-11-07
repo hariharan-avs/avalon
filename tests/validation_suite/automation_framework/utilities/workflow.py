@@ -3,7 +3,6 @@ import logging
 import time
 import json
 from service_client.generic import GenericServiceClient
-import automation_framework.utilities.file_utils as futils
 
 logger = logging.getLogger(__name__)
 
