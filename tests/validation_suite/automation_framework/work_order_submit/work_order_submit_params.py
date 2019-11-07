@@ -103,7 +103,7 @@ class WorkOrderSubmit():
                      input_json_temp["params"]["sessionKeyIv"])
             else :
                 self.set_session_key_iv(binascii.hexlify(bytearray(
-                                        self.session_iv))
+                                        self.session_iv)))
 
         if "encryptedSessionKey" in input_params_list :
             if input_json_temp["params"]["encryptedSessionKey"] != "" :
