@@ -53,35 +53,3 @@ def tamper_request(input_json, tamper_instance, tamper):
     tampered_json = json.dumps(input_json_temp)
 
     return tampered_json
-
-# def tamper_object(input_obj, tamper):
-#
-#     tamper_items_list = tamper["params"].keys()
-#     logger.info("------ Tamper item list : %s , %s------\n", tamper_items_list, type(tamper_items_list))
-#
-#     for key_item in tamper_items_list :
-#         logger.info("------ Tamper item : %s , %s------\n", key_item, type(key_item))
-#         input_obj[key_item] = tamper["params"][key_item]
-#         # for key, value in item :
-#         #     if key not in input_obj.keys() :
-#         #         input_obj[key] = value
-#
-#     return input_obj
-
-
-
-#         logger.info("------ Type of tamper item : %s ------\n", type(item))
-#         while type(item) == 'Dict' :
-#             return_item = add_recursive_item(item)
-#             if return_item != None :
-#                 items = return_item
-#     return input_obj
-#
-# def add_recursive_item(item) :
-#     for key, value in item :
-#         if key in input_obj.keys() :
-#             input_value = input_obj[key]
-#                 return input_value
-#         else :
-#             input_obj[key] = value
-#             return None

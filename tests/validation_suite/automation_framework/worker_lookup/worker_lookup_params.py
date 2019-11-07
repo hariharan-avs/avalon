@@ -26,10 +26,7 @@ class WorkerLookUp():
 
     def add_json_values(self, input_json, worker_obj):
 
-        # input_json_temp = json.loads(input_json)
         input_json_temp = input_json
-        #
-        # input_params_list = input_json_temp["params"].keys()
 
         if "workerType" in input_json_temp["params"].keys() :
             if input_json_temp["params"]["workerType"] != "" :
@@ -39,6 +36,14 @@ class WorkerLookUp():
 
         if "id" in input_json_temp.keys() :
             self.set_request_id(input_json_temp["id"])
+
+        for key in tamper["params"].keys() :
+            param = key
+            value = tamper["params"][key]
+            self.set_unknown_parameter(param, value)
+
+    def set_unknown_parameter(self, param, value):
+        self.params_obj[param] = value
 
     def set_worker_type(self, worker_type):
         self.params_obj["workerType"] = worker_type

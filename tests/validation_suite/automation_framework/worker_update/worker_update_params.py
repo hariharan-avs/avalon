@@ -62,18 +62,16 @@ class WorkerUpdate():
                 self.set_data_encryption_algorithm(
                 input_json_temp["params"]["details"]["dataEncryptionAlgorithm"])
 
-            for key in tamper["params"].keys() :
-                param = key
-                value = tamper["params"][key]
-                self.set_unknown_parameter(param, value)
+        for key in tamper["params"].keys() :
+            param = key
+            value = tamper["params"][key]
+            self.set_unknown_parameter(param, value)
 
-            if "details" in tamper["params"].keys():
-                for key in tamper["params"]["details"].keys() :
-                    detail = key
-                    value = tamper["params"]["details"][key]
-                    self.set_unknown_parameter_detail(param, value)
-
-        # self.params_obj = tamper_object(self.params_obj.copy(), tamper)
+        if "details" in tamper["params"].keys():
+            for key in tamper["params"]["details"].keys() :
+                detail = key
+                value = tamper["params"]["details"][key]
+                self.set_unknown_parameter_detail(param, value)
 
     def set_unknown_parameter(self, param, value):
         self.params_obj[param] = value

@@ -36,6 +36,14 @@ class WorkOrderGetResult():
                 work_order_id = hex(random.randint(1, 2**64 -1))
                 self.set_work_order_id(work_order_id)
 
+        for key in tamper["params"].keys() :
+            param = key
+            value = tamper["params"][key]
+            self.set_unknown_parameter(param, value)
+
+    def set_unknown_parameter(self, param, value):
+        self.params_obj[param] = value
+
     def set_work_order_id(self, work_order_id):
         self.params_obj["workOrderId"] = work_order_id
 

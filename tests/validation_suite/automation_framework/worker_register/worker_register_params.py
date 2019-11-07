@@ -87,6 +87,14 @@ class WorkerRegister():
                 self.set_data_encryption_algorithm(
                 input_json_temp["params"]["details"]["dataEncryptionAlgorithm"])
 
+        for key in tamper["params"].keys() :
+            param = key
+            value = tamper["params"][key]
+            self.set_unknown_parameter(param, value)
+
+    def set_unknown_parameter(self, param, value):
+        self.params_obj[param] = value
+
     def set_worker_type(self, worker_type):
         self.params_obj["workerType"] = worker_type
 

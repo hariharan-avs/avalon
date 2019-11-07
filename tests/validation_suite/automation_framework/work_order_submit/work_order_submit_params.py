@@ -185,6 +185,14 @@ class WorkOrderSubmit():
                 self.params_obj["verifyingKey"] = \
                      input_json_temp["params"]["verifyingKey"]
 
+        for key in tamper["params"].keys() :
+            param = key
+            value = tamper["params"][key]
+            self.set_unknown_parameter(param, value)
+
+    def set_unknown_parameter(self, param, value):
+        self.params_obj[param] = value
+
     def compute_encrypted_request_hash(self) :
         first_string = self.nonce_hash
         worker_order_id = self.get_work_order_id()
