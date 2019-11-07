@@ -276,7 +276,7 @@ def verify_data_hash(msg, data_hash):
     verify_success = True
     msg_hash = compute_data_hash(msg)
     # Convert both hash hex string values to upper case
-    msg_hash_hex = byte_array_to_hex_str(msg_hash).upper()
+    msg_hash_hex = binascii.hexlify(bytearray(message)).upper()
     data_hash = data_hash.upper()
     if msg_hash_hex == data_hash:
         logger.info("Computed hash of message matched with data hash")
