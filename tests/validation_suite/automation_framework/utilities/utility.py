@@ -88,60 +88,7 @@ class GenericServiceClient(object) :
             pass
         value = json.loads(content)
         return value
-#
-# def read_toml_file(input_file, config_name = None, confpaths = [".", TCFHOME + "/" + "config"]):
-#     """
-#     Function to read toml file and returns the toml content as a list
-#     Parameters:
-#         - input_file is any toml file which need to be read
-#         - config_name is particular configuration to pull
-#         - data_dir is the directory structure in which the toml file exists
-#     """
-#     conffiles = [input_file]
-#     config = pconfig.parse_configuration_files(conffiles, confpaths)
-#     if config_name is None:
-#         return config
-#     else :
-#         result = config.get(config_name)
-#         if result is None:
-#             logger.error("%s is missing in toml file %s", config_name, input_file )
-#             return None
-#         else :
-#             return result
-#
-# #---------------------------------------------------------------------------------------------
-# def read_json_file(input_file, data_dir = ['./', '../', '/']) :
-#     """
-#     Function to read json file and returns the json content as a string
-#     Parameters:
-#         - input_file is any json file which need to be read
-#         - data_dir is the directory structure in which the json file exists
-#     """
-#
-#     file_name = putils.find_file_in_path(input_file, data_dir)
-#     with open(file_name, "r") as input_json_file :
-#         input_json = input_json_file.read()
-#     return input_json
-#
-# #---------------------------------------------------------------------------------------------
-# def write_json_file(file_name,input_data, data_dir ='./') :
-#     """
-#     Function to store data as json file
-#     Parameters:
-#         - file_name is the name in which the file should be stored
-#         - input_data is any data which needs to be stored in a file
-#         - data_dir is the directory path to store the file
-#     """
-#
-#     logger.debug('Data file is stored at %s with name %s.json',data_dir, file_name)
-#     result_info = dict()
-#     result_info['Result'] = input_data.result
-#     filename = os.path.realpath(os.path.join(data_dir, file_name + ".json"))
-#     logger.debug('save result data to %s', filename)
-#     with open(filename, "w") as file :
-#         json.dump(result_info, file)
 
-#---------------------------------------------------------------------------------------------
 def create_error_response(code, jrpc_id, message):
     """
     Function to create error response
@@ -339,8 +286,7 @@ def verify_data_hash(msg, data_hash):
     return verify_success
 #------------
 
-def byte_array_to_hex_str(message) :
-    res = binascii.hexlify(bytearray(message))
+
 #---------------------------------------------------------------------------------------------
 def human_read_to_byte(size):
     size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
