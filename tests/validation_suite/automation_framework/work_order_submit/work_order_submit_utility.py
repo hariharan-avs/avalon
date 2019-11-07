@@ -23,11 +23,11 @@ import logging
 
 from error_code.error_status import SignatureStatus
 import automation_framework.worker.worker_params as worker
-import automation_framework.utilities.utility as enclave_helper
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 from automation_framework.work_order_submit.work_order_submit_params \
                                               import WorkOrderSubmit
+import utility.utility as enclave_helper
 
 logger = logging.getLogger(__name__)
 
