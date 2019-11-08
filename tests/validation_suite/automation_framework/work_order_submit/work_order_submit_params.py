@@ -400,7 +400,7 @@ class WorkOrderSubmit():
             new_data_list = out_data_copy.append(outData_item)
             self.params_obj["outData"] = new_data_list
 
-    def add_data_item (self, data_copy, data_item):
+    def _add_data_item (self, data_copy, data_item):
 
         try :
             index = data_item['index']
