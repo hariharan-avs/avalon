@@ -105,10 +105,7 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
     output_json_file_name = 'worker_lookup'
 
     lookup_obj = WorkerLookUp()
-    worker_type = WorkerType.TEE_SGX.value
-    logger.info("worker_type : %s \n ",worker_type)
-    lookup_obj.set_worker_type(worker_type)
-    logger.info("worker_type : %s \n ",worker_type)
+    lookup_obj.set_worker_type(WorkerType.TEE_SGX.value)
     input_worker_look_up = json.loads(lookup_obj.to_string())
 
     # input_json_str = input_worker_look_up
