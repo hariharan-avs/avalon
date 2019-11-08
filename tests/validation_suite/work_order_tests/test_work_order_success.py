@@ -101,4 +101,4 @@ def test_work_order_success(setup_config):
         logger.info('''Test Case Failed : Work Order Not Processed successfully
                    with Signature Verification and Decrypted Response''')
 
-    assert err_cd == 0
+    assert err_cd == TestStep.SUCCESS.value

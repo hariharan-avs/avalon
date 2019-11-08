@@ -16,7 +16,7 @@ import pytest
 import logging
 import json
 
-import automation_framework.worker.worker_params as worker
+import worker.worker_details as worker
 from automation_framework.utilities.process_api_request import \
                                     process_api_request
 
