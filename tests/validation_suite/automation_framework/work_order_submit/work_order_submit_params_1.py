@@ -477,7 +477,7 @@ class WorkOrderSubmit():
             return None
 
     def get_params(self):
-        params_copy = self.params_obj
+        params_copy = self.params_obj.copy()
         if "inData" in params_copy:
             params_copy.pop("inData")
         if "outData" in params_copy:
