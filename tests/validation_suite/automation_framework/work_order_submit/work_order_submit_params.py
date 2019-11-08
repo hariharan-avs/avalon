@@ -14,8 +14,6 @@
 
 import json
 import logging
-import os
-import sys
 import random
 
 import crypto.crypto as crypto

@@ -13,12 +13,10 @@
 # limitations under the License.
 
 import pytest
-import subprocess
 import time
 import os
 import sys
 import argparse
-import random
 import json
 import logging
 
@@ -44,7 +42,7 @@ def setup_config(args=None):
 
     # parse out the configuration file first
     conffiles = [ "tcs_config.toml" ]
-    confpaths = [ ".", TCFHOME + "/config", "../../etc"]
+    confpaths = [ ".", TCFHOME + "/config"]
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", help="configuration file", nargs = "+")

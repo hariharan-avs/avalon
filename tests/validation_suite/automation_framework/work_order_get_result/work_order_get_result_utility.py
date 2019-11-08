@@ -14,10 +14,6 @@
 
 import pytest
 import time
-import os
-import sys
-import argparse
-import random
 import json
 import logging
 

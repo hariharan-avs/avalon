@@ -14,12 +14,12 @@
 
 import pytest
 import json
-import os
-import sys
 import logging
 
-import automation_framework.work_order_submit.work_order_submit_utility as wo_utility
-import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
+import automation_framework.work_order_submit.work_order_submit_utility as \
+                                                             wo_utility
+import automation_framework.work_order_get_result.work_order_get_result_utility \
+                                                               as wo_get_result
 import automation_framework.worker.worker_utility as worker_utility
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
@@ -31,10 +31,16 @@ def process_api_request(request_tup) :
     ''' process_api_request function receives the request from test case.
         extracts inputs for respective API requests from request_tup
         validates if input request is valid json, and has valid method name
+        input_temp :
+           file - input can be provided as a json filename
+           string - request can be constructed in test case and passed as a
+                    string to the framework
+           object - using respective API classes request can be constructed
+                    in test case and passed to framework for processing
         input_type :
-           file - reads input json file
-           string - uses string provided
-           object - extract request from object and submits to enclave
+           specifies whether input_temp is a file , string or object
+        tamper : dictionary specifying parameter : value pairs which need to
+                 added/tampered in the request. Complete tamper utility functionality updated in comments of tamper_utility.py
         based on method name respective API utilities are called to construct
         the request, tamper and submit to enclave. '''
 

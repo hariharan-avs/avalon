@@ -14,7 +14,6 @@
 
 import json
 import logging
-
 import worker.worker_details as worker
 
 logger = logging.getLogger(__name__)

@@ -19,6 +19,7 @@ import json
 import worker.worker_details as worker
 from automation_framework.utilities.process_api_request import \
                                     process_api_request
+from automation_framework.utilities.request_args import TestStep
 
 logger = logging.getLogger(__name__)
 
@@ -53,14 +54,14 @@ def test_worker_update(setup_config):
     input_update = response_tup[1]
     response = response_tup[2]
 
-    if err_cd == 0:
+    if err_cd == TestStep.SUCCESS.value:
         logger.info('''Test Case Success : Worker Update request
                     Processed successfully \n''')
     else:
         logger.info('''Test Case Failure : Worker Update request
                     failed to process successfully \n''')
 
-    assert err_cd == 0
+    assert err_cd == TestStep.SUCCESS.value
 
 def test_worker_update_invalid_parameter(setup_config):
     """ Testing worker update request with all valid parameter values. """
@@ -93,14 +94,14 @@ def test_worker_update_invalid_parameter(setup_config):
     input_update = response_tup[1]
     response = response_tup[2]
 
-    if err_cd == 0:
+    if err_cd == TestStep.SUCCESS.value:
         logger.info('''Test Case Success : Worker Update request
                     Processed successfully \n''')
     else:
         logger.info('''Test Case Failure : Worker Update request
                     failed to process successfully \n''')
 
-    assert err_cd == 0
+    assert err_cd == TestStep.SUCCESS.value
 
 def test_worker_update_unknown_parameter(setup_config):
     """ Testing worker update request with all valid parameter values. """
@@ -112,7 +113,6 @@ def test_worker_update_unknown_parameter(setup_config):
     err_cd = setup_config[3]
 
     # input and output names
-    # input_json_file = './worker_tests/input/worker_update_unknown_parameter.json'
     input_json_file = './worker_tests/input/worker_update.json'
     input_type = 'file'
     output_json_file_name = 'worker_update_unknown_parameter'
@@ -134,11 +134,11 @@ def test_worker_update_unknown_parameter(setup_config):
     input_update = response_tup[1]
     response = response_tup[2]
 
-    if err_cd == 0:
+    if err_cd == TestStep.SUCCESS.value:
         logger.info('''Test Case Success : Worker Update request
                     Processed successfully \n''')
     else:
         logger.info('''Test Case Failure : Worker Update request
                     failed to process successfully \n''')
 
-    assert err_cd == 0
+    assert err_cd == TestStep.SUCCESS.value
