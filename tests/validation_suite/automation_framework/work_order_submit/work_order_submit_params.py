@@ -378,19 +378,18 @@ class WorkOrderSubmit():
 
         try :
             input_json_inData.sort(key=lambda x: x['index'])
-            for inData_item in input_json_inData :
-                in_data_copy = self.params_obj["inData"]
-                mod_data_copy = self._add_data_item(in_data_copy, inData_item)
-                if mod_data_copy is not None :
-                    self.params_obj["inData"] = mod_data_copy
-                else :
-                    in_data_copy = self.params_obj["inData"]
-                    in_data_copy.append(enc_indata_item)
-                    self.params_obj["inData"] = in_data_copy
         except :
+            logger.debug("Sorting Indata based on Index failed \n")
+
+        for inData_item in input_json_inData :
             in_data_copy = self.params_obj["inData"]
-            in_data_copy.append(enc_indata_item)
-            self.params_obj["inData"] = in_data_copy
+            mod_data_copy = self._add_data_item(in_data_copy, inData_item)
+            if mod_data_copy is not None :
+                self.params_obj["inData"] = mod_data_copy
+            else :
+                in_data_copy = self.params_obj["inData"]
+                in_data_copy.append(inData_item)
+                self.params_obj["inData"] = in_data_copy
 
     def add_out_data(self, input_json_outData):
         if not "outData" in self.params_obj:
