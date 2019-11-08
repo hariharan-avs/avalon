@@ -170,5 +170,6 @@ ENV SOLC_BINARY=/root/.py-solc/solc-v0.4.25/bin/solc
 ENV WALLET_PRIVATE_KEY="B413189C95B48737AE2D9AF4CAE97EB03F4DE40599DF8E6C89DCE4C2E2CBA8DE"
 # Set display, replace value with [IP address of host]:0
 ENV DISPLAY=:0
+ENV PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /project/TrustedComputeFramework/tools/build
