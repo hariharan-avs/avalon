@@ -33,6 +33,7 @@ from service_client.generic import GenericServiceClient
 import utility.logger as plogger
 import crypto.crypto as crypto
 import utility.utility as enclave_helper
+from utility.tcf_types import WorkerType
 
 TCFHOME = os.environ.get("TCF_HOME", "../../")
 logger = logging.getLogger(__name__)
@@ -104,7 +105,7 @@ def worker_lookup_retrieve(config, worker_obj, uri_client):
     output_json_file_name = 'worker_lookup'
 
     lookup_obj = WorkerLookUp()
-    lookup_obj.set_worker_type(1)
+    lookup_obj.set_worker_type(WorkerType.TEE_SGX)
     input_worker_look_up = json.loads(lookup_obj.to_string())
 
     # input_json_str = input_worker_look_up
