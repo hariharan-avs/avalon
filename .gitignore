@@ -65,3 +65,5 @@ examples/common/java/*/bin/
 .vscode/
 .DS_Store
 
+### Ignore Pytest Automation Test Results ###
+tests/validaiton_suite/results/

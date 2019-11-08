@@ -22,12 +22,12 @@ import random
 import json
 import logging
 
-import automation_framework.worker.worker_params as worker
 from automation_framework.worker_lookup.worker_lookup_params import WorkerLookUp
 from automation_framework.worker_retrieve.worker_retrieve_params import WorkerRetrieve
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
 
+import worker.worker_details as worker
 import config.config as pconfig
 from service_client.generic import GenericServiceClient
 import utility.logger as plogger

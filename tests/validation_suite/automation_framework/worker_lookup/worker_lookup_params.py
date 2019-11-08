@@ -15,7 +15,7 @@
 import json
 import logging
 
-import automation_framework.worker.worker_params as worker
+import worker.worker_details as worker
 
 logger = logging.getLogger(__name__)
 

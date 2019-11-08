@@ -8,3 +8,5 @@ tcs/core/tcs_trusted_worker_manager/enclave/build*
 tcs/core/common/python/build*
 common/build*
 
+#Ignore Pytest Automation Test Results
+tests/validation_suite/results/*

@@ -22,10 +22,11 @@ import json
 import logging
 
 from error_code.error_status import SignatureStatus
-import automation_framework.worker.worker_params as worker
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
-from automation_framework.work_order_get_result.work_order_get_result_params import WorkOrderGetResult
+from automation_framework.work_order_get_result.work_order_get_result_params \
+                                                   import WorkOrderGetResult
+import worker.worker_details as worker
 
 logger = logging.getLogger(__name__)
 

@@ -21,9 +21,9 @@ import logging
 import automation_framework.work_order_submit.work_order_submit_utility as wo_utility
 import automation_framework.work_order_get_result.work_order_get_result_utility as wo_get_result
 import automation_framework.worker.worker_utility as worker_utility
-import automation_framework.worker.worker_params as worker
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
+import worker.worker_details as worker
 
 logger = logging.getLogger(__name__)
 

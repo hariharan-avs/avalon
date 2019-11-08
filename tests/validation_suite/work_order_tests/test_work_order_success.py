@@ -21,6 +21,7 @@ import automation_framework.work_order_submit.work_order_submit_utility as \
                                                              wo_utility
 import automation_framework.work_order_get_result.work_order_get_result_utility \
                                                                as wo_get_result
+from automation_framework.utilities.request_args import TestStep
 
 logger = logging.getLogger(__name__)
 
@@ -83,17 +84,17 @@ def test_work_order_success(setup_config):
     err_cd = response_get_result[0]
     response = response_get_result[1]
 
-    if err_cd == 0:
+    if err_cd == TestStep.SUCCESS.value:
         # verify signature if work order processed as expected
         err_cd = wo_utility.verify_work_order_signature(response,
                  worker_obj)
 
-    if err_cd == 0:
+    if err_cd == TestStep.SUCCESS.value:
         # decrypt signature if verify signature is successful
         (err_cd, decrypted_data) = (wo_utility.
         decrypt_work_order_response(response, session_key, session_iv))
 
-    if err_cd == 0:
+    if err_cd == TestStep.SUCCESS.value:
         logger.info('''Test Case Success : Work Order Processed successfully
                    with Signature Verification and Decrypted Response \n''')
     else:

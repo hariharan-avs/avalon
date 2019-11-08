@@ -17,7 +17,6 @@ import time
 import logging
 import json
 
-import automation_framework.worker.worker_params as worker
 from automation_framework.worker_lookup.worker_lookup_params import WorkerLookUp
 from automation_framework.worker_retrieve.worker_retrieve_params \
                                              import WorkerRetrieve
@@ -28,6 +27,7 @@ from automation_framework.worker_set_status.worker_set_status_params \
 from automation_framework.worker_update.worker_update_params import WorkerUpdate
 from automation_framework.utilities.workflow import process_request
 from automation_framework.utilities.workflow import validate_response_code
+import worker.worker_details as worker
 
 logger = logging.getLogger(__name__)
 

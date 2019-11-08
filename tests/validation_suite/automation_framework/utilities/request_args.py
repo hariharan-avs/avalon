@@ -20,7 +20,7 @@ status code defined for test case
 from enum import IntEnum, unique
 
 @unique
-class TestCaseStatus(IntEnum):
+class TestStep(IntEnum):
     SUCCESS = 0
     FAILURE = 1
 
