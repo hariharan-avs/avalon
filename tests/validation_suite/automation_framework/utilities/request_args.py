@@ -36,3 +36,7 @@ class WorkOrderStatus(IntEnum):
     PROCESSING = 7
     BUSY = 8
     UNKNOWN_ERROR = 9
+
+@unique
+class GetResultWaitTime(IntEnum):
+    LOOP_WAIT_TIME = 3

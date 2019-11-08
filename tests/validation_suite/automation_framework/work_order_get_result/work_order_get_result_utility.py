@@ -23,6 +23,7 @@ from automation_framework.utilities.workflow import validate_response_code
 from automation_framework.work_order_get_result.work_order_get_result_params \
                                                    import WorkOrderGetResult
 import worker.worker_details as worker
+from automation_framework.utilities.request_args import GetResultWaitTime
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ def process_work_order_get_result(input_request, input_type, tamper,
             # submit work order get result request and retrieve response
             response = process_request(uri_client, input_get_result,
                        output_json_file_name)
-            time.sleep (3)
+            time.sleep (GetResultWaitTime.LOOP_WAIT_TIME.value)
 
         # validate work order get result code response error or result code
         err_cd = validate_response_code(response, check_get_result)
