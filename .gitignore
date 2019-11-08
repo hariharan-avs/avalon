@@ -66,4 +66,4 @@ examples/common/java/*/bin/
 .DS_Store
 
 ### Ignore Pytest Automation Test Results ###
-tests/validaiton_suite/results/
+tests/validaiton_suite/results/*
