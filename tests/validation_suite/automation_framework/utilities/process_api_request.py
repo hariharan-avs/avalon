@@ -28,7 +28,7 @@ from automation_framework.utilities.workflow import validate_response_code
 logger = logging.getLogger(__name__)
 
 def process_api_request(request_tup) :
-    ''' submit_request funtion receives the request from test case.
+    ''' process_api_request function receives the request from test case.
         extracts inputs for respective API requests from request_tup
         validates if input request is valid json, and has valid method name
         input_type :

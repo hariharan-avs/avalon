@@ -22,7 +22,11 @@ def tamper_request(input_json, tamper_instance, tamper):
     '''Function to tamper the input request at required instances.
        Valid instances used in test framework are :
        force, add, remove.
-       force : used by WorkOrderSubmit() class primarily to force null values.
+       force : used by API class definitions primarily to force null values to
+               parameter values to replace default values and to add
+               unknown parameter key, value pair to request parameters for the
+               purpose of testing. code for the same coded in respective api
+               classes
        add : can be used to add a parameter and value not in input json,
              also can be used to replace a value for parameter in input json
        remove : deletes the parameter from input json
