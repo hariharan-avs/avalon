@@ -380,49 +380,13 @@ class WorkOrderSubmit():
             input_json_inData.sort(key=lambda x: x['index'])
             for inData_item in input_json_inData :
                 in_data_copy = self.params_obj["inData"]
-
-                index = inData_item['index']
-                data = inData_item['data'].encode('UTF-8')
-                if 'encryptedDataEncryptionKey' in inData_item :
-                    e_key = inData_item['encryptedDataEncryptionKey'].encode(
-                                                                      'UTF-8')
+                mod_data_copy = self._add_data_item(in_data_copy, inData_item)
+                if mod_data_copy is not None :
+                    self.params_obj["inData"] = mod_data_copy
                 else :
-                    e_key = "null".encode('UTF-8')
-                if (not e_key ) or (e_key == "null".encode('UTF-8')):
-                    enc_data = self.encrypt_data(data, self.session_key,
-                               self.session_iv)
-                    base64_enc_data = (crypto.byte_array_to_base64(enc_data))
-                    if 'dataHash' in inData_item :
-                        dataHash_enc_data = (self.byte_array_to_hex_str(
-                           crypto.compute_message_hash(data)))
-                    logger.debug("encrypted indata - %s",
-                           crypto.byte_array_to_base64(enc_data))
-                elif e_key == "-".encode('UTF-8'):
-                    # Skip encryption and just encode workorder data
-                    # to base64 format
-                    base64_enc_data = (crypto.byte_array_to_base64(data))
-                    if 'dataHash' in inData_item :
-                        dataHash_enc_data = (self.byte_array_to_hex_str(
-                           crypto.compute_message_hash(data)))
-                else:
-                    data_key = None
-                    data_iv = None
-                    enc_data = self.encrypt_data(data, data_key, data_iv)
-                    base64_enc_data = (crypto.byte_array_to_base64(enc_data))
-                    if 'dataHash' in inData_item :
-                        dataHash_enc_data = (self.byte_array_to_hex_str(
-                           crypto.compute_message_hash(data)))
-                    logger.debug("encrypted indata - %s",
-                           crypto.byte_array_to_base64(enc_data))
-
-                enc_indata_item = {'index': index,
-                                   'dataHash': dataHash_enc_data,
-                                   'data': base64_enc_data,
-                                   'encryptedDataEncryptionKey' : \
-                                   inData_item['encryptedDataEncryptionKey'],
-                                   'iv' : inData_item['iv']}
-                in_data_copy.append(enc_indata_item)
-                self.params_obj["inData"] = in_data_copy
+                    in_data_copy = self.params_obj["inData"]
+                    in_data_copy.append(enc_indata_item)
+                    self.params_obj["inData"] = in_data_copy
         except :
             in_data_copy = self.params_obj["inData"]
             in_data_copy.append(enc_indata_item)
@@ -436,6 +400,55 @@ class WorkOrderSubmit():
             out_data_copy = self.params_obj["outData"]
             new_data_list = out_data_copy.append(outData_item)
             self.params_obj["outData"] = new_data_list
+
+    def add_data_item (self, data_copy, data_item):
+
+        try :
+            index = data_item['index']
+            data = data_item['data'].encode('UTF-8')
+            if 'encryptedDataEncryptionKey' in data_item :
+                e_key = data_item['encryptedDataEncryptionKey'].encode(
+                                                                  'UTF-8')
+            else :
+                e_key = "null".encode('UTF-8')
+            if (not e_key ) or (e_key == "null".encode('UTF-8')):
+                enc_data = self.encrypt_data(data, self.session_key,
+                           self.session_iv)
+                base64_enc_data = (crypto.byte_array_to_base64(enc_data))
+                if 'dataHash' in data_item :
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
+                logger.debug("encrypted indata - %s",
+                       crypto.byte_array_to_base64(enc_data))
+            elif e_key == "-".encode('UTF-8'):
+                # Skip encryption and just encode workorder data
+                # to base64 format
+                base64_enc_data = (crypto.byte_array_to_base64(data))
+                if 'dataHash' in data_item :
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
+            else:
+                data_key = None
+                data_iv = None
+                enc_data = self.encrypt_data(data, data_key, data_iv)
+                base64_enc_data = (crypto.byte_array_to_base64(enc_data))
+                if 'dataHash' in data_item :
+                    dataHash_enc_data = (self.byte_array_to_hex_str(
+                       crypto.compute_message_hash(data)))
+                logger.debug("encrypted indata - %s",
+                       crypto.byte_array_to_base64(enc_data))
+
+            enc_indata_item = {'index': index,
+                               'dataHash': dataHash_enc_data,
+                               'data': base64_enc_data,
+                               'encryptedDataEncryptionKey' : \
+                               data_item['encryptedDataEncryptionKey'],
+                               'iv' : data_item['iv']}
+            data_copy.append(enc_indata_item)
+
+            return data_copy
+        except :
+            return None
 
     def encrypt_data(self, data, encryption_key, iv):
         """
