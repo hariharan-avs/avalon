@@ -397,8 +397,13 @@ class WorkOrderSubmit():
 
         for outData_item in input_json_outData :
             out_data_copy = self.params_obj["outData"]
-            new_data_list = out_data_copy.append(outData_item)
-            self.params_obj["outData"] = new_data_list
+            mod_data_copy = self._add_data_item(out_data_copy, outData_item)
+            if mod_data_copy is not None :
+                self.params_obj["outData"] = mod_data_copy
+            else :
+                out_data_copy = self.params_obj["outData"]
+                out_data_copy.append(outData_item)
+                self.params_obj["outData"] = out_data_copy
 
     def _add_data_item (self, data_copy, data_item):
 
