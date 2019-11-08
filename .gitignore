@@ -67,3 +67,5 @@ examples/common/java/*/bin/
 
 ### Ignore Pytest Automation Test Results ###
 tests/validaiton_suite/results/*
+tests/validaiton_suite/report.json
+tests/validaiton_suite/pytest-logs.txt
